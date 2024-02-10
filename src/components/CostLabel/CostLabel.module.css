@@ -1,0 +1,47 @@
+.costLabel {
+    display: inline-flex;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 4px 5px;
+    border-radius: 4px;
+    background: #303044;
+}
+
+.costLabel > span {
+    background: linear-gradient(122deg, #2EA5FB 9.89%, #4340E1 73.1%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.medium {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.large {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.success {
+    background: transparent;
+    border: 1px solid #52C83F;
+}
+
+.success > span {
+    background: transparent;
+    color: #52C83F;
+    -webkit-background-clip: initial;
+    -webkit-text-fill-color: initial;
+}
+
+
+@media screen and (max-width: 768px) {
+    .costLabel {
+        font-size: 12px;
+    }
+
+    .large, .medium {
+        font-size: 14px;
+    }
+}

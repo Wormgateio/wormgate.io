@@ -1,0 +1,30 @@
+.list {
+    margin: 12px auto 0;
+}
+
+.listItem {
+    width: 252px;
+}
+
+@media screen and (max-width: 768px) {
+    .list {
+        gap: 8px 4px !important;
+    }
+
+    .listItem {
+        width: 150px;
+    }
+
+    .chain {
+        gap: 4.79px !important;
+    }
+
+    .chainIcon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .chainLabel {
+        font-size: 10px;
+    }
+}

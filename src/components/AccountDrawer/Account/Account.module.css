@@ -1,0 +1,150 @@
+.account {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.accountLoading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.accountMain {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.card {
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.cardTitle {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.divider {
+    height: 1px;
+    margin: 12px 0;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.subscribeInfo {
+    font-size: 14px;
+    color: rgba(255,255,255,.64);
+    line-height: 20px;
+}
+
+.connectButton {
+    background: transparent;
+    border: 1px solid #2EA5FB;
+    border-radius: 16px;
+    color: #fff;
+    font-size: 14px;
+    padding: 9px 20px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.disconnectButton {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    padding: 9px 8px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.twitterAccount {
+    max-width: 252px;
+}
+
+.twitterUsername {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rewardsList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.rewardItemName {
+    opacity: 0.32;
+    font-size: 12px;
+}
+
+.rewardItemCount {
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rewardItemTotal .rewardItemName {
+    font-size: 14px;
+}
+
+.rewardItemTotal .rewardItemCount {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.walletConnector {
+    padding: 10px;
+}
+
+.userName {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.userAddress {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.40);
+}
+
+.userAddress svg {
+    color: rgba(255, 255, 255, 0.40);
+    width: 18px;
+    height: 18px;
+}
+
+.connector h2 {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+}
+
+.connectorAddress {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.40);
+}
+
+.closeIcon {
+    display: none;
+    padding: 8px;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.refferalLinkControl {
+    margin-bottom: 0 !important;
+}
+
+@media screen and (max-width: 1320px) {
+    .closeIcon {
+        display: block;
+    }
+}

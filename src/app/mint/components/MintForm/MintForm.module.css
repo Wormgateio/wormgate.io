@@ -1,0 +1,32 @@
+.withExtra {
+    position: relative;
+}
+
+.withExtra input {
+    padding-right: 120px;
+}
+
+.generateButton {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+}
+
+.fileTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+@media screen and (max-width: 440px) {
+    .withExtra input {
+        padding-right: 85px;
+    }
+
+    .generateButton {
+        width: 68px;
+        bottom: 6px;
+        right: 10px;
+    }
+}

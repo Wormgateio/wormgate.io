@@ -1,0 +1,42 @@
+.input {
+    padding-left: 16px;
+    padding-right: 40px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    width: 100%;
+    display: block;
+    min-height: 48px;
+    line-height: 48px;
+    font-family: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    transition: 0.3s ease-out;
+    outline: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.input:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.input:focus {
+    border-color: #fff;
+}
+
+.input::placeholder {
+    color: rgba(255, 255, 255, 0.24);
+}
+
+.inputWrapper {
+    position: relative;
+}
+
+.action {
+    position: absolute;
+    right: 8px;
+    top: 12px;
+}
