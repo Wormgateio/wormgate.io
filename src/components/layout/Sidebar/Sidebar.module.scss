@@ -1,0 +1,75 @@
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    &Top {
+        flex: 1;
+        padding-bottom: 32px;
+    }
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 500;
+    text-align: center;
+    display: block;
+    padding: 16px;
+    margin-bottom: 32px;
+}
+
+.menuItem {
+    display: block;
+    padding: 20px 24px;
+    position: relative;
+
+    &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, rgba(150, 106, 225, 0.20), rgba(150, 106, 225, 0));
+        opacity: 0;
+        transition: 0.15s opacity;
+    }
+
+    &Active:before,
+    &:hover:before {
+        opacity: 1;
+    }
+
+    &Active .menuItemIcon {
+        opacity: 1;
+        margin-left: 0;
+    }
+
+    &Active .menuItemName span {
+        text-shadow: 0 0 6px #B087F3, 0 0 16px #B087F3;
+    }
+
+    &Icon {
+        opacity: 0;
+        margin-left: -30px;
+        transition: 0.1s ease-in;
+    }
+
+    &Name {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        margin-bottom: 8px;
+
+        span {
+            font-size: 16px;
+            font-weight: 700;
+        }
+    }
+
+    &Descr {
+        font-size: 14px;
+        font-weight: 600;
+        opacity: 0.48;
+    }
+}

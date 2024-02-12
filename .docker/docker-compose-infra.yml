@@ -3,7 +3,7 @@ version: '3.7'
 services:
   postgres:
     image: postgres:latest
-    container_name: getmint_pg
+    container_name: wormgate_pg
     restart: always
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
@@ -18,7 +18,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: getmint_pgadmin
+    container_name: wormgate_pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
       PGADMIN_DEFAULT_PASSWORD: password

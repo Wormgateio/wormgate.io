@@ -1,5 +1,5 @@
 {
-  "name": "getmint-front",
+  "name": "wormgate-web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -33,6 +33,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.48.2",
+    "sass": "^1.70.0",
     "twitter-api-sdk": "^1.2.1",
     "use-media": "^1.5.0",
     "wagmi": "^1.4.7"

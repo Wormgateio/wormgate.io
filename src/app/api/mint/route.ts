@@ -89,7 +89,8 @@ async function createNFT(data: CreateNFTDto) {
                 userId: data.userId,
                 pinataJsonHash: data.pinataJsonHash,
                 tokenId: data.tokenId,
-                chainId: data.chainId
+                chainId: data.chainId,
+                isCustom: true
             }
         });
 

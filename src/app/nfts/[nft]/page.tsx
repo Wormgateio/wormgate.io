@@ -20,6 +20,7 @@ import BridgeForm from "./components/BridgeForm/BridgeForm";
 import { OperationHistoryDto } from "../../../common/dto/OperationHistoryDto";
 
 import styles from "./page.module.css";
+import MiniCard from "../../../components/ui/MiniCard/MiniCard";
 
 interface Props {
     params: { nft: string },
@@ -82,17 +83,12 @@ function Page({ params }: Props) {
     }
 
     return (
-        <Card
-            title={
-                <>
-                    <div className={styles.back} onClick={goToBack}>
-                        <Image src="/svg/ui/back-arrow.svg" width={24} height={24} alt="" />
-                        <span>Back</span>
-                    </div>
-                    <div className={styles.title}>{nft.name}</div>
-                </>
-            }
-        >
+        <Card title="NFT Info">
+            <div className={styles.back} onClick={goToBack}>
+                <Image src="/svg/ui/back-arrow.svg" width={24} height={24} alt="" />
+                <span>Back to Your NFT`s</span>
+            </div>
+
             <div className={styles.container}>
                 <div className={styles.card}>
                     <div className={styles.image}>
@@ -100,37 +96,26 @@ function Page({ params }: Props) {
                     </div>
 
                     <div className={styles.info}>
-                        <div className={styles.account}>
-                            <Avatar size={32} src={account?.twitter.user?.avatar} style={{ background: generateGradient(135) }} />
-                            {nft.userId === account?.id ? (
-                                <span>You</span>
-                            ) : nft.userName ? (
-                                <span>{nft.userName}</span>
-                            ) : (
-                                <AccountAddress address={nft.userWalletAddress} />
-                            )}
+                        <div className={styles.main}>
+                            <div>{nft.name}</div>
+
+                            <div className={styles.chain}>
+                                <ChainLabel network={nft.chainNetwork} label={nft.chainName} />
+                            </div>
                         </div>
 
-                        <div className={styles.chain}>
-                            <ChainLabel network={nft.chainNetwork} label={nft.chainName} />
-                            {account?.id === nft.userId && (
-                                <div className={styles.xp}>
-                                    <Image src="/svg/xp.svg" width={20} height={20} alt="XP" />
-                                    <span>{BalanceOperationCost.Bridge} XP</span>
-                                </div>
-                            )}
-                        </div>
+                        {account?.id === nft.userId && (
+                            <MiniCard title="Bridge">
+                                <BridgeForm nft={nft} className={styles.form} onAfterBridge={refetch} />
+                            </MiniCard>
+                        )}
                     </div>
-
-                    <div className={styles.description}>{nft.description}</div>
-
-                    {account?.id === nft.userId && (
-                        <BridgeForm nft={nft} className={styles.form} onAfterBridge={refetch} />
-                    )}
                 </div>
-                
-                <History history={history} loading={isLoadingHistory} className={styles.history} />
             </div>
+
+            <MiniCard title="History">
+                <History history={history} loading={isLoadingHistory} className={styles.history} />
+            </MiniCard>
         </Card>
     );
 }

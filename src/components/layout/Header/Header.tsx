@@ -3,8 +3,6 @@
 import { useMedia } from "use-media";
 import { useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import Logo from "../../Logo/Logo";
-import Navigation from "../../Navigation/Navigation";
 import WalletActions from "../../WalletActions/WalletActions";
 import MobileMenu from "../../MobileMenu/MobileMenu";
 import AppStore from "../../../store/AppStore";
@@ -23,10 +21,10 @@ function Header() {
 
     return (
         <div className={styles.header}>
-            <Logo />
+            <div></div>
             {!isTablet && (
                 <>
-                    <Navigation />
+                    {/*<Navigation />*/}
                     <WalletActions />
                 </>
             )}

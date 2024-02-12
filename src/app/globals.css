@@ -18,9 +18,24 @@ body {
 }
 
 body {
-  background: #18212D;
   color: #fff;
   font-size: 16px;
+  background: #020518 url('/bg/bg.png') center no-repeat;
+  background-size: cover;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  padding-right: 1px;
+}
+
+::-webkit-scrollbar-track {
+  margin: 12px 0;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: rgba(255,255,255, .15);
 }
 
 a {

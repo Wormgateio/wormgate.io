@@ -36,6 +36,7 @@ model Nft {
   description     String?     @default("")
   createdAt       DateTime    @default(now()) @map("created_at")
   tokenId         Int
+  isCustom        Boolean     @default(false) @map("is_custom")
   userId          String      @map("user_id")
   user            User        @relation(fields: [userId], references: [id])
   mintLog         MintLog[]

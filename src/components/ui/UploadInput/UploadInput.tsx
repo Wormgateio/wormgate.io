@@ -49,12 +49,14 @@ export default function UploadInput({ file, onUpload, ...props }: UploadInputPro
                         <img className={styles.preview} src={preview} alt="" />
                     ) : (
                         <div className={styles.imageWrapper}>
-                            <Image className={styles.image} src="/svg/upload-picture.svg" width={24} height={24} alt="" />
-                            <Image className={styles.dropImage} src="/svg/upload-drop.svg" width={24} height={24} alt="" />
+                            <Image className={styles.image} src="/svg/upload-picture.svg" width={46} height={46} alt="" />
+                            <Image className={styles.dropImage} src="/svg/upload-drop.svg" width={46} height={46} alt="" />
                         </div>
                     )}
 
-                    {!preview && <p>{selected ? selected : 'Click to upload'}</p>}
+                    {!preview && <p>{selected ? selected : (
+                        <>Click to upload <br/>Format: JPG, PNG, GIF, WEBM or SVG</>
+                    )}</p>}
                 </div>
             </label>
         </Tooltip>

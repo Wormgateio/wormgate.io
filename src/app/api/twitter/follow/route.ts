@@ -12,7 +12,7 @@ export async function POST(request: Request) {
                 data: {
                     userId,
                     operation: BalanceOperation.Debit,
-                    description: 'Начисление за подписку на аккаунт Getmint',
+                    description: 'Начисление за подписку на аккаунт Womex',
                     type: BalanceLogType.TwitterGetmintSubscription,
                     amount: BalanceOperationCost.TwitterGetmintSubscription,
                 }

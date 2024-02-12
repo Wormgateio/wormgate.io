@@ -24,9 +24,11 @@ export default function RefuelSwitch({ className, onChangeRefuelGas, refuel, ...
     };
 
     return (
-        <Flex gap={8} align="center" justify="center" className={className}>
-            <Switch {...props} className={styles.switch} />
-            <span className={styles.label}>Enable refuel</span>
+        <Flex gap={8} align="center" justify="space-between" className={className}>
+            <Flex align="center" gap={8}>
+                <Switch {...props} className={styles.switch} />
+                <span className={styles.label}>Enable refuel</span>
+            </Flex>
 
             <Dropdown
                 trigger={['click']}

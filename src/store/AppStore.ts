@@ -71,13 +71,25 @@ class AppStore {
             if (status === 'ok') {
                 await NftStore.getNfts();
             }
+
+            return status;
+
         } catch (e) {
             console.error(e);
-            notification.warning({
-                message: 'The tweet may have already been created',
-                duration: 10000
-            })
+            return 'failed';
         } finally {
+            this.loading = false;
+        }
+    }
+
+    async createIntentTweet(data: CreateTweetDto) {
+        this.loading = true;
+
+        try {
+            await ApiService.createIntentTweet(data);
+        } catch (e) {
+            console.error(e);
+        }finally {
             this.loading = false;
         }
     }

@@ -23,11 +23,19 @@
     display: flex;
     align-items: flex-start;
     gap: 24px;
+    width: 100%;
 }
 
 .card {
     width: 100%;
-    max-width: 559px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.main {
+    margin-bottom: 24px;
 }
 
 .image {
@@ -38,8 +46,10 @@
     border-radius: 12px;
     padding: 12px;
     border: 1px solid rgba(255, 255, 255, 0.12);
-    height: 344px;
     background: #161D27;
+    width: 362px;
+    height: 362px;
+    flex: 1;
 }
 
 .image img {
@@ -48,11 +58,7 @@
 }
 
 .info {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-top: 12px;
+    flex: 1;
 }
 
 .account {
@@ -92,9 +98,7 @@
 }
 
 @media screen and (max-width: 1360px) {
-    .card {
-        max-width: 447px;
-    }
+
 }
 
 @media screen and (max-width: 1024px) {

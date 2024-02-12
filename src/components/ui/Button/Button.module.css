@@ -1,25 +1,25 @@
 .button {
     outline: 0;
-    background: linear-gradient(170deg, #2EA5FB, #4340E1);
     color: #fff;
     font-weight: 600;
     padding: 16px 20px;
     font-family: inherit;
     border-radius: 12px;
-    border: none;
     cursor: pointer;
     font-size: 16px;
     line-height: 1;
     transition: 300ms ease-out;
     text-align: center;
+    border: 1px solid #B087F3;
+    background: linear-gradient(180deg, rgba(176, 135, 243, 0.78) 0%, rgba(151, 87, 255, 0.78) 100%);
 }
 
 .button:hover {
-    box-shadow: 0 2px 12px 0 rgba(53, 102, 196, 0.80);
+    background: linear-gradient(180deg, #B087F3 0%, #9757FF 100%);
 }
 
 .button:active {
-    transform: scale(0.95);
+    transform: scale(0.97);
 }
 
 .block {

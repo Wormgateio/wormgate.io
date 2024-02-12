@@ -69,31 +69,24 @@ function BridgeForm({ nft, className, onAfterBridge }: Props) {
 
     return (
         <div className={clsx(styles.container, className)}>
-            {!isMobile ? (
-                <ChainSelect chains={chains} value={selectedChain} onChange={onChangeChain} priceList={bridgePriceList} />
-            ) : (
-                <RefuelSwitch
-                    refuel={refuelCost}
-                    onChangeRefuelGas={onChangeRefuelGas}
-                    checked={refuelEnabled}
-                    onChange={onChangeRefuelEnabled}
-                />
-            )}
+           <div className={styles.refuel}>
+               <RefuelSwitch
+                   refuel={refuelCost}
+                   onChangeRefuelGas={onChangeRefuelGas}
+                   checked={refuelEnabled}
+                   onChange={onChangeRefuelEnabled}
+               />
+           </div>
+
             <div className={styles.actions}>
-                {!isMobile ? (
-                    <RefuelSwitch
-                        refuel={refuelCost}
-                        onChangeRefuelGas={onChangeRefuelGas}
-                        checked={refuelEnabled}
-                        onChange={onChangeRefuelEnabled}
-                    />
-                ) : (
-                    <ChainSelect chains={chains} value={selectedChain} onChange={onChangeChain} priceList={bridgePriceList} />
-                )}
-                {isNeedChangeChain
-                    ? <Button className={styles.sendBtn} onClick={switchNetwork}>Switch network</Button>
-                    : <Button className={styles.sendBtn} onClick={onBridge}>Send</Button>
-                }
+                <ChainSelect chains={chains} value={selectedChain} onChange={onChangeChain} priceList={bridgePriceList} />
+
+                <div>
+                    {isNeedChangeChain
+                        ? <Button block className={styles.sendBtn} onClick={switchNetwork}>Switch network</Button>
+                        : <Button block className={styles.sendBtn} onClick={onBridge}>Bridge</Button>
+                    }
+                </div>
             </div>
         </div>
     );

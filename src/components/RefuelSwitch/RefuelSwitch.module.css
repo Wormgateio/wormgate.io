@@ -1,8 +1,10 @@
 .switch {
-    min-width: 40px !important;
-    height: 20px !important;
+    min-width: 36px !important;
+    height: 18px !important;
     border-radius: 12px !important;
-    background: rgba(240, 240, 240, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.08);
+
 }
 .switch:hover:not(.ant-switch-disabled) {
     background: rgba(240, 240, 240, 0.12);
@@ -23,18 +25,20 @@
 }
 
 .switch :global(.ant-switch-handle) {
-    width: 12px !important;
-    height: 12px !important;
-    top: 4px !important;
+    width: 13px !important;
+    height: 13px !important;
+    top: 2px !important;
     inset-inline-start: 4px !important;
 }
 
 .switch :global(.ant-switch-checked) {
-    background: linear-gradient(122deg, #2EA5FB 9.89%, #4340E1 73.1%) !important;
+    border: 1px solid #B087F3;
+    background: rgba(176, 135, 243, 0.08) !important;
+    box-shadow: 0px 0px 4px 0px #B087F3 inset, 0px 0px 12px 0px rgba(176, 135, 243, 0.32);
 }
 
 .switch :global(.ant-switch-handle):before {
-    background-color: #f0f0f0 !important;
+    background-color: #B087F3 !important;
 }
 
 .switch:global(.ant-switch-checked .ant-switch-handle) {
