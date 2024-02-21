@@ -126,3 +126,68 @@ strong {
     padding: 0 16px;
   }
 }
+
+.ant-divider {
+  border-block-start: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.ant-form-item, .ant-form {
+  color: #fff !important;
+}
+
+.ant-form .ant-form-item .ant-form-item-label > label {
+  color: rgba(255,255,255,.64);
+  font-size: 14px;
+  height: initial !important;
+}
+
+.ant-form .ant-form-item-label {
+  padding-bottom: 4px;
+}
+
+input.ant-input {
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: none;
+  color: #fff;
+}
+
+input.ant-input::placeholder {
+  color: rgba(255, 255, 255, 0.24);
+}
+
+.ant-tabs {
+  &.ant-tabs-card {
+    .ant-tabs-nav {
+      color: #fff;
+      border-radius: 12px;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+
+      &:before {
+        border: none;
+      }
+    }
+
+    .ant-tabs-tab {
+      padding: 4px 16px !important;
+      border-radius: 8px !important;
+      border: none !important;
+
+      .ant-tabs-tab-btn {
+        color: #fff;
+        font-weight: 600;
+      }
+
+      &.ant-tabs-tab-active {
+        background: rgba(255, 255, 255, 0.08);
+
+        .ant-tabs-tab-btn {
+          color: #B087F3;
+          text-shadow: none;
+        }
+      }
+    }
+  }
+}
+

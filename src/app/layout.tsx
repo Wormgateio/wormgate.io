@@ -1,12 +1,11 @@
 import React, { ReactNode } from "react";
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import './globals.css'
+import './globals.scss'
 import styles from "./layout.module.css";
 import Script from "next/script";
 
 import Header from "../components/layout/Header/Header";
-import Footer from "../components/layout/Footer/Footer";
 import WalletProvider from "./wallet-provider";
 import StyledComponentsRegistry from "../components/AntdRegistry";
 import AccountDrawer from "../components/AccountDrawer/AccountDrawer";

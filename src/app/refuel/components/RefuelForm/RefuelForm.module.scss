@@ -1,0 +1,28 @@
+.refuelInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+
+  &Item {
+    line-height: 1;
+  }
+
+  &Name {
+    color: rgba(255, 255, 255, 0.64);
+  }
+
+  &Price {
+    font-weight: 500;
+  }
+}
+
+.amount {
+  :global label {
+    width: 100%;
+
+    & > div {
+      width: 100%;
+    }
+  }
+}

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Page from "./mint/page";
 import ConfirmDialog from "../components/ConfirmDialog/ConfirmDialog";
 import AppStore from "../store/AppStore";
+import ChainStore from "../store/ChainStore";
 
 export default function Home() {
     const [showConfirm, setShowConfirm] = useState(false);
@@ -48,6 +49,10 @@ export default function Home() {
             setReffererAddress(reffererAddress);
         }
     }, [params]);
+
+    useEffect(() => {
+        ChainStore.getChains();
+    }, []);
 
     return (
         <>
