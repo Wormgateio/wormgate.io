@@ -1,7 +1,7 @@
 'use client';
 
 import { observer } from "mobx-react-lite";
-import { message, Space, Tabs } from 'antd';
+import { Space, Tabs } from 'antd';
 
 import styles from './page.module.scss';
 import Card from "../../components/ui/Card/Card";
@@ -10,8 +10,6 @@ import MultipleMintForm from "./components/MultipleMintForm/MultipleMintForm";
 import SingleMintForm from "./components/SingleMintForm/SingleMintForm";
 
 function Page() {
-    const [messageApi, contextHolder] = message.useMessage();
-
     const tabs = [
         {
             key: 'single',
@@ -28,8 +26,6 @@ function Page() {
 
     return (
         <>
-            {contextHolder}
-
             <Card className={styles.page} title="Mint and Bridge NFT">
                 <Tabs className={styles.tabs} defaultActiveKey="single" items={tabs} type="card" />
             </Card>

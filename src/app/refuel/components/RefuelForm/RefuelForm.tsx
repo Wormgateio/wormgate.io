@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo } from "react";
 import { observer } from "mobx-react-lite";
-import { Divider, Flex, Form, Input, Space } from "antd";
+import { Divider, Flex, Form, Input } from "antd";
 import { useNetwork } from "wagmi";
 import Image from "next/image";
 import cn from './RefuelForm.module.scss';

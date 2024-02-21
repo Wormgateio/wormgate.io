@@ -3,11 +3,11 @@ import { makeAutoObservable } from "mobx";
 class RefuelState {
     loading: boolean = false;
 
-    balance: string | null;
-    transferTime: string;
-    lzFee: string;
-    refuelFee: string;
-    refuelOutput: string;
+    balance: number | null = 0;
+    transferTime: number = 0;
+    lzFee: number = 0;
+    refuelFee: number = 0;
+    refuelOutput: string = '';
 
     constructor() {
         makeAutoObservable(this, undefined, {

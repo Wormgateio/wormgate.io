@@ -10,10 +10,10 @@ import Button from "../../components/ui/Button/Button";
 import AppStore from "../../store/AppStore";
 
 function RefuelPage() {
-    const { isConnected, isConnecting } = useAccount();
+    const { isConnected } = useAccount();
     const { closeAccountDrawer, setWalletAddress, setWalletConnected } = AppStore;
 
-    const { connect, connectors, isLoading, pendingConnector } =
+    const { connect, connectors } =
         useConnect({
             onSuccess: (data) => {
                 setWalletAddress(data.account);
