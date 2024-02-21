@@ -66,13 +66,13 @@ const menu = [
         key: 'bridge',
         href: '/bridge',
         name: 'Bridge NFT',
-        description: 'Make a mint our NFT'
+        description: 'Seamlessly transfer NFTs across blockchains'
     },
     {
         key: 'refuel',
         href: '/refuel',
         name: 'Refuel',
-        description: 'Make a mint our NFT'
+        description: 'Send native tokens across networks'
     }
 ];
 

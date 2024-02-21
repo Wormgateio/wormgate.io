@@ -22,22 +22,17 @@ export default function Footer() {
     return (
         <div className={styles.footer}>
             <div className={styles.socials}>
-                <FooterLink href="#">
-                    <Image src="/svg/socials/discord.svg" width={32} height={32} alt="Discord" />
-                    <span>Discord</span>
-                </FooterLink>
-
-                <FooterLink href="https://twitter.com/GetMint_io">
+                <FooterLink href="https://twitter.com/Womex_io">
                     <Image src="/svg/socials/twitter.svg" width={28} height={28} alt="Twitter" />
                     <span>Twitter</span>
                 </FooterLink>
 
-                <FooterLink href="https://getmint.gitbook.io/">
+                <FooterLink href="https://womex.gitbook.io/womex/">
                     <Image src="/svg/socials/gitbook.svg" width={28} height={28} alt="GitBook" />
                     <span>GitBook</span>
                 </FooterLink>
 
-                <FooterLink href="https://medium.com/@GetMint_io">
+                <FooterLink href="https://medium.com/@womex.io">
                     <Image src="/svg/socials/medium.svg" width={28} height={28} alt="Medium" />
                     <span>Medium</span>
                 </FooterLink>
