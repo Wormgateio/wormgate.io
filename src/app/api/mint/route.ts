@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     const createdNFT = await createNFT({
         name: randomNft.name,
         description: '',
-        pinataImageHash: process.env.PINATA_NFTS_FOLDER as string,
+        pinataImageHash: randomNft.hash,
         pinataJsonHash: null,
         pinataFileName: randomNft.fileName,
         user,

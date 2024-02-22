@@ -1,12 +1,12 @@
 import { Flex, Spin } from "antd";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
+
 import PinataImage from "../../../../components/PinataImage";
 import NftStore from "../../../../store/NftStore";
 import ChainLabel from "../../../../components/ChainLabel/ChainLabel";
 import { NFTDto } from "../../../../common/dto/NFTDto";
 import ListCard from "../../../../components/ListCard/ListCard";
-import { BalanceOperationCost } from "../../../../common/enums/BalanceOperationCost";
 
 import styles from "./NftList.module.css";
 
@@ -36,7 +36,7 @@ function NftList() {
                             labelClassName={styles.chainLabel}
                         />
                     }
-                    image={<PinataImage hash={nft.pinataImageHash} name={nft.name} />}
+                    image={<PinataImage hash={nft.pinataImageHash} fileName={nft.pinataFileName} name={nft.name} />}
                     title={nft.name}
                     onClick={() => handleCardClick(nft)}
                     className={styles.listItem}

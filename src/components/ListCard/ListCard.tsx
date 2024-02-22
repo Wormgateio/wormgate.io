@@ -24,8 +24,8 @@ export default function ListCard({ image, label, className, tokenId, onClick }: 
             )}
 
             <footer className={styles.footer}>
-                {label && (<div className={styles.label}>{label}</div>)}
-                {tokenId && (<div>#{tokenId}</div>)}
+                {label && (<div><div className={styles.label}>{label}</div></div>)}
+                {tokenId && (<div><div>#{tokenId}</div></div>)}
             </footer>
         </Flex>
     )

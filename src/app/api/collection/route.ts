@@ -23,19 +23,23 @@ export async function GET(request: Request) {
         select: {
             id: true,
             pinataImageHash: true,
+            pinataFileName: true,
             name: true,
             description: true,
             createdAt: true,
             tokenId: true,
             tweetLog: true,
             chain: true,
-            user: true
+            user: true,
+            isCustom: true
         }
     }).then(list => list.map(item => {
         return ({
             id: item.id,
             name: item.name,
             pinataImageHash: item.pinataImageHash,
+            pinataFileName: item.pinataFileName,
+            isCustom: item.isCustom,
             description: item.description,
             createdAt: item.createdAt,
             tokenId: item.tokenId,

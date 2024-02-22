@@ -1,6 +1,7 @@
 export interface NFTDto {
     id: string;
     pinataImageHash: string;
+    pinataFileName: string;
     name: string;
     description: string;
     createdAt: string;
@@ -9,8 +10,10 @@ export interface NFTDto {
     chainId: string;
     chainNetwork: string;
     chainName: string;
+    chainIdToFirstBridge: string;
     userId: string;
     userWalletAddress: string;
     userName: string | null;
     tweeted: boolean;
+    isCustom: boolean;
 }
