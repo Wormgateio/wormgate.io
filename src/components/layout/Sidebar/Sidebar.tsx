@@ -80,7 +80,12 @@ export default function Sidebar() {
     return (
         <div className={cn.sidebar}>
             <div className={cn.sidebarTop}>
-                <a className={cn.logo} href="/">Womex.io</a>
+                <a className={cn.logo} href="/">
+                    <Space size={10}>
+                        <Image src="/svg/logo/womex.png" alt="" width={48} height={48} />
+                        <Image src="/svg/logo/Womex.io.svg" alt="" width={134} height={34} />
+                    </Space>
+                </a>
 
                 <nav className={cn.menu}>
                     {menu.map(item => (

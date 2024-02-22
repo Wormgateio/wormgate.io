@@ -90,10 +90,10 @@ export async function GET(request: Request) {
         });
     };
 
-    const mints = await aggregateByType(BalanceLogType.Mint, user.id!);
+    const mints = await aggregateByType(BalanceLogType.MintCustom, user.id!);
     const bridges = await aggregateByType(BalanceLogType.Bridge, user.id!);
     const twitterActivityDaily = await aggregateByType(BalanceLogType.TwitterActivityDaily, user.id!);
-    const twitterGetmintSubscription = await aggregateByType(BalanceLogType.TwitterGetmintSubscription, user.id!);
+    const twitterWomexSubscription = await aggregateByType(BalanceLogType.TwitterwGetmintSubscription, user.id!);
     const tweets = await aggregateByType(BalanceLogType.CreateTweet, user.id!);
 
     const refferalMints = await prisma.balanceLog.aggregate({
@@ -104,7 +104,7 @@ export async function GET(request: Request) {
                     select: { id: true }
                 }).then(response => response.map(r => r.id))
             },
-            type: BalanceLogType.Mint,
+            type: BalanceLogType.MintCustom,
             operation: BalanceOperation.Debit
         },
         _sum: { amount: true },
@@ -124,13 +124,13 @@ export async function GET(request: Request) {
             mintsCount: mints._count.amount,
             bridges: bridges._sum.amount || 0,
             bridgesCount: bridges._count.amount,
-            twitterActivity: (twitterActivityDaily._sum.amount || 0) + (twitterGetmintSubscription._sum.amount || 0) + (tweets._sum.amount || 0),
+            twitterActivity: (twitterActivityDaily._sum.amount || 0) + (twitterWomexSubscription._sum.amount || 0) + (tweets._sum.amount || 0),
             refferals: refferalMints._sum.amount || 0,
             refferalsMintCount: refferalMints._count.amount || 0,
         },
         twitter: {
             connected: user.twitterEnabled,
-            followed: !!twitterGetmintSubscription._count.amount && user.followedGetmintTwitter,
+            followed: !!twitterWomexSubscription._count.amount && user.followedGetmintTwitter,
             token,
             user: twitterUser,
         },

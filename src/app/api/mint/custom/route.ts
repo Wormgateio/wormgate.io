@@ -1,12 +1,11 @@
 import { User } from "@prisma/client";
 
-import prisma from "../../../utils/prismaClient";
-import { BadRequest } from "../utils/responses";
-import { BalanceOperation } from "../../../common/enums/BalanceOperation";
-import { BalanceLogType } from "../../../common/enums/BalanceLogType";
-import { BalanceOperationCost } from "../../../common/enums/BalanceOperationCost";
-import { CreateMintDto } from "../../../common/dto/MintDto";
-import { ipfs } from './ipfs';
+import prisma from "../../../../utils/prismaClient";
+import { BadRequest } from "../../utils/responses";
+import { BalanceOperation } from "../../../../common/enums/BalanceOperation";
+import { BalanceLogType } from "../../../../common/enums/BalanceLogType";
+import { BalanceOperationCost } from "../../../../common/enums/BalanceOperationCost";
+import { sendNFTImage } from "../../nft/sendNFTImage";
 
 /**
  * Mint операция
@@ -26,33 +25,43 @@ export async function POST(request: Request) {
         return new BadRequest('User not found');
     }
 
-    const data: CreateMintDto = await request.json();
+    const formData = await request.formData();
 
-    const chainFrom = await prisma.chain.findFirst({
-        where: { network: data.chainFromNetwork }
+    const image: File = formData.get('image') as unknown as File;
+    const name: string = formData.get('name') as unknown as string;
+    const description: string | null = formData.get('description') as unknown as string;
+    const tokenId = parseInt(formData.get('tokenId') as string);
+    const chainNetwork = formData.get('chainNetwork') as string;
+    const transactionHash = formData.get('transactionHash') as string;
+
+    const chain = await prisma.chain.findFirst({
+        where: { network: chainNetwork }
     });
 
-    if (!chainFrom) {
-        return new BadRequest(`Chain network ${data.chainFromNetwork} not found`);
+    if (!chain) {
+        return new BadRequest(`Chain network ${chainNetwork} not found`);
     }
 
-    const randomNft = ipfs[Math.floor(Math.random() * ipfs.length)];
+    const { pinataImageHash, pinataJsonHash } = await sendNFTImage(image, name, description);
+
+    const nftExists = await prisma.nft.findFirst({
+        where: { pinataImageHash }
+    });
+
+    if (nftExists) {
+        return new BadRequest('NFT already minted');
+    }
 
     const createdNFT = await createNFT({
-        name: randomNft.name,
-        description: '',
-        pinataImageHash: process.env.PINATA_NFTS_FOLDER as string,
-        pinataJsonHash: null,
-        pinataFileName: randomNft.fileName,
+        name,
+        description,
+        pinataImageHash,
+        pinataJsonHash,
         user,
         userId: user.id,
-        tokenId: data.tokenId,
-        chainId: chainFrom.id,
-        chainIdToFirstBridge: (await prisma.chain.findFirst({
-            where: { network: data.chainToNetwork }
-        }))?.id!,
-        transactionHash: data.transactionHash,
-        isCustom: false
+        tokenId,
+        chainId: chain.id,
+        transactionHash
     });
 
     return Response.json(createdNFT);
@@ -62,15 +71,12 @@ interface CreateNFTDto {
     name: string;
     description?: string;
     pinataImageHash: string;
-    pinataJsonHash: string | null;
-    pinataFileName: string;
+    pinataJsonHash: string;
     user: User;
     userId: string;
     tokenId: number;
     chainId: string;
-    chainIdToFirstBridge: string;
     transactionHash: string;
-    isCustom: boolean;
 }
 
 async function createNFT(data: CreateNFTDto) {
@@ -80,13 +86,12 @@ async function createNFT(data: CreateNFTDto) {
                 name: data.name,
                 description: data.description,
                 pinataImageHash: data.pinataImageHash,
-                pinataJsonHash: data.pinataJsonHash,
-                pinataFileName: data.pinataFileName,
                 userId: data.userId,
+                pinataJsonHash: data.pinataJsonHash,
                 tokenId: data.tokenId,
                 chainId: data.chainId,
-                chainIdToFirstBridge: data.chainIdToFirstBridge,
-                isCustom: data.isCustom
+                chainIdToFirstBridge: null,
+                isCustom: true
             }
         });
 
@@ -94,13 +99,13 @@ async function createNFT(data: CreateNFTDto) {
            data: {
                userId: data.userId,
                operation: BalanceOperation.Debit,
-               description: 'Начисление за Mint',
-               type: BalanceLogType.Mint,
+               description: 'Начисление за кастомный Mint',
+               type: BalanceLogType.MintCustom,
                amount: BalanceOperationCost.Mint,
             }
         });
 
-        await context.mintLog.create({
+        await context.mintCustomLog.create({
             data: {
                 balanceLogId: balanceLog.id,
                 nftId: nft.id,
@@ -113,7 +118,7 @@ async function createNFT(data: CreateNFTDto) {
                 data: {
                     userId: data.user.reffererId,
                     operation: BalanceOperation.Debit,
-                    description: 'Начисление за минт от реферального пользователя',
+                    description: 'Начисление за кастомный минт от реферального пользователя',
                     type: BalanceLogType.RefferalMint,
                     amount: BalanceOperationCost.RefferalMint,
                 }

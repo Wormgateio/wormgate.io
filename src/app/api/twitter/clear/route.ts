@@ -4,7 +4,7 @@ import prisma from "../../../../utils/prismaClient";
 export async function POST(request: Request) {
     const { userId } = await request.json();
     const logTwitterTypes = [
-        BalanceLogType.TwitterGetmintSubscription,
+        BalanceLogType.TwitterwGetmintSubscription,
         BalanceLogType.TwitterActivityDaily,
         BalanceLogType.CreateTweet
     ];

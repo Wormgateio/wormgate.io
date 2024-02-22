@@ -29,38 +29,42 @@ model User {
 }
 
 model Nft {
-  id              String      @id @default(uuid())
-  pinataImageHash String      @unique @map("pinata_image_hash")
-  pinataJsonHash  String      @unique @map("pinata_json_hash")
-  name            String
-  description     String?     @default("")
-  createdAt       DateTime    @default(now()) @map("created_at")
-  tokenId         Int
-  isCustom        Boolean     @default(false) @map("is_custom")
-  userId          String      @map("user_id")
-  user            User        @relation(fields: [userId], references: [id])
-  mintLog         MintLog[]
-  bridgeLog       BridgeLog[]
-  tweetLog        TweetLog?
-  chainId         String      @map("chain_id")
-  chain           Chain       @relation(fields: [chainId], references: [id])
+  id                   String          @id @default(uuid())
+  pinataImageHash      String          @unique @map("pinata_image_hash")
+  pinataJsonHash       String?         @unique @map("pinata_json_hash")
+  pinataFileName       String?         @map("pinata_file_name")
+  name                 String
+  description          String?         @default("")
+  createdAt            DateTime        @default(now()) @map("created_at")
+  tokenId              Int
+  isCustom             Boolean         @default(false) @map("is_custom")
+  userId               String          @map("user_id")
+  user                 User            @relation(fields: [userId], references: [id])
+  mintLog              MintLog[]
+  mintCustomLog        MintCustomLog[]
+  bridgeLog            BridgeLog[]
+  tweetLog             TweetLog?
+  chainIdToFirstBridge String?         @map("chain_id_to_first_bridge")
+  chainId              String          @map("chain_id")
+  chain                Chain           @relation(fields: [chainId], references: [id])
 
   @@map(name: "nfts")
 }
 
 model BalanceLog {
-  id          String           @id @default(uuid())
-  createdAt   DateTime         @default(now()) @map("created_at")
-  userId      String           @map("user_id")
-  user        User             @relation(fields: [userId], references: [id])
-  amount      Int
-  operation   BalanceOperation
-  type        BalanceLogType
-  description String?
-  mintLog     MintLog?
-  bridgeLog   BridgeLog?
-  tweetLog    TweetLog?
-  refferalLog RefferalLog?
+  id            String           @id @default(uuid())
+  createdAt     DateTime         @default(now()) @map("created_at")
+  userId        String           @map("user_id")
+  user          User             @relation(fields: [userId], references: [id])
+  amount        Int
+  operation     BalanceOperation
+  type          BalanceLogType
+  description   String?
+  mintLog       MintLog?
+  mintCustomLog MintCustomLog?
+  bridgeLog     BridgeLog?
+  tweetLog      TweetLog?
+  refferalLog   RefferalLog?
 
   @@map(name: "balance_logs")
 }
@@ -74,6 +78,17 @@ model MintLog {
   transactionHash String     @map("transaction_hash")
 
   @@map(name: "mint_logs")
+}
+
+model MintCustomLog {
+  id              String     @id @default(uuid())
+  nft             Nft        @relation(fields: [nftId], references: [id])
+  nftId           String     @map("nft_id")
+  balanceLog      BalanceLog @relation(fields: [balanceLogId], references: [id])
+  balanceLogId    String     @unique @map("balance_log_id")
+  transactionHash String     @map("transaction_hash")
+
+  @@map(name: "mint_custom_logs")
 }
 
 model BridgeLog {
@@ -137,5 +152,7 @@ enum BalanceLogType {
   twitter_getmint_subscription
   create_tweet
   mint
+  mint_custom
   bridge
+  refuel
 }

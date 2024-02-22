@@ -10,7 +10,6 @@ import { message } from 'antd';
 import styles from './page.module.css';
 import Card from "../../components/ui/Card/Card";
 import MintForm, { MintSubmitEvent } from "./components/MintForm/MintForm";
-import CostLabel from "../../components/CostLabel/CostLabel";
 import ApiService from "../../services/ApiService";
 import AppStore from "../../store/AppStore";
 import { CONTRACT_ADDRESS } from "../../common/constants";
@@ -59,7 +58,7 @@ function Page() {
                 });
 
                 if (result.result) {
-                    const nft = await ApiService.createMint(data.image!, {
+                    const nft = await ApiService.createCustomMint(data.image!, {
                         name: data.name,
                         description: data.description,
                         metamaskWalletAddress: address as string,

@@ -1,8 +1,10 @@
 export enum BalanceLogType {
     RefferalMint = 'refferal',
     TwitterActivityDaily = 'twitter_activity_daily',
-    TwitterGetmintSubscription = 'twitter_getmint_subscription',
+    TwitterwGetmintSubscription = 'twitter_getmint_subscription',
     CreateTweet = 'create_tweet',
+    MintCustom = 'mint_custom',
     Mint = 'mint',
-    Bridge = 'bridge'
+    Bridge = 'bridge',
+    Refuel = 'refuel'
 }

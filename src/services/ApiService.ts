@@ -1,4 +1,4 @@
-import { CreateMintDto, MintDto } from "../common/dto/MintDto";
+import { CreateCustomMintDto, CreateMintDto, MintDto } from "../common/dto/MintDto";
 import { apiClient } from "../utils/api";
 import { AccountDto } from "../common/dto/AccountDto";
 import { NFTDto } from "../common/dto/NFTDto";
@@ -30,7 +30,12 @@ class ApiService {
         return response.data;
     }
 
-    async createMint(image: File, data: CreateMintDto): Promise<MintDto> {
+    async createMint(data: CreateMintDto): Promise<MintDto> {
+        const response = await apiClient.post('mint', data);
+        return response.data;
+    }
+
+    async createCustomMint(image: File, data: CreateCustomMintDto): Promise<MintDto> {
         const formData = new FormData();
         formData.append('image', image);
         formData.append('name', data.name);
@@ -39,7 +44,7 @@ class ApiService {
         formData.append('chainNetwork', data.chainNetwork);
         formData.append('transactionHash', data.transactionHash);
 
-        const response = await apiClient.post('mint', formData);
+        const response = await apiClient.post('mint/custom', formData);
         return response.data;
     }
 

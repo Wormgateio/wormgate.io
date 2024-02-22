@@ -13,7 +13,7 @@ export async function POST(request: Request) {
                     userId,
                     operation: BalanceOperation.Debit,
                     description: 'Начисление за подписку на аккаунт Womex',
-                    type: BalanceLogType.TwitterGetmintSubscription,
+                    type: BalanceLogType.TwitterwGetmintSubscription,
                     amount: BalanceOperationCost.TwitterGetmintSubscription,
                 }
             });

@@ -10,8 +10,12 @@
     line-height: 1;
     transition: 300ms ease-out;
     text-align: center;
-    border: 1px solid #B087F3;
+    border: none;
     background: linear-gradient(180deg, rgba(176, 135, 243, 0.78) 0%, rgba(151, 87, 255, 0.78) 100%);
+}
+
+.button:not(:disabled) {
+    border: 1px solid #B087F3;
 }
 
 .button:hover {
@@ -35,10 +39,10 @@
 }
 
 .rounded {
-    background: linear-gradient(122deg, #2EA5FB 9.89%, #4340E1 73.1%);
+    background: linear-gradient(122deg, #B087F3 9.89%, #B087F3 73.1%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    border: 1px solid #4340E1;
+    border: 1px solid #B087F3;
 }
 
 .rounded:hover {

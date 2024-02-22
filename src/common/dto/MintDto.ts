@@ -5,11 +5,19 @@ export interface MintDto {
     description?: string;
 }
 
-export interface CreateMintDto {
+export interface CreateCustomMintDto {
     name: string;
     description?: string;
     metamaskWalletAddress: string;
     tokenId: number;
     chainNetwork: string;
+    transactionHash: string;
+}
+
+export interface CreateMintDto {
+    metamaskWalletAddress: string;
+    tokenId: number;
+    chainFromNetwork: string;
+    chainToNetwork: string;
     transactionHash: string;
 }

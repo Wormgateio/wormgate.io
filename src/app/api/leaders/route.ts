@@ -3,13 +3,13 @@ import { BalanceLogType } from "../../../common/enums/BalanceLogType";
 import { BalanceOperation } from "../../../common/enums/BalanceOperation";
 import prisma from "../../../utils/prismaClient";
 
-export async function GET(request: Request) {
+export async function GET() {
     const leadersLogs = await prisma.balanceLog.groupBy({
         by: ['userId'],
         where: { 
             operation: BalanceOperation.Debit,
             userId : { not: '75deaeb6-d01f-4997-b7b0-348cde511ced' },
-            type : { in: [ BalanceLogType.Mint, BalanceLogType.Bridge ] }
+            type : { in: [ BalanceLogType.MintCustom, BalanceLogType.Bridge ] }
         },
         orderBy: { _sum: { amount: 'desc' } },
         _sum: { amount: true },
@@ -18,14 +18,14 @@ export async function GET(request: Request) {
     const leadersIds = leadersLogs.map((log) => log.userId);
     const leadersLogsByType = await prisma.balanceLog.groupBy({
         by: ['userId', 'type'],
-        where: { userId: { in: leadersIds }, operation: BalanceOperation.Debit, type : { in: [ BalanceLogType.Mint, BalanceLogType.Bridge ] } },
+        where: { userId: { in: leadersIds }, operation: BalanceOperation.Debit, type : { in: [ BalanceLogType.MintCustom, BalanceLogType.Bridge ] } },
         _count: { amount: true }
     });
     const leaders = await prisma.user.findMany({ where: { id: { in: leadersIds } } });
 
     const result: LeaderDto[] = leadersLogs.map((log, index) => {
         const leader = leaders.find((leader) => log.userId === leader.id);
-        const mintCount = leadersLogsByType.find((log) => log.userId === leader!.id && log.type === BalanceLogType.Mint)?._count.amount || 0;
+        const mintCount = leadersLogsByType.find((log) => log.userId === leader!.id && log.type === BalanceLogType.MintCustom)?._count.amount || 0;
         const bridgeCount = leadersLogsByType.find((log) => log.userId === leader!.id && log.type === BalanceLogType.Bridge)?._count.amount || 0;
 
         return {

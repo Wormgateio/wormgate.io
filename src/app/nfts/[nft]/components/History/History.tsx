@@ -1,25 +1,26 @@
 import { useMedia } from "use-media";
 import { observer } from "mobx-react-lite";
 import clsx from "clsx";
-import { useEffect, useState } from "react";
 import { Spin } from "antd";
 import Image from "next/image";
 import { intlFormatDistance } from "date-fns";
+
 import { BalanceLogType } from "../../../../../common/enums/BalanceLogType";
 import { OperationHistoryDto } from "../../../../../common/dto/OperationHistoryDto";
 import ChainLabel from "../../../../../components/ChainLabel/ChainLabel";
 import ChainStore from "../../../../../store/ChainStore";
-import ApiService from "../../../../../services/ApiService";
 
 import styles from "./History.module.css";
 
 const OPERATION_ICONS = {
     [BalanceLogType.Mint]: '/svg/mint-operation.svg',
+    [BalanceLogType.MintCustom]: '/svg/mint-operation.svg',
     [BalanceLogType.Bridge]: '/svg/bridge-operation.svg',
 };
 
 const OPERATION_NAME = {
     [BalanceLogType.Mint]: 'Mint',
+    [BalanceLogType.MintCustom]: 'Mint',
     [BalanceLogType.Bridge]: 'Bridge',
 };
 

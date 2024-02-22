@@ -4,15 +4,25 @@ import { useEffect, useMemo } from "react";
 import { Flex, Form } from "antd";
 import { useNetwork } from "wagmi";
 import Image from "next/image";
+import { observer } from "mobx-react-lite";
 
 import styles from "../../page.module.scss";
 import ChainStore from "../../../../store/ChainStore";
 import ChainSelect from "../../../../components/ChainSelect/ChainSelect";
 import Button from "../../../../components/ui/Button/Button";
-import { observer } from "mobx-react-lite";
 
-function SingleMintForm() {
+interface SingleMintFormProps {
+    onSubmit: (formData: SingleMintFormData) => void;
+}
+
+export interface SingleMintFormData {
+    from: string;
+    to: string;
+}
+
+function SingleMintForm({ onSubmit }: SingleMintFormProps) {
     const [form] = Form.useForm();
+    const watchedFormData = Form.useWatch([], form);
 
     const { chain } = useNetwork();
     const { chains } = ChainStore;
@@ -25,18 +35,26 @@ function SingleMintForm() {
         return null;
     }, [chains, chain]);
 
+    const chainsTo = useMemo(() => {
+        return chains.filter(c => c.id !== watchedFormData?.from);
+    }, [chains, watchedFormData?.from])
+
     useEffect(() => {
-        if (selectedChain && chains.length) {
+        if (chains.length) {
             form.setFieldsValue({
-                from: selectedChain?.id,
-                to: chains[0]?.id
+                from: selectedChain?.id || chains[0]?.id,
+                to: chainsTo[0]?.id
             });
         }
     }, [chains, selectedChain]);
 
-    const onSubmit = () => {
-
-    };
+    useEffect(() => {
+        if (watchedFormData?.from === watchedFormData?.to) {
+            form.setFieldsValue({
+                to: chainsTo?.[0]?.id
+            });
+        }
+    }, [watchedFormData]);
 
     return (
         <Form size="large" layout="vertical" form={form} onFinish={onSubmit}>
@@ -50,14 +68,14 @@ function SingleMintForm() {
                 <Image src="/svg/arrows-left-right.svg" alt="" width={20} height={20} />
                 <Form.Item style={{ flex: 1 }} name="to" label="To">
                     <ChainSelect
-                        chains={chains}
+                        chains={chainsTo}
                         className={styles.dropdown}
                     />
                 </Form.Item>
             </Flex>
 
             <Flex align="center" gap={12}>
-                <Button block>Mint</Button>
+                <Button block type="submit">Mint</Button>
                 <Image src="/svg/coins/our-mint.svg" alt="+1" width={56} height={50} />
             </Flex>
         </Form>
