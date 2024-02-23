@@ -1,9 +1,8 @@
-import { Flex, Spin } from "antd";
+import { Flex } from "antd";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 
 import PinataImage from "../../../../components/PinataImage";
-import NftStore from "../../../../store/NftStore";
 import ChainLabel from "../../../../components/ChainLabel/ChainLabel";
 import { NFTDto } from "../../../../common/dto/NFTDto";
 import ListCard from "../../../../components/ListCard/ListCard";
@@ -17,10 +16,6 @@ function NftList({ data }: { data: NFTDto[] }) {
     const handleCardClick = (nft: NFTDto) => {
         router.push(`/nfts/${nft.id}`);
     };
-
-    if (NftStore.loading) {
-        return <Spin size="large" />
-    }
 
     return (
         <Flex gap={24} wrap="wrap" className={styles.list}>

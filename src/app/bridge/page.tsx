@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useAccount } from "wagmi";
+import { Spin } from "antd";
 
 import Card from "../../components/ui/Card/Card";
 import NftList from "./components/NftList/NftList";
@@ -11,7 +12,6 @@ import NftStore from "../../store/NftStore";
 import styles from "./page.module.scss";
 import Button from "../../components/ui/Button/Button";
 import AppStore from "../../store/AppStore";
-import clsx from "clsx";
 
 enum Tabs {
     All,
@@ -20,7 +20,7 @@ enum Tabs {
 }
 
 function Page() {
-    const { address, isConnected } = useAccount();
+    const { address, isConnected, isConnecting } = useAccount();
     const [activeTab, setActiveTab] = useState(Tabs.All);
 
     useEffect(() => {
@@ -54,6 +54,16 @@ function Page() {
         return NftStore.nfts;
     }, [activeTab, NftStore.nfts]);
 
+    if (NftStore.loading || isConnecting) {
+        return <Card title="All NFT"><Spin size="large" /></Card>
+    }
+
+    if (!isConnected) {
+        return <Card title="All NFT">
+            <Button onClick={AppStore.openAccountDrawer}>Connect wallet to get your collection</Button>
+        </Card>
+    }
+
     return (
         <Card title={(
             <div className={styles.title}>
@@ -65,10 +75,6 @@ function Page() {
                 ))}*/}
             </div>
         )}>
-            {!isConnected && (
-                <Button onClick={AppStore.openAccountDrawer}>Connect wallet to get your collection</Button>
-            )}
-
             <NftList data={data} />
         </Card>
     )

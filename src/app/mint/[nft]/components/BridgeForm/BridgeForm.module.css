@@ -1,5 +1,12 @@
+.bridgeTitle {
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.32);
+}
+
 .bridgeTitle > span {
-    color: rgba(255, 255, 255, 0.64);
+    color: #2DAD70;
+    font-size: 12px;
+    font-weight: 600;
 }
 
 .bridgeTitle.successful > span {
@@ -18,14 +25,16 @@
     flex-shrink: 0;
 }
 
-.bridgeScheme {
-    padding: 12px 8px;
-    border-radius: 12px;
-    background-color: #171d2a;
-}
-
 .label {
     flex-grow: 1;
+}
+
+.bridgeSuccessful {
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    background: rgba(0, 0, 0, 0.32);
+    backdrop-filter: blur(2px);
+    padding: 8px 12px;
 }
 
 .footer {

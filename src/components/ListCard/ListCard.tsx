@@ -23,7 +23,7 @@ export default function ListCard({ image, label, className, tokenId, onClick }: 
                 </Flex>
             )}
 
-            <Flex className={styles.footer} justify={label ? 'justify-content' : 'center'}>
+            <Flex className={styles.footer} justify={label ? 'space-between' : 'center'}>
                 {label && (<div><div className={styles.label}>{label}</div></div>)}
                 {tokenId && (<div><div>#{tokenId}</div></div>)}
             </Flex>
