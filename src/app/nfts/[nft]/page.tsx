@@ -111,7 +111,9 @@ function Page({ params }: Props) {
 
                         {account?.id === nft.userId && (
                             <MiniCard title="Bridge">
-                                <BridgeForm nft={nft} className={styles.form} onAfterBridge={refetch} />
+                                <BridgeForm nft={nft} className={styles.form} onAfterBridge={(previousChain, nextChain) => {
+                                    router.push(`/bridge/${nft.pinataImageHash}?from=${previousChain?.network}&to=${nextChain?.network}`);
+                                }} />
                             </MiniCard>
                         )}
                     </div>

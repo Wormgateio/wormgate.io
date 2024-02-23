@@ -14,11 +14,12 @@ import CostLabel from "../../../../../components/CostLabel/CostLabel";
 import ChainLabel from "../../../../../components/ChainLabel/ChainLabel";
 
 import styles from "./BridgeForm.module.css";
+import { ChainDto } from "../../../../../common/dto/ChainDto";
 
 interface Props {
     nft: NFTDto;
     className?: string;
-    onAfterBridge?(): void;
+    onAfterBridge?(previousChain?: ChainDto, nextChain?: ChainDto): void;
 }
 
 function BridgeForm({ nft, className, onAfterBridge }: Props) {
