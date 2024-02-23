@@ -1,0 +1,35 @@
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 40px;
+}
+
+.back {
+  opacity: 0.48;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease-out;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  cursor: pointer;
+  justify-content: center;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.nft {
+  max-width: 256px;
+  margin: auto;
+  gap: 8px;
+  display: flex;
+  flex-direction: column;
+}

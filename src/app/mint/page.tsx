@@ -74,8 +74,6 @@ function Page() {
                         transactionHash: result?.transactionHash!
                     });
 
-                    await messageApi.success('NFT Successfully minted');
-
                     router.push(`/mint/${nft.pinataImageHash}?successful=true`);
 
                     await fetchAccount();

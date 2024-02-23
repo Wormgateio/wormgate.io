@@ -1,142 +1,73 @@
-"use client";
+'use client';
 
 import React, { useEffect, useState } from "react";
+import { observer } from "mobx-react-lite";
+import { Flex, Spin } from "antd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Flex, Spin } from "antd";
-import { observer } from "mobx-react-lite";
+import cn from './page.module.scss';
 
-import styles from "./page.module.css";
-import Card from "../../../components/ui/Card/Card";
-import PinataImage from "../../../components/PinataImage";
-import CostLabel from "../../../components/CostLabel/CostLabel";
-import Button from "../../../components/ui/Button/Button";
-import ChainLabel from "../../../components/ChainLabel/ChainLabel";
-import BridgeForm from "./components/BridgeForm/BridgeForm";
 import NftStore from "../../../store/NftStore";
+import ChainStore from "../../../store/ChainStore";
 import AppStore from "../../../store/AppStore";
-import { twitterApi } from "../../../utils/twitterApi";
-import { TWEET_CONTENT } from "../../../common/constants";
+import ListCard from "../../../components/ListCard/ListCard";
+import PinataImage from "../../../components/PinataImage";
+import { NFTDto } from "../../../common/dto/NFTDto";
+import BridgeForm from "./components/BridgeForm/BridgeForm";
 
 interface NftPageProps {
     params: { nft: string };
-    searchParams: { successful?: boolean };
 }
 
-function NftPage({ params, searchParams }: NftPageProps) {
-    const [nft, setNft] = useState(NftStore.selectNftByHash(params.nft));
-    const { account, createTweet, createIntentTweet,loading, fetchAccount } = AppStore;
+function NftPage({ params }: NftPageProps) {
+    const { fetchAccount } = AppStore;
     const router = useRouter();
+    const [nft, setNft] = useState(NftStore.selectNftByHash(params.nft));
 
     const refetch = () => {
         NftStore.getNfts().then(() => setNft(NftStore.selectNftByHash(params.nft)));
+        fetchAccount();
     }
-
-    const createTweetHandler = async () => {
-        if (account && nft) {
-
-            var status;
-
-            if (account.twitter.connected) {
-                status = await createTweet({
-                    userId: account.id,
-                    nftId: nft.id,
-                });
-                //в случае, если не получилось создать твит через API (сейчас доступно 50 твитов в день), 
-                //то создаём через Intent
-                if (status === 'failed'){
-                    await createIntentTweet({
-                        userId: account.id,
-                        nftId: nft.id,
-                    });
-                    const url = new URL('https://twitter.com/intent/tweet');
-                    url.searchParams.append('text', TWEET_CONTENT);
-                    url.searchParams.append('url', `${process.env.APP_URL}/nfts/${nft.id}`);
-                    window.open(url, '_blank');
-                }
-
-                refetch();
-            } else {
-                const authUrl = twitterApi.getAuthUrl(`${account.id}:${nft.id}`);
-                window.location.assign(authUrl);
-            }
-        }
-    };
-
-    const goToMint = () => {
-        router.push('/');
-    };
 
     useEffect(() => {
         refetch();
-        fetchAccount();
+        ChainStore.getChains();
     }, []);
 
     if (!nft) {
-        return <Spin size={"large"} />
+        return (
+            <Flex align="center" justify="center">
+                <Spin size={"large"} />
+            </Flex>
+        );
     }
 
+    const goToBack = () => router.push('/');
+
+    const handleCardClick = (nft: NFTDto) => router.push(`/nfts/${nft.id}`);
+
     return (
-        <Card className={styles.page} title={searchParams.successful && (
-            <Flex align="center" gap={12}>
-                <Image src="/svg/congratulations.svg" width={32} height={32} alt="Congratulations" className={styles.titleIcon} />
-                <span className={styles.title}>Congratulations!</span>
-                <CostLabel className={styles.badge} cost={20} size="medium" success>+20 points</CostLabel>
-            </Flex>
-        )}>
-            {nft && (
-                <div className={styles.nft}>
-                    <h2 className={styles.name}>{nft.name}</h2>
-                    <div className={styles.image}>
-                        <PinataImage hash={nft.pinataImageHash} name={nft.name} />
-                    </div>
-                </div>
-            )}
+        <>
+            <div className={cn.title}>
+                Congratulation! NFT is done. You get
+                <Image src="/svg/coins/onemint.svg" alt={''} width={82} height={49} />
+            </div>
 
-            <Flex gap={8} align="center" className={styles.chainInfo}>
-                <strong>Your NFT is now live on the</strong>
-                <ChainLabel
-                    network={nft?.chainNetwork || ''}
-                    label={nft?.chainName || ''}
-                    labelClassName={styles.chainLabel} />
-            </Flex>
+            <div className={cn.back} onClick={goToBack}>
+                <Image src="/svg/ui/back-arrow.svg" width={24} height={24} alt="" />
+                <span>Back to Mint Page</span>
+            </div>
 
-            <BridgeForm nft={nft} className={styles.bridge} onAfterBridge={refetch} />
-
-            {loading ? (
-                <Flex gap={12} align="center" justify="center">
-                    <Spin size="large" />
-                    <span>Creating tweet...</span>
-                </Flex>
-            ) : nft.tweeted ? (
-                <div className={styles.tweet}>
-                    <div className={styles.tweetText}>
-                        <Image src="/svg/ui/successful.svg" width={24} height={24} alt="" />Thank you for your twit <CostLabel cost={10} success />
-                    </div>
-                    <Flex align="center" gap={8} className={styles.tweetButtons}>
-                        <button className={styles.resultBtn} onClick={goToMint}>Mint again <CostLabel cost={20} /></button>
-                        {/* <button className={styles.resultBtn}>Invite friends <CostLabel cost={20} /></button> */}
-                    </Flex>
-                </div>
-            ) : (
-                <div className={styles.tweet}>
-                    <div className={styles.tweetText}>Tell your friends about it <CostLabel cost={10} /></div>
-                    <Button className={styles.tweetBtn} block onClick={createTweetHandler}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="22" viewBox="0 0 25 22" fill="none">
-                            <g clipPath="url(#clip0_577_1460)">
-                                <path d="M1.04053 0.453369L9.93285 12.0876L0.984375 21.5467H2.99832L10.8327 13.2651L17.1627 21.5467H24.0162L14.6235 9.25808L22.9527 0.453369H20.9388L13.7237 8.08056L7.89405 0.453369H1.04053ZM4.00218 1.90495H7.15071L21.0541 20.0949H17.9055L4.00218 1.90495Z" fill="white"/>
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_577_1460">
-                                    <rect width="24" height="22" fill="white" transform="translate(0.5)"/>
-                                </clipPath>
-                            </defs>
-                        </svg> Tweet
-                    </Button>
-                </div>
-            )}
-        </Card>
-    )
+            <div className={cn.nft}>
+                <ListCard
+                    tokenId={nft.tokenId}
+                    image={<PinataImage hash={nft.pinataImageHash} fileName={nft.pinataFileName} name={nft.name} />}
+                    onClick={() => handleCardClick(nft)}
+                />
+                <BridgeForm chainIdToFirstBridge={nft.chainIdToFirstBridge} simple nft={nft} onAfterBridge={refetch} />
+            </div>
+        </>
+    );
 }
 
 export default observer(NftPage);

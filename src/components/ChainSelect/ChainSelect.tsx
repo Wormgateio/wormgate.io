@@ -74,7 +74,7 @@ function ChainSelect({ value, className, onChange, chains, priceList }: Props) {
                 onClick: ({ key }) => handleSelect(key),    
             }}
         >
-            <Flex align="center" gap={8} className={clsx(styles.select, className)}>
+            <Flex align="center" justify="center" gap={8} className={clsx(styles.select, className)}>
                 {chainLogo && (<Image src={chainLogo} width={24} height={24} alt="" />)}
 
                 <span className={styles.label}>{chain?.name || ''}</span>
@@ -85,8 +85,6 @@ function ChainSelect({ value, className, onChange, chains, priceList }: Props) {
                         <span>${bridgePrice}</span>
                     </Flex>
                 )}
-
-                <Image src="/svg/ui/dropdown-arrow.svg" width={24} height={24} alt="" />
             </Flex>
         </Dropdown>
     )

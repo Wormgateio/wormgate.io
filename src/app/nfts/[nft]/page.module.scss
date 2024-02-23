@@ -7,13 +7,17 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    opacity: 0.64;
+    opacity: 0.48;
     transition: all 0.3s ease-out;
     color: #fff;
     font-size: 14px;
     font-weight: 500;
     margin-bottom: 24px;
     cursor: pointer;
+
+    &:hover {
+        opacity: 1;
+    }
 }
 
 .back:hover {

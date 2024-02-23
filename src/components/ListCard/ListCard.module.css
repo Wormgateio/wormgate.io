@@ -54,7 +54,6 @@
     left: 0;
     padding: 11px 8px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     transition: 0.4s ease-out;

@@ -31,7 +31,8 @@ export async function GET(request: Request) {
             tweetLog: true,
             chain: true,
             user: true,
-            isCustom: true
+            isCustom: true,
+            chainIdToFirstBridge: true
         }
     }).then(list => list.map(item => {
         return ({
@@ -47,6 +48,7 @@ export async function GET(request: Request) {
             chainId: item.chain.id,
             chainNetwork: item.chain.network,
             chainName: item.chain.name,
+            chainIdToFirstBridge: item.chainIdToFirstBridge,
             userId: item.user.id,
             userWalletAddress: item.user.metamaskWalletAddress,
             userName: item.user.twitterLogin,

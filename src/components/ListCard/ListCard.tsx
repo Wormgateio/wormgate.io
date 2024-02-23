@@ -23,10 +23,10 @@ export default function ListCard({ image, label, className, tokenId, onClick }: 
                 </Flex>
             )}
 
-            <footer className={styles.footer}>
+            <Flex className={styles.footer} justify={label ? 'justify-content' : 'center'}>
                 {label && (<div><div className={styles.label}>{label}</div></div>)}
                 {tokenId && (<div><div>#{tokenId}</div></div>)}
-            </footer>
+            </Flex>
         </Flex>
     )
 }

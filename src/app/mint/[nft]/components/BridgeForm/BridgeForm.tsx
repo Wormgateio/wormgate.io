@@ -13,14 +13,15 @@ import { NFTDto } from "../../../../../common/dto/NFTDto";
 import RefuelSwitch from "../../../../../components/RefuelSwitch/RefuelSwitch";
 import { useBridge } from "../../../../../common/useBridge";
 
-
 interface Props {
     nft: NFTDto;
     onAfterBridge: () => void;
     className?: string;
+    simple?: boolean;
+    chainIdToFirstBridge?: string;
 }
 
-export default function BridgeForm({ className, nft, onAfterBridge }: Props) {
+export default function BridgeForm({ className, nft, onAfterBridge, simple, chainIdToFirstBridge }: Props) {
     const {
         bridgePriceList,
         chains,
@@ -57,31 +58,28 @@ export default function BridgeForm({ className, nft, onAfterBridge }: Props) {
 
     return (
         <Flex vertical gap={12} className={className}>
-            <Flex gap={8} align="center" className={styles.bridgeTitle}>
-                <span>Bridge your NFT</span>
-                <CostLabel cost={10} />
-            </Flex>
+            {!simple && (
+                <RefuelSwitch
+                    refuel={refuelCost}
+                    onChangeRefuelGas={onChangeRefuelGas}
+                    checked={refuelEnabled}
+                    onChange={onChangeRefuelEnabled}
+                    className={styles.switch}
+                />
+            )}
 
-            <RefuelSwitch
-                refuel={refuelCost}
-                onChangeRefuelGas={onChangeRefuelGas}
-                checked={refuelEnabled}
-                onChange={onChangeRefuelEnabled}
-                className={styles.switch}
-            />
-
-            <div className={clsx(styles.footer, isPending && styles.footerPending)}>
-                <Flex gap={8} className={styles.formActions}>
+            <div className={clsx(styles.footer)}>
+                <Flex gap={8} vertical={simple} className={styles.formActions}>
                     <ChainSelect
                         chains={chains}
-                        value={selectedChain}
+                        value={chainIdToFirstBridge || selectedChain}
                         className={styles.dropdown}
                         onChange={onChangeChain}
                         priceList={bridgePriceList}
                     />
                     {isNeedChangeChain
-                        ? <Button className={styles.sendBtn} onClick={switchNetwork}>Switch network</Button>
-                        : <Button className={styles.sendBtn} onClick={onBridge}>Send</Button>
+                        ? <Button block={simple} className={styles.sendBtn} onClick={switchNetwork}>Switch network</Button>
+                        : <Button block={simple} className={styles.sendBtn} onClick={onBridge}>Bridge</Button>
                     }
                 </Flex>
 

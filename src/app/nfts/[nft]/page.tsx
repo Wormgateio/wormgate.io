@@ -66,11 +66,9 @@ function Page({ params }: Props) {
 
     if (isLoading) {
         return (
-            <Card className={styles.page}>
-                <Flex align="center" justify="center">
-                    <Spin size="large" />
-                </Flex>
-            </Card>
+            <Flex align="center" justify="center">
+                <Spin size="large" />
+            </Flex>
         );
     }
 
