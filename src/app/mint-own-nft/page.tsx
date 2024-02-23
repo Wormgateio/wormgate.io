@@ -15,7 +15,6 @@ import AppStore from "../../store/AppStore";
 import { CONTRACT_ADDRESS } from "../../common/constants";
 import { NetworkName } from "../../common/enums/NetworkName";
 import { mintNFT } from "../../core/contractController";
-import ChainStore from "../../store/ChainStore";
 import NftStore from "../../store/NftStore";
 
 function Page() {
@@ -95,10 +94,6 @@ function Page() {
             }
         }
     };
-
-    useEffect(() => {
-        ChainStore.getChains();
-    }, []);
 
     useEffect(() => {
         const tweeted = searchParams.get('tweeted');

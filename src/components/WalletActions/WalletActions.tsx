@@ -1,17 +1,16 @@
 'use client'
 
-import { Flex } from "antd";
+import { Flex, Space } from "antd";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { observer } from "mobx-react-lite";
+import styles from './WalletActions.module.scss';
 
 import Button from "../ui/Button/Button";
 import AccountAddress from "../AccountAddress/AccountAddress";
 import AppStore from "../../store/AppStore";
 import NetworkChainSelect from "../NetworkChainSelect/NetworkChainSelect";
-
-import styles from './WalletActions.module.css';
-
+import { Crystal } from "./Crystal/Crystal";
 function WalletActions() {
     const { account, openAccountDrawer, setWalletConnected, setWalletAddress } = AppStore;
 
@@ -35,6 +34,29 @@ function WalletActions() {
         return <Button className={styles.btn}>Connect a Wallet</Button>;
     }
 
+    const crystals = [
+        {
+            number: 2,
+            value: account?.balance.mintsCount || 0,
+            color: '#4EFFFF'
+        },
+        {
+            number: 4,
+            value: account?.balance.mintsCustomCount || 0,
+            color: '#00D670'
+        },
+        {
+            number: 1,
+            value: account?.balance.bridgesCount || 0,
+            color: '#DB4BFF'
+        },
+        {
+            number: 3,
+            value: account?.balance.refuelCount || 0,
+            color: '#FFC328'
+        }
+    ];
+
     return (
         <div>
             {!isConnected ? (
@@ -42,16 +64,29 @@ function WalletActions() {
                     {isConnecting ? 'Connecting...' : 'Connect Metamask'}
                 </Button>
             ) : (
-                <Flex gap={10}>
-                    <NetworkChainSelect />
+                <Flex gap={19}>
+                    <div className={styles.account}>
+                        <NetworkChainSelect />
 
-                    {address && (
-                        <Button className={styles.btn} onClick={openAccountDrawer}>
-                            {account?.twitter.user?.username ? account.twitter.user.username : (
-                                <AccountAddress address={address} />
-                            )}
-                        </Button>
-                    )}
+                        {address && (
+                            <button className={styles.btn} onClick={openAccountDrawer}>
+                                {account?.twitter.user?.username ? account.twitter.user.username : (
+                                    <AccountAddress address={address} />
+                                )}
+                            </button>
+                        )}
+                    </div>
+
+                    <Space size={12}>
+                        {crystals.map(item => (
+                            <Space key={item.number} size={4}>
+                                <Crystal number={item.number} />
+                                <div className={styles.counterWrap} style={{ color: item.color }}>
+                                    <div className={styles.counter}>{item.value}</div>
+                                </div>
+                            </Space>
+                        ))}
+                    </Space>
                 </Flex>
             )}
         </div>

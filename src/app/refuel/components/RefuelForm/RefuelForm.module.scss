@@ -17,6 +17,30 @@
   }
 }
 
+.maxButton {
+  color: rgba(176, 135, 243, 0.64);
+  font-size: 14px;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.input {
+  height: 58px;
+  font-size: 22px;
+  font-weight: 600;
+  font-family: inherit;
+}
+
+.maxRefuel {
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 14px;
+  font-weight: 400;
+  text-align: right;
+  margin-top: 4px;
+}
+
 .amount {
   :global label {
     width: 100%;

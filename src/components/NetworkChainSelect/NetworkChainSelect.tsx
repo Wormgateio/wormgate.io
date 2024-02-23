@@ -76,10 +76,10 @@ export default function NetworkChainSelect() {
                 }}
                 rootClassName={styles.dropdown}
             >
-                <Flex align="center" gap={8} className={clsx(styles.dropdownBtn, { [styles.wrong]: !isKnownChain })}>
+                <Flex align="center" gap={8} className={clsx('network-chain-select', styles.dropdownBtn, { [styles.wrong]: !isKnownChain })}>
                     {chainLogo && <Image src={chainLogo} width={24} height={24} alt="" />}
 
-                    <div className={styles.value}>{chainName}</div>
+                    <div className={clsx(styles.value, 'network-chain-select__name')}>{chainName}</div>
 
                     <Image src="/svg/ui/dropdown-arrow.svg" width={24} height={24} alt="" />
                 </Flex>

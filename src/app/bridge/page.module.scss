@@ -1,0 +1,23 @@
+.title {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.tab {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.40);
+    font-size: 24px;
+    font-weight: 700;
+    transition: .2s;
+
+    &:hover:not(.tabActive) {
+        color: rgba(255, 255, 255, 0.60);
+    }
+
+    &Active {
+        color: #fff;
+    }
+}

@@ -7,7 +7,7 @@ import WalletActions from "../../WalletActions/WalletActions";
 import MobileMenu from "../../MobileMenu/MobileMenu";
 import AppStore from "../../../store/AppStore";
 
-import styles from './Header.module.css';
+import styles from './Header.module.scss';
 
 function Header() {
     const { metamaskWalletAddress, fetchAccount } = AppStore
@@ -22,12 +22,7 @@ function Header() {
     return (
         <div className={styles.header}>
             <div></div>
-            {!isTablet && (
-                <>
-                    {/*<Navigation />*/}
-                    <WalletActions />
-                </>
-            )}
+            {!isTablet && <WalletActions />}
             {isTablet && (<MobileMenu />)}
         </div>
     );

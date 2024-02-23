@@ -14,7 +14,11 @@ export const CONTRACT_ADDRESS: Record<NetworkName, CryptoAddress> = {
     [NetworkName.Arbitrum]: '0x809E8c06e6110CD6a055a7d2044EF7e0B29Ce2e3',
     [NetworkName.Avalanche]: '0x7a9ed9A5EF8dF626Bf934AaCe84c66267b37842c',
     [NetworkName.ZkSync]: '0x569aA521b05752D22de8B3DBb91D92f65baa7E6f',
-    [NetworkName.BSC]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42'
+    [NetworkName.BSC]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
+    [NetworkName.Celo]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
+    [NetworkName.Core]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
+    [NetworkName.Gnosis]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
+    [NetworkName.Harmony]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
 };
 
 export const UnailableNetworks: Record<NetworkName, NetworkName[]> = {
@@ -57,9 +61,13 @@ export const UnailableNetworks: Record<NetworkName, NetworkName[]> = {
         NetworkName.Mantle,
         NetworkName.Scroll,
     ],
+    [NetworkName.Celo]: [],
+    [NetworkName.Core]: [],
+    [NetworkName.Gnosis]: [],
+    [NetworkName.Harmony]: [],
 }
 
 export const DEFAULT_REFUEL_COST_USD = 0.25;
 export const REFUEL_AMOUNT_USD = [DEFAULT_REFUEL_COST_USD, 0.5, 0.75, 1];
 
-export const TWEET_CONTENT = "Just created a unique omnichain NFT at @GetMint_io. Mint NFT, and make bridges using Layer Zero and earn future project tokens.\nCheck out my NFT: ";
+export const TWEET_CONTENT = "Just created a unique omnichain NFT at @Womex_io. Mint NFT, and make bridges using Layer Zero and earn future project tokens.\nCheck out my NFT: ";

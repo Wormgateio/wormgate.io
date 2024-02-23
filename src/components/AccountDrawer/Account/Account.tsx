@@ -7,7 +7,6 @@ import { observer } from "mobx-react-lite";
 
 import styles from './Account.module.css';
 import Button from "../../ui/Button/Button";
-import CostLabel from "../../CostLabel/CostLabel";
 import IconBtn from "../../ui/IconBtn/IconBtn";
 import FormControl from "../../ui/FormControl/FormControl";
 import Input from "../../ui/Input/Input";
@@ -114,7 +113,6 @@ function Account() {
 
     useEffect(() => {
         void fetchAccount();
-        ChainStore.getChains();
     }, [fetchAccount, address]);
 
     const calculateEarnedClaims = async () => {
@@ -233,9 +231,8 @@ function Account() {
                                     <Flex align="center" gap={8}>
                                         {account.twitter.followed && (<Image src="/svg/ui/successful.svg" width={24} height={24} alt="" />)}
                                         <span>Subscribe to our social network</span>
-                                        <CostLabel cost={30} success={account.twitter.followed} />
                                     </Flex>
-                                    <Button block onClick={goToFollow} disabled={account.twitter.followed || !account.twitter.connected}>Follow <strong>@GetMint_io</strong></Button>
+                                    <Button block onClick={goToFollow} disabled={account.twitter.followed || !account.twitter.connected}>Follow <strong>@Womex_io</strong></Button>
                                 </>
                             )}
                         </Flex>
@@ -284,38 +281,6 @@ function Account() {
                         >
                             Claim {earnedClaims}
                         </Button>
-                    </div>
-
-                    <div className={styles.card}>
-                        <div className={styles.cardTitle}>Rewards</div>
-                        <div className={styles.divider}></div>
-                        {account ? (
-                            <>
-                                <div className={styles.rewardsList}>
-                                    <RewardItem
-                                        name="Refferals mints"
-                                        count={account.balance.refferalsMintCount}
-                                        amount={`${account.balance.refferals} XP`}
-                                    />
-                                    <RewardItem
-                                        name="Twitter activity"
-                                        amount={`${account.balance.twitterActivity} XP`}
-                                    />
-                                    <RewardItem
-                                        name="Mints"
-                                        count={account.balance.mintsCount}
-                                        amount={`${account.balance.mints} XP`}
-                                    />
-                                    <RewardItem
-                                        name="Bridges"
-                                        count={account.balance.bridgesCount}
-                                        amount={`${account.balance.bridges} XP`}
-                                    />
-                                </div>
-                                <div className={styles.divider}></div>
-                                <div><RewardItem name="Total" amount={`${account.balance.total} XP`} isTotal /></div>
-                            </>
-                        ) : <Spin />}
                     </div>
                 </main>
 

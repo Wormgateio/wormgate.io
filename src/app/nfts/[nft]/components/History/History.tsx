@@ -82,13 +82,6 @@ function History({ history, loading, className }: Props) {
 
     return (
         <div className={clsx(styles.container, className)}>
-            <div className={styles.head}>
-                <div className={styles.row}>
-                    <div>Action</div>
-                    <div>Network</div>
-                    <div>Time</div>
-                </div>
-            </div>
             <div className={styles.body}>
                 {loading && <Spin size="large" />}
                 {!loading && !history.length && <strong>Operation history is empty</strong>}

@@ -9,8 +9,12 @@ export interface AccountDto {
         refferalsMintCount: number;
         mintsCount: number;
         mints: number;
+        mintsCustomCount: number;
+        mintsCustom: number;
         bridgesCount: number;
         bridges: number;
+        refuelCount: number;
+        refuel: number;
         twitterActivity: number;
         total: number;
     },

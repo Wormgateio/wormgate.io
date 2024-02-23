@@ -90,7 +90,8 @@ export async function GET(request: Request) {
         });
     };
 
-    const mints = await aggregateByType(BalanceLogType.MintCustom, user.id!);
+    const mints = await aggregateByType(BalanceLogType.Mint, user.id!);
+    const mintsCustom = await aggregateByType(BalanceLogType.MintCustom, user.id!);
     const bridges = await aggregateByType(BalanceLogType.Bridge, user.id!);
     const twitterActivityDaily = await aggregateByType(BalanceLogType.TwitterActivityDaily, user.id!);
     const twitterWomexSubscription = await aggregateByType(BalanceLogType.TwitterwGetmintSubscription, user.id!);
@@ -104,7 +105,9 @@ export async function GET(request: Request) {
                     select: { id: true }
                 }).then(response => response.map(r => r.id))
             },
-            type: BalanceLogType.MintCustom,
+            type: {
+                in: [BalanceLogType.MintCustom, BalanceLogType.Mint]
+            },
             operation: BalanceOperation.Debit
         },
         _sum: { amount: true },
@@ -122,8 +125,12 @@ export async function GET(request: Request) {
             total: total._sum.amount || 0,
             mints: mints._sum.amount || 0,
             mintsCount: mints._count.amount,
+            mintsCustom: mintsCustom._sum.amount || 0,
+            mintsCustomCount: mintsCustom._count.amount,
             bridges: bridges._sum.amount || 0,
             bridgesCount: bridges._count.amount,
+            refuel: 0,
+            refuelCount: 0,
             twitterActivity: (twitterActivityDaily._sum.amount || 0) + (twitterWomexSubscription._sum.amount || 0) + (tweets._sum.amount || 0),
             refferals: refferalMints._sum.amount || 0,
             refferalsMintCount: refferalMints._count.amount || 0,

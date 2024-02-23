@@ -7,7 +7,7 @@ import {
     arbitrumNova,
     avalanche,
     base,
-    bsc,
+    bsc, celo, coreDao, gnosis, harmonyOne,
     linea,
     mantle,
     optimism,
@@ -34,7 +34,11 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
         polygonZkEvm,
         mantle,
         zkSync,
-        bsc
+        bsc,
+        celo,
+        harmonyOne,
+        gnosis,
+        coreDao
     ],
     [
         publicProvider()

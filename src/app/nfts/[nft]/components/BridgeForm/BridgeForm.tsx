@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import clsx from "clsx";
 import { useMedia } from "use-media";
-import { Spin } from "antd";
+import { Flex, Spin } from "antd";
 import Image from "next/image";
 
 import { NFTDto } from "../../../../../common/dto/NFTDto";
@@ -81,12 +81,13 @@ function BridgeForm({ nft, className, onAfterBridge }: Props) {
             <div className={styles.actions}>
                 <ChainSelect chains={chains} value={selectedChain} onChange={onChangeChain} priceList={bridgePriceList} />
 
-                <div>
+                <Flex align="center" gap={12}>
                     {isNeedChangeChain
                         ? <Button block className={styles.sendBtn} onClick={switchNetwork}>Switch network</Button>
                         : <Button block className={styles.sendBtn} onClick={onBridge}>Bridge</Button>
                     }
-                </div>
+                    <Image src="/svg/coins/bridge.svg" alt="+1" width={56} height={50} />
+                </Flex>
             </div>
         </div>
     );

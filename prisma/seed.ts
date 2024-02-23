@@ -105,6 +105,38 @@ const chains = [
         lzChain: 102,
         token: 'BNB',
         rpcUrl: 'https://rpc.ankr.com/bsc'
+    },
+    {
+        chainId: 42220,
+        name: 'Celo',
+        network: 'celo',
+        lzChain: 125,
+        token: 'CELO',
+        rpcUrl: 'https://forno.celo.org'
+    },
+    {
+        chainId: 1666600000,
+        name: 'Harmony',
+        network: 'harmony',
+        lzChain: 116,
+        token: 'ONE',
+        rpcUrl: 'https://api.harmony.one'
+    },
+    {
+        chainId: 1116,
+        name: 'Core',
+        network: 'coreDao',
+        lzChain: 153,
+        token: 'CORE',
+        rpcUrl: 'https://rpc.coredao.org'
+    },
+    {
+        chainId: 100,
+        name: 'Gnosis',
+        network: 'gnosis',
+        lzChain: 145,
+        token: 'xDAI',
+        rpcUrl: 'https://rpc.gnosischain.com'
     }
 ];
 

@@ -16,6 +16,7 @@ function RefuelForm() {
     const [form] = Form.useForm();
     const { chain } = useNetwork();
     const { chains } = ChainStore;
+    const watchedFormData = Form.useWatch([], form);
 
     const selectedChain = useMemo(() => {
         if (chain && chains.length) {
@@ -24,6 +25,10 @@ function RefuelForm() {
 
         return null;
     }, [chains, chain]);
+
+    useEffect(() => {
+        ChainStore.getChains();
+    }, []);
 
     useEffect(() => {
         if (selectedChain && chains.length) {
@@ -37,6 +42,8 @@ function RefuelForm() {
     const onSubmit = (formData: any) => {
         console.log(formData);
     };
+
+    const fromChain = ChainStore.getChainById(watchedFormData?.from);
 
     return (
         <Form size="large" layout="vertical" form={form} onFinish={onSubmit}>
@@ -59,11 +66,11 @@ function RefuelForm() {
             <Form.Item name="amount" className={cn.amount} label={
                 <Flex align="center" justify="space-between">
                     <div>Refuel Amount</div>
-                    <div>Balance: 0 <span>Max</span></div>
+                    <div>Balance: 0 <button className={cn.maxButton}>Max</button></div>
                 </Flex>
             }>
-                <Input placeholder={`0 ${selectedChain?.name || 'ETH'}`} />
-                <div>Max Refuel: 0</div>
+                <Input rootClassName={cn.input} placeholder={`0 ${fromChain?.token || 'ETH'}`} />
+                <div className={cn.maxRefuel}>Max Refuel: 0</div>
             </Form.Item>
 
             <Divider />
@@ -87,8 +94,9 @@ function RefuelForm() {
                 </Flex>
             </div>
 
-            <Flex>
+            <Flex align="center" gap={12}>
                 <Button block>Refuel</Button>
+                <Image src="/svg/coins/refuel.svg" alt="+1" width={56} height={50} />
             </Flex>
         </Form>
     )

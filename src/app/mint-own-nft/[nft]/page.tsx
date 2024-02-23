@@ -16,7 +16,6 @@ import BridgeForm from "./components/BridgeForm/BridgeForm";
 import NftStore from "../../../store/NftStore";
 import AppStore from "../../../store/AppStore";
 import { twitterApi } from "../../../utils/twitterApi";
-import ChainStore from "../../../store/ChainStore";
 import { TWEET_CONTENT } from "../../../common/constants";
 
 interface NftPageProps {
@@ -70,7 +69,6 @@ function NftPage({ params, searchParams }: NftPageProps) {
 
     useEffect(() => {
         refetch();
-        ChainStore.getChains();
         fetchAccount();
     }, []);
 

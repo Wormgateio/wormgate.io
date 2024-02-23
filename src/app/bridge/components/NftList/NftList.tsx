@@ -10,9 +10,9 @@ import ListCard from "../../../../components/ListCard/ListCard";
 
 import styles from "./NftList.module.css";
 
-function NftList() {
+function NftList({ data }: { data: NFTDto[] }) {
     const router = useRouter();
-    const nfts = [...NftStore.nfts].sort((a, b) => a.chainName.localeCompare(b.chainName));
+    const nfts = [...data].sort((a, b) => a.chainName.localeCompare(b.chainName));
 
     const handleCardClick = (nft: NFTDto) => {
         router.push(`/nfts/${nft.id}`);

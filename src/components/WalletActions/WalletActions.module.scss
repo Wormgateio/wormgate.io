@@ -1,0 +1,71 @@
+.account {
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #404851;
+
+    :global(.network-chain-select) {
+        background: none;
+        width: auto;
+        border-radius: 0;
+        border-right: 1px solid #404851;
+        padding: 9px 12px;
+        gap: 2px !important;
+    }
+
+    :global(.network-chain-select img) {
+        width: 20px;
+        height: 20px;
+    }
+
+    :global(.network-chain-select__name) {
+        display: none;
+    }
+}
+
+button.btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    position: relative;
+    cursor: pointer;
+    padding: 9px 12px;
+}
+
+.counterWrap {
+    min-width: 46px;
+    height: 23px;
+    position: relative;
+    background: transparent;
+    padding: 4px 8px;
+    text-align: center;
+}
+
+.counterWrap::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    padding: 0.09em;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 27px;
+    background: linear-gradient(90deg, currentColor, rgba(0,0,0,.32));
+    -webkit-mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+    mask:
+            linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+.counter {
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+
+}

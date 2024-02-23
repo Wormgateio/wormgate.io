@@ -1,3 +1,8 @@
+.page {
+    max-width: 772px;
+    margin: auto;
+}
+
 .back {
     display: inline-flex;
     align-items: center;
@@ -5,14 +10,20 @@
     opacity: 0.64;
     transition: all 0.3s ease-out;
     color: #fff;
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 24px;
     cursor: pointer;
 }
 
 .back:hover {
     opacity: 1;
+}
+
+.nftName {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
 }
 
 .title {
@@ -24,6 +35,17 @@
     align-items: flex-start;
     gap: 24px;
     width: 100%;
+}
+
+.descrItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+
+    & > div:first-child {
+        color: rgba(255, 255, 255, 0.64);
+    }
 }
 
 .card {
@@ -43,13 +65,13 @@
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    border-radius: 12px;
-    padding: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    border: 1px solid #A46CFF;
+    box-shadow: 0px 0px 59.391px 0px rgba(176, 135, 243, 0.32) inset;
     background: #161D27;
     width: 362px;
     height: 362px;
-    flex: 1;
+    overflow: hidden;
 }
 
 .image img {

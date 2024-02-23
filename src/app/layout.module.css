@@ -22,6 +22,10 @@
     flex-shrink: 0;
 }
 
+.wrapperHeader {
+    margin-bottom: 48px;
+}
+
 .main {
     flex: 1;
     padding: 20px;
