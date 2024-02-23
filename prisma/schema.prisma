@@ -30,7 +30,7 @@ model User {
 
 model Nft {
   id                   String          @id @default(uuid())
-  pinataImageHash      String          @unique @map("pinata_image_hash")
+  pinataImageHash      String?         @unique @map("pinata_image_hash")
   pinataJsonHash       String?         @unique @map("pinata_json_hash")
   pinataFileName       String?         @map("pinata_file_name")
   name                 String
