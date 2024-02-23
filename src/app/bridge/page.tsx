@@ -57,11 +57,12 @@ function Page() {
     return (
         <Card title={(
             <div className={styles.title}>
-                {tabs.map(tab => (
+                All NFT
+                {/*{tabs.map(tab => (
                     <button key={tab.key} className={clsx(styles.tab, {
                         [styles.tabActive]: activeTab === tab.key
                     })} onClick={() => setActiveTab(tab.key)}>{tab.label}</button>
-                ))}
+                ))}*/}
             </div>
         )}>
             {!isConnected && (

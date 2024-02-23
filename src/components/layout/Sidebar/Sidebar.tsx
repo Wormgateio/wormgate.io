@@ -10,6 +10,7 @@ import cn from './Sidebar.module.scss';
 import Footer from "../Footer/Footer";
 import { Space } from "antd";
 import SoonLabel from "../../SoonLabel/SoonLabel";
+import Logo from "../../Logo/Logo";
 
 interface MenuItemProps {
     href: string;
@@ -53,7 +54,7 @@ const menu = [
         name: 'Mint NFT',
         description: 'Make a mint our NFT'
     },
-    {
+    /*{
         key: 'mintOwn',
         href: '/mint-own-nft',
         name: (
@@ -61,7 +62,7 @@ const menu = [
         ),
         disabled: true,
         description: 'Create NFT from your own jpg, png picture'
-    },
+    },*/
     {
         key: 'bridge',
         href: '/bridge',
@@ -80,12 +81,9 @@ export default function Sidebar() {
     return (
         <div className={cn.sidebar}>
             <div className={cn.sidebarTop}>
-                <a className={cn.logo} href="/">
-                    <Space size={10}>
-                        <Image src="/svg/logo/womex.png" alt="" width={48} height={48} />
-                        <Image src="/svg/logo/Womex.io.svg" alt="" width={134} height={34} />
-                    </Space>
-                </a>
+                <div className={cn.logo}>
+                    <Logo />
+                </div>
 
                 <nav className={cn.menu}>
                     {menu.map(item => (
@@ -94,7 +92,6 @@ export default function Sidebar() {
                             href={item.href}
                             name={item.name}
                             description={item.description}
-                            disabled={item.disabled}
                         />
                     ))}
                 </nav>

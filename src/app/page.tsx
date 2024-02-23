@@ -60,7 +60,7 @@ export default function Home() {
             <ConfirmDialog
                 open={showConfirm}
                 title="Twitter account"
-                description="Twitter account has already connected to wallet on GetMint.io.
+                description="Twitter account has already connected to wallet on Womex.io.
                 If you connect account to this wallet, all your rewards 'Twitter activity' will be reset. 
                 Are you sure?"
                 onCancel={handleCancel}

@@ -102,7 +102,7 @@ function Account() {
             const url = new URL('https://twitter.com/intent/follow');
             url.searchParams.append('original_referer', process.env.APP_URL);
             url.searchParams.append('region', 'follow_link');
-            url.searchParams.append('screen_name', 'GetMint_io');
+            url.searchParams.append('screen_name', 'Womex_io');
             window.open(url, '_blank');
             setTimeout(() => {
                 fetchAccount();

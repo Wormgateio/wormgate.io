@@ -38,22 +38,26 @@ function WalletActions() {
         {
             number: 2,
             value: account?.balance.mintsCount || 0,
-            color: '#4EFFFF'
+            color: '#4EFFFF',
+            tooltip: 'Mint'
         },
-        {
+        /*{
             number: 4,
             value: account?.balance.mintsCustomCount || 0,
-            color: '#00D670'
-        },
+            color: '#00D670',
+            tooltip: 'Custom Mint'
+        },*/
         {
             number: 1,
             value: account?.balance.bridgesCount || 0,
-            color: '#DB4BFF'
+            color: '#DB4BFF',
+            tooltip: 'Bridge'
         },
         {
             number: 3,
             value: account?.balance.refuelCount || 0,
-            color: '#FFC328'
+            color: '#FFC328',
+            tooltip: 'Refuel'
         }
     ];
 
