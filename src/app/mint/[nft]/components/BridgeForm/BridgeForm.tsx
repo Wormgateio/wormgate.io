@@ -27,7 +27,7 @@ export default function BridgeForm({ className, nft, onAfterBridge, simple, chai
         refuelCost,
         refuelEnabled,
         selectedChain,
-        // submittedData,
+        submittedData,
         isPending,
         isNeedChangeChain,
         switchNetwork,
@@ -36,11 +36,6 @@ export default function BridgeForm({ className, nft, onAfterBridge, simple, chai
         onChangeRefuelGas,
         onBridge
     } = useBridge(nft, onAfterBridge);
-
-    const submittedData = chains.length ? {
-        previousChain: chains?.[0],
-        nextChain: chains?.[0],
-    } : null;
 
     if (submittedData) {
         return (
