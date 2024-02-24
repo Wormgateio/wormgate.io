@@ -8,6 +8,7 @@ import Card from "../../components/ui/Card/Card";
 import RefuelForm from "./components/RefuelForm/RefuelForm";
 import Button from "../../components/ui/Button/Button";
 import AppStore from "../../store/AppStore";
+import { useState } from "react";
 
 function RefuelPage() {
     const { isConnected } = useAccount();

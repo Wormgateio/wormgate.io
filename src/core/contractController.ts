@@ -2,7 +2,9 @@ import { ethers } from "ethers";
 import { hexToNumber } from "web3-utils";
 import axios, { AxiosResponse } from "axios";
 
-import abi from "./abi.json";
+import ABI from "./abi.json";
+import ABI_RELAYER from './abi-relayer.json';
+import ABI_REFUEL from './abi-refuel.json';
 import { NetworkName } from "../common/enums/NetworkName";
 import { CONTRACT_ADDRESS, DEFAULT_REFUEL_COST_USD } from "../common/constants";
 import { AccountDto } from "../common/dto/AccountDto";
@@ -47,7 +49,7 @@ export const mintNFT = async ({ contractAddress, chainToSend, account }: Control
     const signer = await provider.getSigner();
     const sender = await signer.getAddress();
 
-    const contract = new ethers.Contract(contractAddress, abi, signer);
+    const contract = new ethers.Contract(contractAddress, ABI, signer);
     const mintFee = await contract.mintFee();
 
     const userBalance = await provider.getBalance(sender);
@@ -127,7 +129,7 @@ export const estimateBridge = async (
             ["address"], [sender]
         );
 
-        const contract = new ethers.Contract(contractAddress, abi, signer);
+        const contract = new ethers.Contract(contractAddress, ABI, signer);
         const _dstChainId = chainToSend?.lzChain;
 
         const MIN_DST_GAS = await contract.minDstGasLookup(_dstChainId, LZ_VERSION);
@@ -211,7 +213,7 @@ export const bridgeNFT = async (
         ["address"], [sender]
     );
 
-    const contract = new ethers.Contract(contractAddress, abi, signer);
+    const contract = new ethers.Contract(contractAddress, ABI, signer);
     const _dstChainId = chainToSend?.lzChain;
 
     const MIN_DST_GAS = await contract.minDstGasLookup(_dstChainId, LZ_VERSION);
@@ -312,7 +314,7 @@ export async function claimReferralFee(chain: ChainDto) {
 
         const signer = await provider.getSigner();
 
-        const contract = new ethers.Contract(CONTRACT_ADDRESS[chain.network as NetworkName], abi, signer);
+        const contract = new ethers.Contract(CONTRACT_ADDRESS[chain.network as NetworkName], ABI, signer);
 
         const txResponse = await contract.claimReferrerEarnings();
         const receipt = await txResponse.wait(null, 60000);
@@ -336,7 +338,7 @@ export async function claimReferralFee(chain: ChainDto) {
 
 export async function getReffererEarnedInNetwork(chain: ChainDto, accountAddress: string) {
     const provider = new ethers.JsonRpcProvider(chain.rpcUrl);
-    const contract = new ethers.Contract(CONTRACT_ADDRESS[chain.network as NetworkName], abi, provider);
+    const contract = new ethers.Contract(CONTRACT_ADDRESS[chain.network as NetworkName], ABI, provider);
     const earned = await contract.referrersEarnedAmount(accountAddress);
     return ethers.formatEther(earned);
 }
@@ -363,6 +365,36 @@ export async function fetchPrice(symbol: string): Promise<number | null> {
     } catch (error) {
         await new Promise(resolve => setTimeout(resolve, 1000))
         return fetchPrice(symbol)
+    }
+}
+
+export async function getBalance(normalize = false) {
+    const provider = new ethers.BrowserProvider((window as any).ethereum);
+
+    const signer = await provider.getSigner()
+    const sender = await signer.getAddress()
+    const balance = await provider.getBalance(sender)
+
+    return (normalize ? ethers.formatEther(balance) : balance) || 0;
+}
+
+export async function getMaxTokenValueInDst(fromChainId: number, toChainId: number, normalize = false) {
+    try {
+        /*const provider = new ethers.BrowserProvider((window as any).ethereum);
+
+        const fromChainConfig: _CHAIN = Config.getChainById(fromChainId)
+        const toChainConfig: _CHAIN = Config.getChainById(toChainId)
+
+        if (!fromChainConfig.lzRelayer) {
+            return null;
+        }
+
+        const contract = new ethers.Contract(fromChainConfig.lzRelayer, ABI_RELAYER, provider)
+        const dstConfig = await contract.dstConfigLookup(toChainConfig.lzChain.toString(), "2")
+
+        return (normalize ? ethers.formatEther(dstConfig.dstNativeAmtCap) : dstConfig.dstNativeAmtCap) || null*/
+    } catch (error) {
+        return null;
     }
 }
 

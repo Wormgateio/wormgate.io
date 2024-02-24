@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { Divider, Flex, Form, Input, Tooltip } from "antd";
-import { useNetwork } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import Image from "next/image";
 import cn from './RefuelForm.module.scss';
 
@@ -11,12 +11,20 @@ import Button from "../../../../components/ui/Button/Button";
 import styles from "../../../bridge/components/NftModal/NftModal.module.css";
 import ChainSelect from "../../../../components/ChainSelect/ChainSelect";
 import ChainStore from "../../../../store/ChainStore";
+import { fetchPrice, getBalance } from "../../../../core/contractController";
 
 function RefuelForm() {
     const [form] = Form.useForm();
     const { chain } = useNetwork();
+    const { isConnected, address } = useAccount();
     const { chains } = ChainStore;
     const watchedFormData = Form.useWatch([], form);
+
+    const [balance, setBalance] = useState<number>(0);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [fromPrice, setFromPrice] = useState<number | null>(0);
+    const [toPrice, setToPrice] = useState<number | null>(0);
+    const [maxAmount, setMaxAmount] = useState<number | null>(0);
 
     const selectedChain = useMemo(() => {
         if (chain && chains.length) {
@@ -26,9 +34,57 @@ function RefuelForm() {
         return null;
     }, [chains, chain]);
 
+    const normalizeValue = (value: number, unit = 5) => {
+        return value !== null ? parseFloat(value.toFixed(unit)) : 0
+    }
+
+    const updateBalance = async () => {
+        if (isConnected) {
+            setBalance(normalizeValue(Number(await getBalance(true))));
+        }
+    };
+
+    const updatePrices = async () => {
+        setLoading(true);
+
+        const fromPrice = await fetchPrice(ChainStore.getChainById(watchedFormData?.from)?.token!);
+        const toPrice = await fetchPrice(ChainStore.getChainById(watchedFormData?.to)?.token!);
+
+        setFromPrice(fromPrice);
+        setToPrice(toPrice);
+
+        setLoading(false);
+    };
+
+    const updateMaxAmount = async () => {
+        const maxAmount = Number(await getMaxTokenValueInDst(
+            state.refuel.chain.from.id,
+            state.refuel.chain.to.id,
+            true
+        ));
+
+        setMaxAmount(maxAmount);
+    };
+
+    const updateData = async () => {
+        // if (!isConnected || !selectedChainFrom.value || typeof selectedChainFrom.value.selected === 'undefined') return;
+        setLoading(true);
+        // if (state.user.chain && state.refuel.chain.from) selectedChainFrom.value.selected = state.user.chain
+
+        await updatePrices()
+/*        await updateMaxAmount()
+        await updateInfo()*/
+
+        setLoading(false);
+    }
+
     useEffect(() => {
         ChainStore.getChains();
     }, []);
+
+    useEffect(() => {
+        updateBalance();
+    }, [address, chain]);
 
     useEffect(() => {
         if (selectedChain && chains.length) {
@@ -46,7 +102,7 @@ function RefuelForm() {
     const fromChain = ChainStore.getChainById(watchedFormData?.from);
 
     return (
-        <Form size="large" layout="vertical" form={form} onFinish={onSubmit}>
+        <Form form={form} size="large" layout="vertical" onFinishFailed={e => console.error(e)} form={form} onFinish={onSubmit}>
             <Flex align="center" justify="center" gap={8} className={cn.refuelCostBanner}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
                     <path d="M7 4.375C5.56104 4.375 4.375 5.56104 4.375 7V23.625H16.625V17.5H18.375V21C18.375 22.439 19.561 23.625 21 23.625C22.439 23.625 23.625 22.439 23.625 21V12.0859C23.625 11.3887 23.3516 10.7461 22.8594 10.2539L18.7305 6.125L17.5 7.35547L19.9883 9.84375C19.0483 10.2437 18.375 11.1699 18.375 12.25C18.375 13.689 19.561 14.875 21 14.875C21.3076 14.875 21.5981 14.8101 21.875 14.7109V21C21.875 21.4956 21.4956 21.875 21 21.875C20.5044 21.875 20.125 21.4956 20.125 21V17.5C20.125 16.543 19.332 15.75 18.375 15.75H16.625V7C16.625 5.56104 15.439 4.375 14 4.375H7ZM7 6.125H14C14.4956 6.125 14.875 6.50439 14.875 7V10.5H6.125V7C6.125 6.50439 6.50439 6.125 7 6.125ZM21 11.375C21.4922 11.375 21.875 11.7578 21.875 12.25C21.875 12.7422 21.4922 13.125 21 13.125C20.5078 13.125 20.125 12.7422 20.125 12.25C20.125 11.7578 20.5078 11.375 21 11.375ZM6.125 12.25H14.875V21.875H6.125V12.25Z" fill="url(#paint0_linear_602_6931)" fill-opacity="0.78"/>
@@ -93,7 +149,9 @@ function RefuelForm() {
             <Form.Item name="amount" className={cn.amount} label={
                 <Flex align="center" justify="space-between">
                     <div>Refuel Amount</div>
-                    <div>Balance: 0 <button className={cn.maxButton}>Max</button></div>
+                    <div>Balance: {balance} <button onClick={() => {
+                        form.setFieldsValue({ amount: balance });
+                    }} className={cn.maxButton} type="button">Max</button></div>
                 </Flex>
             }>
                 <Input rootClassName={cn.input} placeholder={`0 ${fromChain?.token || 'ETH'}`} />
@@ -122,7 +180,7 @@ function RefuelForm() {
             </div>
 
             <Flex align="center" gap={12}>
-                <Button block>Refuel</Button>
+                <Button type="submit" block>Refuel</Button>
                 <Image src="/svg/coins/refuel.svg" alt="+1" width={56} height={50} />
             </Flex>
         </Form>
