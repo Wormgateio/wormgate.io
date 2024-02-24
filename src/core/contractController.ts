@@ -6,7 +6,7 @@ import ABI from "./abi.json";
 import ABI_RELAYER from './abi-relayer.json';
 import ABI_REFUEL from './abi-refuel.json';
 import { NetworkName } from "../common/enums/NetworkName";
-import { CONTRACT_ADDRESS, DEFAULT_REFUEL_COST_USD } from "../common/constants";
+import { CONTRACT_ADDRESS, CONTRACT_REFUEL_ADDRESS, DEFAULT_REFUEL_COST_USD, LZ_RELAYER } from "../common/constants";
 import { AccountDto } from "../common/dto/AccountDto";
 import { wait } from "../utils/wait";
 import { ChainDto } from "../common/dto/ChainDto";
@@ -308,6 +308,48 @@ export const bridgeNFT = async (
     };
 };
 
+export async function refuel(fromChain: ChainDto, toChain: ChainDto, amount: string): Promise<any> {
+    try {
+        const provider = new ethers.BrowserProvider((window as any).ethereum)
+        const signer = await provider.getSigner()
+        const sender = await signer.getAddress()
+
+        const contract = new ethers.Contract(CONTRACT_REFUEL_ADDRESS[fromChain.network as NetworkName], ABI_REFUEL, signer)
+
+        const _dstChainId = toChain.lzChain;
+
+        const _toAddress = ethers.solidityPacked(
+            ["address"],
+            [CONTRACT_REFUEL_ADDRESS[toChain.network as NetworkName]]
+        )
+
+        const MIN_DST_GAS = await contract.minDstGasLookup(_dstChainId, 0)
+
+        const _adapterParams = ethers.solidityPacked(
+            ["uint16", "uint256", "uint256", "address"],
+            [2, MIN_DST_GAS, ethers.parseUnits(amount, 'ether'), sender]
+        )
+
+        const feeEstimate = await contract.estimateSendFee(_dstChainId, _toAddress, _adapterParams)
+        const nativeFee = BigInt(feeEstimate.nativeFee)
+
+        const tx = await contract.refuel(_dstChainId, _toAddress, _adapterParams, { value: nativeFee })
+
+        const receipt = await tx.wait()
+
+        return {
+            result: receipt.status === 1,
+            msg: receipt.status === 1 ? 'Refuel successful' : 'Refuel failed',
+            receipt
+        }
+    } catch (error) {
+        return {
+            result: false,
+            msg: 'Refuel failed',
+        };
+    }
+}
+
 export async function claimReferralFee(chain: ChainDto) {
     try {
         const provider = new ethers.BrowserProvider((window as any).ethereum);
@@ -378,23 +420,55 @@ export async function getBalance(normalize = false) {
     return (normalize ? ethers.formatEther(balance) : balance) || 0;
 }
 
-export async function getMaxTokenValueInDst(fromChainId: number, toChainId: number, normalize = false) {
+export async function getMaxTokenValueInDst(chainFrom: ChainDto, toChain: ChainDto, normalize = false) {
     try {
-        /*const provider = new ethers.BrowserProvider((window as any).ethereum);
+        const provider = new ethers.BrowserProvider((window as any).ethereum);
+        const relayer = LZ_RELAYER[chainFrom.network as NetworkName];
 
-        const fromChainConfig: _CHAIN = Config.getChainById(fromChainId)
-        const toChainConfig: _CHAIN = Config.getChainById(toChainId)
-
-        if (!fromChainConfig.lzRelayer) {
-            return null;
+        if (!relayer) {
+            return null
         }
 
-        const contract = new ethers.Contract(fromChainConfig.lzRelayer, ABI_RELAYER, provider)
-        const dstConfig = await contract.dstConfigLookup(toChainConfig.lzChain.toString(), "2")
+        const contract = new ethers.Contract(relayer, ABI_RELAYER, provider);
+        const dstConfig = await contract.dstConfigLookup(toChain.lzChain.toString(), "2");
 
-        return (normalize ? ethers.formatEther(dstConfig.dstNativeAmtCap) : dstConfig.dstNativeAmtCap) || null*/
+        return (normalize ? ethers.formatEther(dstConfig.dstNativeAmtCap) : dstConfig.dstNativeAmtCap) || null
     } catch (error) {
         return null;
+    }
+}
+
+export async function estimateRefuelFee(fromChain: ChainDto, toChain: ChainDto, amount: string)
+    : Promise<{ nativeFee: number | null, zroFee: number | null }> {
+    const ZERO = 0, TWO = 2
+
+    try {
+        const provider = new ethers.BrowserProvider((window as any).ethereum)
+        const signer = await provider.getSigner()
+        const sender = await signer.getAddress()
+
+        const contract = new ethers.Contract(CONTRACT_REFUEL_ADDRESS[fromChain.network as NetworkName], ABI_REFUEL, signer)
+
+        const MIN_DST_GAS = await contract.minDstGasLookup(LZ_RELAYER[toChain.network as NetworkName], ZERO)
+
+        const payload = ethers.solidityPacked(
+            ["address"],
+            [CONTRACT_REFUEL_ADDRESS[toChain.network as NetworkName]]
+        )
+
+        const adapterParams = ethers.solidityPacked(
+            ["uint16", "uint256", "uint256", "address"],
+            [TWO, MIN_DST_GAS, ethers.parseUnits(amount.toString(), 'ether'), sender]
+        )
+
+        const { nativeFee, zroFee } = await contract.estimateSendFee(LZ_RELAYER[toChain.network as NetworkName], payload, adapterParams)
+
+        return {
+            nativeFee: Number(ethers.formatUnits(nativeFee, 'ether')),
+            zroFee: Number(ethers.formatUnits(zroFee, 'ether'))
+        }
+    } catch (error) {
+        return { nativeFee: null, zroFee: null }
     }
 }
 
