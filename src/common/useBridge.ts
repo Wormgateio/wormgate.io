@@ -15,7 +15,7 @@ interface SubmittedData {
     nextChain: ChainDto;
 }
 
-export function useBridge(nft: NFTDto, onAfterBridge?: (previousChain?: ChainDto, nextChain?: ChainDto) => void) {
+export function useBridge(nft: NFTDto, onAfterBridge?: (previousChain?: ChainDto, nextChain?: ChainDto) => void, useFirstChainToBridge = false) {
     const [selectedChain, setSelectedChain] = useState<string>();
     const [refuelCost, setRefuelCost] = useState(DEFAULT_REFUEL_COST_USD);
     const [refuelEnabled, setRefuelEnable] = useState<boolean>(false);
@@ -135,7 +135,14 @@ export function useBridge(nft: NFTDto, onAfterBridge?: (previousChain?: ChainDto
                 .filter(x => !UnailableNetworks[x.network as NetworkName].includes(nft.chainNetwork as NetworkName));
 
             setChains(_chains);
-            setSelectedChain(_chains[0].id);
+
+            let initialBridgeChain = _chains[0].id;
+
+            if (useFirstChainToBridge) {
+                initialBridgeChain = ChainStore.getChainById(nft.chainIdToFirstBridge)?.id || _chains[0].id;
+            }
+
+            setSelectedChain(initialBridgeChain);
         }
     }, [chains, nft]);
 

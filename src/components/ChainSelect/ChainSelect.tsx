@@ -14,13 +14,14 @@ interface Props {
     chains: ChainDto[];
     value?: string;
     className?: string;
+    disabled?: boolean;
     priceList?: EstimationBridgeType;
     isLoading?: boolean;
     onChange?(value: string): void;
 }
 
 function ChainSelect(props: Props) {
-    const { value, className, onChange, chains, priceList } = props;
+    const { value, className, onChange, chains, priceList , disabled } = props;
     const [selectedValue, setSelectedValue] = useState<string>('');
     const chain = ChainStore.getChainById(selectedValue);
 
@@ -69,6 +70,7 @@ function ChainSelect(props: Props) {
     return (
         <Dropdown
             trigger={['click']}
+            disabled={disabled}
             menu={{
                 items,
                 selectable: true,
@@ -76,7 +78,9 @@ function ChainSelect(props: Props) {
                 onClick: ({ key }) => handleSelect(key),    
             }}
         >
-            <Flex align="center" justify="center" gap={8} className={clsx(styles.select, className)}>
+            <Flex align="center" justify="center" gap={8} className={clsx(styles.select, className, {
+                [styles.selectDisabled]: disabled
+            })}>
                 {chainLogo && (<Image src={chainLogo} width={24} height={24} alt="" />)}
 
                 <span className={styles.label}>{chain?.name || ''}</span>

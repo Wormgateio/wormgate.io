@@ -6,7 +6,11 @@
     transition: .3s ease-out;
 }
 
-.select:hover {
+.selectDisabled {
+    cursor: default;
+}
+
+.select:not(.selectDisabled):hover {
     background: rgba(255, 255, 255, 0.1);
 }
 

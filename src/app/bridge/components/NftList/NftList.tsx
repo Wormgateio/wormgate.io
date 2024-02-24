@@ -19,6 +19,8 @@ function NftList({ data }: { data: NFTDto[] }) {
 
     return (
         <Flex gap={24} wrap="wrap" className={styles.list}>
+            {nfts.length === 0 && "NFT's list is empty"}
+
             {nfts.map((nft) => (
                 <ListCard
                     key={nft.id}

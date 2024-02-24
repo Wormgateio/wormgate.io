@@ -18,9 +18,12 @@ interface Props {
     className?: string;
     simple?: boolean;
     chainIdToFirstBridge?: string;
+    disabeldSelect?: boolean;
 }
 
-export default function BridgeForm({ className, nft, onAfterBridge, simple, chainIdToFirstBridge }: Props) {
+export default function BridgeForm(props: Props) {
+    const { className, nft, onAfterBridge, simple, chainIdToFirstBridge, disabeldSelect } = props;
+
     const {
         bridgePriceList,
         chains,
@@ -35,7 +38,7 @@ export default function BridgeForm({ className, nft, onAfterBridge, simple, chai
         onChangeRefuelEnabled,
         onChangeRefuelGas,
         onBridge
-    } = useBridge(nft, onAfterBridge);
+    } = useBridge(nft, onAfterBridge, true);
 
     if (submittedData) {
         return (
@@ -76,6 +79,7 @@ export default function BridgeForm({ className, nft, onAfterBridge, simple, chai
                 <Flex gap={8} vertical={simple} className={styles.formActions}>
                     <ChainSelect
                         chains={chains}
+                        disabled={disabeldSelect}
                         value={chainIdToFirstBridge || selectedChain}
                         className={styles.dropdown}
                         onChange={onChangeChain}

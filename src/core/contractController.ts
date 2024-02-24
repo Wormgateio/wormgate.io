@@ -64,15 +64,15 @@ export const mintNFT = async ({ contractAddress, chainToSend, account }: Control
     let gasLimit, txResponse;
 
     if (account?.refferer) {
-        gasLimit = await contract['batchMint(1, address)'].estimateGas(account.refferer, options);
+        gasLimit = await contract[`batchMint(1, address)`].estimateGas(account.refferer, options);
         options.gasLimit = gasLimit;
 
-        txResponse = await contract['batchMint(1, address)'](account.refferer, options);
+        txResponse = await contract[`batchMint(1, address)`](account.refferer, options);
     } else {
-        gasLimit = await contract['batchMint(1)'].estimateGas(options);
+        gasLimit = await contract[`mint()`].estimateGas(options);
         options.gasLimit = gasLimit;
 
-        txResponse = await contract['batchMint(1)'](options);
+        txResponse = await contract[`mint()`](options);
     }
 
     await wait();
@@ -200,6 +200,9 @@ export const bridgeNFT = async (
     refuel: boolean = false,
     refuelCost: number = DEFAULT_REFUEL_COST_USD
 ): Promise<ControllerFunctionResult> => {
+    console.log({
+        contractAddress, chainToSend, tokenId, refuel, refuelCost
+    })
     const provider = new ethers.BrowserProvider((window as any).ethereum);
 
     const signer = await provider.getSigner();

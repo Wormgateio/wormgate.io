@@ -64,7 +64,13 @@ function NftPage({ params }: NftPageProps) {
                     image={<PinataImage hash={nft.pinataImageHash} fileName={nft.pinataFileName} name={nft.name} />}
                     onClick={() => handleCardClick(nft)}
                 />
-                <BridgeForm chainIdToFirstBridge={nft.chainIdToFirstBridge} simple nft={nft} onAfterBridge={refetch} />
+                <BridgeForm
+                    disabeldSelect
+                    chainIdToFirstBridge={nft.chainIdToFirstBridge}
+                    nft={nft}
+                    onAfterBridge={refetch}
+                    simple
+                />
             </div>
         </>
     );
