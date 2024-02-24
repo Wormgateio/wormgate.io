@@ -32,6 +32,10 @@
 
   &Price {
     font-weight: 500;
+
+    span {
+      color: rgba(255, 255, 255, 0.64);
+    }
   }
 }
 

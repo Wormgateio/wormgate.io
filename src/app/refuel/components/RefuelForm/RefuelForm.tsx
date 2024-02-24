@@ -97,45 +97,38 @@ function RefuelForm() {
     };
 
     const updateMaxAmount = async () => {
-        const maxAmount = Number(await getMaxTokenValueInDst(
+        setMaxAmount(Number(await getMaxTokenValueInDst(
             ChainStore.getChainById(watchedFormData?.from)!,
             ChainStore.getChainById(watchedFormData?.to)!,
             true
-        ));
-
-        setMaxAmount(maxAmount);
+        )));
     };
 
     const updateFeeAmount = async () => {
         const amount = normalizeValue(
-            (watchedFormData.amount * fromPrice!) / toPrice!,
+            isSameToken ?
+                parseFloat(watchedFormData?.amount) || 0 :
+                (parseFloat(watchedFormData?.amount) || 0 * fromPrice!) / toPrice!,
             5
         )
 
         const from = ChainStore.getChainById(watchedFormData?.from!)!;
         const to = ChainStore.getChainById(watchedFormData?.to!)!;
-
         const fee = await estimateRefuelFee(from, to, amount.toString())
 
         setFeeNativeCost(fee.nativeFee);
-
-        if (fee.nativeFee) {
-            setFeeLzCost(Math.abs(watchedFormData.amount - fee.nativeFee));
-        }
+        setFeeLzCost(Math.abs(parseFloat(watchedFormData?.amount) || 0 - fee.nativeFee!));
     }
 
     const updateInfo = async () => {
         setLoading(true);
 
-        const amount = watchedFormData.amount;
-
-        if (amount > 0) {
-            if (amount <= balance && amount <= maxAmount!) {
+        if (parseFloat(watchedFormData?.amount) || 0 > 0) {
+            if (parseFloat(watchedFormData?.amount) || 0 <= balance && parseFloat(watchedFormData?.amount) || 0 <= maxAmount!) {
                 await updateFeeAmount()
             }
         } else {
             setFeeLzCost(null);
-            // state.refuel.output.raw = null;
         }
 
         setLoading(false);
@@ -160,7 +153,7 @@ function RefuelForm() {
             updateBalance();
             updateData();
         }
-    }, [address, chain, chains, watchedFormData]);
+    }, [address, chain, chains, watchedFormData, maxAmount]);
 
     useEffect(() => {
         if (selectedChain && chains.length) {
@@ -177,11 +170,6 @@ function RefuelForm() {
         amount: number;
     }) => {
         const { from, to, amount } = formData;
-
-        /*if (state.user.chain.id !== selectedChainFrom?.value?.selected.id) {
-            await Evm.setChainById(selectedChainFrom.value?.selected.id)
-            return
-        }*/
 
         setRefueling(true);
 
@@ -208,19 +196,22 @@ function RefuelForm() {
         let output = 0
 
         if (
-            watchedFormData?.amount &&
+            parseFloat(watchedFormData?.amount) || 0 &&
             isConnected &&
             !loading &&
             feeNativeCost !== null
         ) {
-            output = (watchedFormData?.amount * fromPrice!) / toPrice!
-            output = normalizeValue(output, output > 1 ? 4 : 5)
+            output = isSameToken ?
+                parseFloat(watchedFormData?.amount) || 0 :
+                (parseFloat(watchedFormData?.amount) || 0 * fromPrice!) / toPrice!;
+
+            output = normalizeValue(output, output > 1 ? 4 : 5);
 
             return output;
         }
 
         return output;
-    }, [watchedFormData, isConnected, loading, feeNativeCost, fromPrice, toPrice]);
+    }, [watchedFormData, isConnected, isSameToken, loading, feeNativeCost, fromPrice, toPrice]);
 
     const outputRawFormatted = useMemo(() => {
         const chainTo = ChainStore.getChainById(watchedFormData?.to);
@@ -228,17 +219,17 @@ function RefuelForm() {
     }, [outputRaw, watchedFormData]);
 
     const outputUSD = useMemo(() => {
-        if (!loading && feeNativeCost === null) return null
+        if (loading) return null;
 
         const USD = normalizeValue(outputRaw *
             toPrice!,
-            2)
+            2);
 
         return USD !== 0 ? `$(${USD})` : null
     }, [loading, fromPrice, toPrice]);
 
     const amountMaxOutput = useMemo(() => {
-        let output = 0
+        let output = 0;
 
         const chainFrom = ChainStore.getChainById(watchedFormData?.from);
 
@@ -280,7 +271,34 @@ function RefuelForm() {
         }
 
         return '~1min'
-    }, [maxAmount, ]);
+    }, [maxAmount]);
+
+    const refuelFeeOutput = useMemo(() => {
+        const chainFrom = ChainStore.getChainById(watchedFormData?.from)!;
+        return `${feeLzCost ? '0' : '--'} ${chainFrom?.token}`;
+    }, [feeLzCost, watchedFormData]);
+
+    const feeLzOutput = useMemo(() => {
+        let output = 0;
+
+        if (feeLzCost &&
+            !loading &&
+            feeNativeCost !== null
+        ) {
+            output = normalizeValue(feeLzCost, feeLzCost > 1 ? 4 : 5);
+        }
+
+        const chainFrom = ChainStore.getChainById(watchedFormData?.from)!;
+        return `${output !== 0 ? output : '--'} ${chainFrom?.token}`
+
+    }, [feeLzCost, loading, feeNativeCost, watchedFormData]);
+
+    const feeLzOutputUSD = useMemo(() => {
+        if (loading) return null
+
+        const USD = normalizeValue(feeLzCost! * fromPrice!, 2)
+        return USD !== 0 ? `$(${USD})` : null
+    }, [feeLzCost, loading]);
 
     const fromChain = ChainStore.getChainById(watchedFormData?.from);
     const networkFromIsDifferent = fromChain?.chainId !== chain?.id;
@@ -341,7 +359,7 @@ function RefuelForm() {
             }>
                 <Input rootClassName={cn.input} placeholder={`0 ${fromChain?.token || 'ETH'}`} />
             </Form.Item>
-            <div className={cn.maxRefuel}>Max Refuel: {amountMaxOutput}</div>
+            {!networkFromIsDifferent && <div className={cn.maxRefuel}>Max Refuel: {amountMaxOutput || '--'}</div>}
 
             <Divider />
 
@@ -349,29 +367,25 @@ function RefuelForm() {
                 <Flex className={cn.refuelInfoItem} justify="space-between" align="center" wrap="wrap">
                     <div className={cn.refuelInfoName}>Estimated Transfer Time</div>
                     <div className={cn.refuelInfoPrice}>
-                        {loading && <Spin size="small" />}
                         {estimatedTransferTime}
                     </div>
                 </Flex>
                 <Flex className={cn.refuelInfoItem} justify="space-between" align="center" wrap="wrap">
                     <div className={cn.refuelInfoName}>Refuel Fee</div>
                     <div className={cn.refuelInfoPrice}>
-                        {loading && <Spin size="small" />}
-                        {feeNativeCost || '--'}
+                        {refuelFeeOutput}
                     </div>
                 </Flex>
                 <Flex className={cn.refuelInfoItem} justify="space-between" align="center" wrap="wrap">
                     <div className={cn.refuelInfoName}>LayerZero Fee</div>
                     <div className={cn.refuelInfoPrice}>
-                        {loading && <Spin size="small" />}
-                        {feeLzCost || '--'}
+                        {feeLzOutput} <span>{feeLzOutputUSD}</span>
                     </div>
                 </Flex>
                 <Flex className={cn.refuelInfoItem} justify="space-between" align="center" wrap="wrap">
                     <div className={cn.refuelInfoName}>Expected Output</div>
                     <div className={cn.refuelInfoPrice}>
-                        {loading && <Spin size="small" />}
-                        {outputRawFormatted} {outputUSD}
+                        {outputRawFormatted} <span>{outputUSD}</span>
                     </div>
                 </Flex>
             </div>

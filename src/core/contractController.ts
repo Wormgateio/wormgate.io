@@ -426,7 +426,7 @@ export async function getMaxTokenValueInDst(chainFrom: ChainDto, toChain: ChainD
         const relayer = LZ_RELAYER[chainFrom.network as NetworkName];
 
         if (!relayer) {
-            return null
+            return null;
         }
 
         const contract = new ethers.Contract(relayer, ABI_RELAYER, provider);
@@ -440,8 +440,6 @@ export async function getMaxTokenValueInDst(chainFrom: ChainDto, toChain: ChainD
 
 export async function estimateRefuelFee(fromChain: ChainDto, toChain: ChainDto, amount: string)
     : Promise<{ nativeFee: number | null, zroFee: number | null }> {
-    const ZERO = 0, TWO = 2
-
     try {
         const provider = new ethers.BrowserProvider((window as any).ethereum)
         const signer = await provider.getSigner()
@@ -449,7 +447,7 @@ export async function estimateRefuelFee(fromChain: ChainDto, toChain: ChainDto, 
 
         const contract = new ethers.Contract(CONTRACT_REFUEL_ADDRESS[fromChain.network as NetworkName], ABI_REFUEL, signer)
 
-        const MIN_DST_GAS = await contract.minDstGasLookup(LZ_RELAYER[toChain.network as NetworkName], ZERO)
+        const MIN_DST_GAS = await contract.minDstGasLookup(toChain.lzChain, 0);
 
         const payload = ethers.solidityPacked(
             ["address"],
@@ -458,16 +456,17 @@ export async function estimateRefuelFee(fromChain: ChainDto, toChain: ChainDto, 
 
         const adapterParams = ethers.solidityPacked(
             ["uint16", "uint256", "uint256", "address"],
-            [TWO, MIN_DST_GAS, ethers.parseUnits(amount.toString(), 'ether'), sender]
+            [2, MIN_DST_GAS, ethers.parseUnits(amount.toString(), 'ether'), sender]
         )
 
-        const { nativeFee, zroFee } = await contract.estimateSendFee(LZ_RELAYER[toChain.network as NetworkName], payload, adapterParams)
+        const { nativeFee, zroFee } = await contract.estimateSendFee(toChain.lzChain, payload, adapterParams);
 
         return {
             nativeFee: Number(ethers.formatUnits(nativeFee, 'ether')),
             zroFee: Number(ethers.formatUnits(zroFee, 'ether'))
         }
     } catch (error) {
+        console.log(error);
         return { nativeFee: null, zroFee: null }
     }
 }
