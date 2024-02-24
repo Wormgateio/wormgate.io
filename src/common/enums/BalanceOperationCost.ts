@@ -1,5 +1,6 @@
 export enum BalanceOperationCost {
     RefferalMint = 10,
+    Refuel = 10,
     Mint = 20,
     Bridge = 10,
     Tweet = 10,

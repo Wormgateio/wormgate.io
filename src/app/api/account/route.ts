@@ -90,6 +90,7 @@ export async function GET(request: Request) {
         });
     };
 
+    const refuels = await aggregateByType(BalanceLogType.Refuel, user.id!);
     const mints = await aggregateByType(BalanceLogType.Mint, user.id!);
     const mintsCustom = await aggregateByType(BalanceLogType.MintCustom, user.id!);
     const bridges = await aggregateByType(BalanceLogType.Bridge, user.id!);
@@ -129,8 +130,8 @@ export async function GET(request: Request) {
             mintsCustomCount: mintsCustom._count.amount,
             bridges: bridges._sum.amount || 0,
             bridgesCount: bridges._count.amount,
-            refuel: 0,
-            refuelCount: 0,
+            refuel: refuels._sum.amount || 0,
+            refuelCount: refuels._count.amount,
             twitterActivity: (twitterActivityDaily._sum.amount || 0) + (twitterWomexSubscription._sum.amount || 0) + (tweets._sum.amount || 0),
             refferals: refferalMints._sum.amount || 0,
             refferalsMintCount: refferalMints._count.amount || 0,

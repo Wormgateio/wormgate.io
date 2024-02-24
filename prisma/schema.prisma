@@ -65,6 +65,7 @@ model BalanceLog {
   bridgeLog     BridgeLog?
   tweetLog      TweetLog?
   refferalLog   RefferalLog?
+  refuelLog     RefuelLog?
 
   @@map(name: "balance_logs")
 }
@@ -102,6 +103,15 @@ model BridgeLog {
   nextChain       String
 
   @@map(name: "bridge_logs")
+}
+
+model RefuelLog {
+  id              String     @id @default(uuid())
+  balanceLog      BalanceLog @relation(fields: [balanceLogId], references: [id])
+  balanceLogId    String     @unique @map("balance_log_id")
+  transactionHash String     @map("transaction_hash")
+
+  @@map(name: "refuel_logs")
 }
 
 model TweetLog {

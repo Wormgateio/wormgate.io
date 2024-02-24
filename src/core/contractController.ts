@@ -340,12 +340,14 @@ export async function refuel(fromChain: ChainDto, toChain: ChainDto, amount: str
         return {
             result: receipt.status === 1,
             msg: receipt.status === 1 ? 'Refuel successful' : 'Refuel failed',
-            receipt
+            receipt,
+            hash: tx?.hash
         }
     } catch (error) {
         return {
             result: false,
             msg: 'Refuel failed',
+            hash: null
         };
     }
 }
@@ -456,7 +458,7 @@ export async function estimateRefuelFee(fromChain: ChainDto, toChain: ChainDto, 
 
         const adapterParams = ethers.solidityPacked(
             ["uint16", "uint256", "uint256", "address"],
-            [2, MIN_DST_GAS, ethers.parseUnits(amount.toString(), 'ether'), sender]
+            [2, MIN_DST_GAS, ethers.parseUnits(amount.toString(), 18), sender]
         )
 
         const { nativeFee, zroFee } = await contract.estimateSendFee(toChain.lzChain, payload, adapterParams);

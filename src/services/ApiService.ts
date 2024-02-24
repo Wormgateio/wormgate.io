@@ -8,6 +8,7 @@ import { CreateTweetDto } from "../common/dto/CreateTweetDto";
 import { LeaderDto } from "../common/dto/LeaderDto";
 import { RandomImageDto } from "../common/dto/RandomImageDto";
 import { OperationHistoryDto } from "../common/dto/OperationHistoryDto";
+import { CreateRefuelDto } from "../common/dto/RefuelDto";
 
 class ApiService {
     async getAccount(): Promise<AccountDto> {
@@ -28,6 +29,10 @@ class ApiService {
 
         const response = await apiClient.post('nft', formData);
         return response.data;
+    }
+
+    createRefuel(data: CreateRefuelDto) {
+        return apiClient.post('refuel', data);
     }
 
     async createMint(data: CreateMintDto): Promise<MintDto> {

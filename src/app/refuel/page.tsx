@@ -2,13 +2,10 @@
 
 import { observer } from "mobx-react-lite";
 import { useAccount, useConnect } from "wagmi";
-import cn from './page.module.scss';
 
-import Card from "../../components/ui/Card/Card";
 import RefuelForm from "./components/RefuelForm/RefuelForm";
 import Button from "../../components/ui/Button/Button";
 import AppStore from "../../store/AppStore";
-import { useState } from "react";
 
 function RefuelPage() {
     const { isConnected } = useAccount();
@@ -40,9 +37,7 @@ function RefuelPage() {
     }
 
     return (
-        <Card title="Refuel" className={cn.card}>
-            <RefuelForm />
-        </Card>
+        <RefuelForm />
     )
 }
 
