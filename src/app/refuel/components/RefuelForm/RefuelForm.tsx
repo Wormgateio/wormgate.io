@@ -204,17 +204,17 @@ function RefuelForm() {
                 transactionHash: hash
             });
 
+            setRefueling(false);
             await fetchAccount();
 
             messageApi.success({
                 content: 'Refuel Successful',
             });
 
-            setRefueling(false);
             await updateBalance();
-
         } catch (e) {
             console.error(e);
+            setRefueling(false);
             await messageApi.error('Oops, Something went wrong :(');
         }
     };
