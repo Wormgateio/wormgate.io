@@ -132,7 +132,7 @@ export function useBridge(nft: NFTDto, onAfterBridge?: (previousChain?: ChainDto
         if (chains.length && nft) {
             const _chains = chains
                 .filter(x => x.id !== nft.chainId)
-                .filter(x => !UnailableNetworks[x.network as NetworkName].includes(nft.chainNetwork as NetworkName));
+                .filter(x => !UnailableNetworks[x.network as NetworkName]?.includes(nft.chainNetwork as NetworkName));
 
             setChains(_chains);
 
