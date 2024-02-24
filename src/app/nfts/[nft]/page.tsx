@@ -115,7 +115,7 @@ function Page({ params }: Props) {
                                     nft={nft}
                                     className={styles.form}
                                     onAfterBridge={(previousChain, nextChain) => {
-                                        router.push(`/bridge/${nft.pinataImageHash}?from=${previousChain?.network}&to=${nextChain?.network}`);
+                                        router.push(`/bridge/${nft.id}?from=${previousChain?.network}&to=${nextChain?.network}`);
                                     }}
                                 />
                             </MiniCard>

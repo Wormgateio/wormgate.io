@@ -74,7 +74,7 @@ function Page() {
                         transactionHash: result?.transactionHash!
                     });
 
-                    router.push(`/mint/${nft.pinataImageHash}?successful=true`);
+                    router.push(`/mint/${nft.id}?successful=true`);
 
                     await fetchAccount();
                 } else {

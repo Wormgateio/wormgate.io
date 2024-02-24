@@ -202,9 +202,6 @@ export const bridgeNFT = async (
     refuel: boolean = false,
     refuelCost: number = DEFAULT_REFUEL_COST_USD
 ): Promise<ControllerFunctionResult> => {
-    console.log({
-        contractAddress, chainToSend, tokenId, refuel, refuelCost
-    })
     const provider = new ethers.BrowserProvider((window as any).ethereum);
 
     const signer = await provider.getSigner();

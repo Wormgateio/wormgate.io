@@ -22,10 +22,10 @@ interface NftPageProps {
 function NftPage({ params }: NftPageProps) {
     const { fetchAccount } = AppStore;
     const router = useRouter();
-    const [nft, setNft] = useState(NftStore.selectNftByHash(params.nft));
+    const [nft, setNft] = useState(NftStore.selectNftById(params.nft));
 
     const refetch = () => {
-        NftStore.getNfts().then(() => setNft(NftStore.selectNftByHash(params.nft)));
+        NftStore.getNfts().then(() => setNft(NftStore.selectNftById(params.nft)));
         fetchAccount();
     }
 
