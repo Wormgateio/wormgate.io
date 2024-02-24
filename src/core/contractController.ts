@@ -173,7 +173,7 @@ export const estimateBridge = async (
         }
     }
 
-    return Promise.all(chains.map(chain => {
+    const list = await Promise.allSettled(chains.map(chain => {
         return estimate({
             id: chain.chainId,
             name: chain.name,
@@ -181,7 +181,9 @@ export const estimateBridge = async (
             lzChain: chain.lzChain,
             token: chain.token
         })
-    }))
+    }));
+
+    return list.filter(x => x.status === 'fulfilled').map((x: any) => x.value);
 };
 
 /**

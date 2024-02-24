@@ -54,9 +54,9 @@ export default function MobileMenu() {
         <>
             <Flex gap={16} align="center">
                 <Avatar size={40} style={{ background: generateGradient(135) }} onClick={openAccountDrawer} className={styles.avatar} />
-                <button className={styles.burger} onClick={handleOpenMenu}>
+                {/*<button className={styles.burger} onClick={handleOpenMenu}>
                     <Image src="/svg/ui/burger.svg" width={24} height={24} alt="" />
-                </button>
+                </button>*/}
             </Flex>
 
             <Drawer isOpen={isOpen} onClose={handleCloseMenu}>

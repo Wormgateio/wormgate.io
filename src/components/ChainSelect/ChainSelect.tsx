@@ -84,7 +84,6 @@ function ChainSelect(props: Props) {
                 {chainLogo && (<Image src={chainLogo} width={24} height={24} alt="" />)}
 
                 <span className={styles.label}>{chain?.name || ''}</span>
-
                 {bridgePrice && bridgePrice !== '0.00' && (
                     <Flex align="center" gap={4} className={styles.price}>
                         <Image src="/svg/ui/fuel.svg" width={16} height={16} alt="" />
