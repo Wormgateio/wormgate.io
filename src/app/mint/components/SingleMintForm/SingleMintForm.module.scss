@@ -1,0 +1,40 @@
+.mintCost {
+  background: #231938 url("/bg/mintCost.png") no-repeat;
+  background-size: cover;
+  border-radius: 12px;
+  padding: 8px 16px;
+  margin-top: 12px;
+  line-height: 1;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+
+  &Label {
+    opacity: 0.64;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+
+  &Cost {
+    font-size: 20px;
+    font-weight: 800;
+    background: linear-gradient(180deg, #D9C2FF 0%, #8962F9 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-right: 6px;
+    position: relative;
+    top: -1px;
+  }
+
+  &Extra {
+    color: #FFF;
+    opacity: 0.32;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: line-through;
+    position: relative;
+    top: 1px;
+  }
+}

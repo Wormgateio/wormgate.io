@@ -8,12 +8,11 @@ export enum NetworkName {
     Zora = 'zora',
     Scroll = 'scroll',
     Polygon = 'matic',
-    PolygonzkEVM = 'polygon-zkevm',
     Mantle = 'mantle',
     ZkSync = 'zksync-era',
     BSC = 'bsc',
     Celo = 'celo',
     Core = 'coreDao',
     Gnosis = 'gnosis',
-    Harmony = 'harmony',
+    Fantom = 'fantom'
 }

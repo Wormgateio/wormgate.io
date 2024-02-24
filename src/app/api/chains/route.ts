@@ -1,7 +1,11 @@
 import prisma from "../../../utils/prismaClient";
 
 export async function GET() {
-    const chains = await prisma.chain.findMany();
+    const chains = await prisma.chain.findMany({
+        where: {
+            visible: true
+        }
+    });
 
     return Response.json(chains, {
         headers: {

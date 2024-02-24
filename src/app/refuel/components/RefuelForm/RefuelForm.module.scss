@@ -1,3 +1,21 @@
+.refuelCostBanner {
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(0, 0, 0, 0.12) url("/bg/gas-pump.png") no-repeat right 33px center;
+  display: flex;
+  padding: 4px 8px;
+  min-height: 28px;
+  margin-bottom: 8px;
+
+  &Label {
+    font-weight: 600;
+
+    span {
+      color: rgba(255, 255, 255, 0.32);
+    }
+  }
+}
+
 .refuelInfo {
   display: flex;
   flex-direction: column;
@@ -31,6 +49,8 @@
   font-size: 22px;
   font-weight: 600;
   font-family: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .maxRefuel {

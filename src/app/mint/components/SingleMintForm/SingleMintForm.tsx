@@ -5,8 +5,8 @@ import { Flex, Form } from "antd";
 import { useNetwork } from "wagmi";
 import Image from "next/image";
 import { observer } from "mobx-react-lite";
+import cn from './SingleMintForm.module.scss';
 
-import styles from "../../page.module.scss";
 import ChainStore from "../../../../store/ChainStore";
 import ChainSelect from "../../../../components/ChainSelect/ChainSelect";
 import Button from "../../../../components/ui/Button/Button";
@@ -60,17 +60,11 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
         <Form size="large" layout="vertical" form={form} onFinish={onSubmit}>
             <Flex align="center" gap={12}>
                 <Form.Item style={{ flex: 1 }} name="from" label="From">
-                    <ChainSelect
-                        chains={chains}
-                        className={styles.dropdown}
-                    />
+                    <ChainSelect chains={chains} />
                 </Form.Item>
                 <Image src="/svg/arrows-left-right.svg" alt="" width={20} height={20} />
                 <Form.Item style={{ flex: 1 }} name="to" label="To">
-                    <ChainSelect
-                        chains={chainsTo}
-                        className={styles.dropdown}
-                    />
+                    <ChainSelect chains={chainsTo} />
                 </Form.Item>
             </Flex>
 
@@ -78,6 +72,12 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
                 <Button block type="submit">Mint</Button>
                 <Image src="/svg/coins/our-mint.svg" alt="+1" width={56} height={50} />
             </Flex>
+
+            <div className={cn.mintCost}>
+                <span className={cn.mintCostLabel}>Mint Cost</span>
+                <span className={cn.mintCostCost}>0.25$</span>
+                <span className={cn.mintCostExtra}>0.5$</span>
+            </div>
         </Form>
     )
 }

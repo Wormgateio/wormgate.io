@@ -7,7 +7,12 @@ import {
     arbitrumNova,
     avalanche,
     base,
-    bsc, celo, coreDao, gnosis, harmonyOne,
+    bsc,
+    celo,
+    coreDao,
+    fantom,
+    gnosis,
+    harmonyOne,
     linea,
     mantle,
     optimism,
@@ -31,14 +36,13 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
         zora,
         scroll,
         polygon,
-        polygonZkEvm,
         mantle,
         zkSync,
         bsc,
         celo,
-        harmonyOne,
         gnosis,
-        coreDao
+        coreDao,
+        fantom
     ],
     [
         publicProvider()

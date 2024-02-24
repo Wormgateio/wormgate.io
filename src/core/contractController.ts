@@ -64,15 +64,15 @@ export const mintNFT = async ({ contractAddress, chainToSend, account }: Control
     let gasLimit, txResponse;
 
     if (account?.refferer) {
-        gasLimit = await contract['mint(address)'].estimateGas(account.refferer, options);
+        gasLimit = await contract['batchMint(1, address)'].estimateGas(account.refferer, options);
         options.gasLimit = gasLimit;
 
-        txResponse = await contract['mint(address)'](account.refferer, options);
+        txResponse = await contract['batchMint(1, address)'](account.refferer, options);
     } else {
-        gasLimit = await contract['mint()'].estimateGas(options);
+        gasLimit = await contract['batchMint(1)'].estimateGas(options);
         options.gasLimit = gasLimit;
 
-        txResponse = await contract['mint()'](options);
+        txResponse = await contract['batchMint(1)'](options);
     }
 
     await wait();

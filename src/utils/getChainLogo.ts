@@ -4,7 +4,7 @@ const paths: Record<NetworkName, string> = {
     [NetworkName.Arbitrum]: '/svg/chains/arbitrum.svg',
     [NetworkName.ArbitrumNova]: '/svg/chains/nova.svg',
     [NetworkName.Base]: '/svg/chains/base.svg',
-    [NetworkName.PolygonzkEVM]: '/svg/chains/polygon-zkevm.svg',
+    // [NetworkName.PolygonzkEVM]: '/svg/chains/polygon-zkevm.svg',
     [NetworkName.Polygon]: '/svg/chains/polygon-zkevm.svg',
     [NetworkName.Avalanche]: '/svg/chains/avalanche.svg',
     [NetworkName.LineaMainnet]: '/svg/chains/linea.svg',
@@ -16,8 +16,9 @@ const paths: Record<NetworkName, string> = {
     [NetworkName.BSC]: '/svg/chains/bnb.svg',
     [NetworkName.Celo]: '/svg/chains/celo.svg',
     [NetworkName.Core]: '/svg/chains/core.svg',
-    [NetworkName.Harmony]: '/svg/chains/harmony.svg',
+    // [NetworkName.Harmony]: '/svg/chains/harmony.svg',
     [NetworkName.Gnosis]: '/svg/chains/gnosis.svg',
+    [NetworkName.Fantom]: '/svg/chains/fantom.svg',
 };
 
 export function getChainLogo(network: string) {

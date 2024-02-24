@@ -72,7 +72,8 @@ const chains = [
         network: 'polygon-zkevm',
         lzChain: 158,
         token: 'MATIC',
-        rpcUrl: 'https://zkevm-rpc.com'
+        rpcUrl: 'https://zkevm-rpc.com',
+        visible: false
     },
     {
         chainId: 534352,
@@ -120,7 +121,8 @@ const chains = [
         network: 'harmony',
         lzChain: 116,
         token: 'ONE',
-        rpcUrl: 'https://api.harmony.one'
+        rpcUrl: 'https://api.harmony.one',
+        visible: false
     },
     {
         chainId: 1116,
@@ -137,6 +139,14 @@ const chains = [
         lzChain: 145,
         token: 'xDAI',
         rpcUrl: 'https://rpc.gnosischain.com'
+    },
+    {
+        chainId: 250,
+        name: 'Fantom',
+        network: 'fantom',
+        lzChain: 112,
+        token: 'FTM',
+        rpcUrl: 'https://rpc.ankr.com/fantom'
     }
 ];
 

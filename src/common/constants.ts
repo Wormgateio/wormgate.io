@@ -2,29 +2,27 @@ import { CryptoAddress } from "./types";
 import { NetworkName } from "./enums/NetworkName";
 
 export const CONTRACT_ADDRESS: Record<NetworkName, CryptoAddress> = {
-    [NetworkName.Base]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-    [NetworkName.ArbitrumNova]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-    [NetworkName.LineaMainnet]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-    [NetworkName.Optimism]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-    [NetworkName.PolygonzkEVM]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-    [NetworkName.Polygon]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-    [NetworkName.Zora]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-    [NetworkName.Scroll]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-    [NetworkName.Mantle]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-    [NetworkName.Arbitrum]: '0x809E8c06e6110CD6a055a7d2044EF7e0B29Ce2e3',
-    [NetworkName.Avalanche]: '0x7a9ed9A5EF8dF626Bf934AaCe84c66267b37842c',
-    [NetworkName.ZkSync]: '0x569aA521b05752D22de8B3DBb91D92f65baa7E6f',
-    [NetworkName.BSC]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-    [NetworkName.Celo]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-    [NetworkName.Core]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-    [NetworkName.Gnosis]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-    [NetworkName.Harmony]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
+    [NetworkName.Base]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
+    [NetworkName.ArbitrumNova]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
+    [NetworkName.LineaMainnet]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
+    [NetworkName.Optimism]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
+    [NetworkName.Polygon]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
+    [NetworkName.Zora]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
+    [NetworkName.Scroll]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
+    [NetworkName.Mantle]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
+    [NetworkName.Arbitrum]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
+    [NetworkName.Avalanche]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
+    [NetworkName.ZkSync]: '0x0B5448ab6E035bC28800a6CA18Fe6E9b695F9c8D',
+    [NetworkName.BSC]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
+    [NetworkName.Celo]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
+    [NetworkName.Core]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
+    [NetworkName.Gnosis]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
+    [NetworkName.Fantom]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
 };
 
 export const UnailableNetworks: Record<NetworkName, NetworkName[]> = {
     [NetworkName.ArbitrumNova]: [
         NetworkName.Mantle,
-        NetworkName.PolygonzkEVM,
         NetworkName.Scroll,
         NetworkName.Zora
     ],
@@ -43,10 +41,6 @@ export const UnailableNetworks: Record<NetworkName, NetworkName[]> = {
     ],
     [NetworkName.Optimism]: [],
     [NetworkName.Polygon]: [],
-    [NetworkName.PolygonzkEVM]: [
-        NetworkName.ArbitrumNova,
-        NetworkName.Zora
-    ],
     [NetworkName.Scroll]: [
         NetworkName.ArbitrumNova,
         NetworkName.Zora
@@ -64,7 +58,7 @@ export const UnailableNetworks: Record<NetworkName, NetworkName[]> = {
     [NetworkName.Celo]: [],
     [NetworkName.Core]: [],
     [NetworkName.Gnosis]: [],
-    [NetworkName.Harmony]: [],
+    [NetworkName.Fantom]: [],
 }
 
 export const DEFAULT_REFUEL_COST_USD = 0.25;

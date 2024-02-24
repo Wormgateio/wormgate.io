@@ -15,10 +15,12 @@ interface Props {
     value?: string;
     className?: string;
     priceList?: EstimationBridgeType;
+    isLoading?: boolean;
     onChange?(value: string): void;
 }
 
-function ChainSelect({ value, className, onChange, chains, priceList }: Props) {
+function ChainSelect(props: Props) {
+    const { value, className, onChange, chains, priceList } = props;
     const [selectedValue, setSelectedValue] = useState<string>('');
     const chain = ChainStore.getChainById(selectedValue);
 

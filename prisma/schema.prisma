@@ -136,6 +136,7 @@ model Chain {
   lzChain Int     @map("lz_chain")
   rpcUrl  String?
   token   String?
+  visible Boolean @default(true)
   Nft     Nft[]
 
   @@map(name: "chains")
