@@ -47,13 +47,11 @@ function RewardItem({ name, amount = `0 XP`, count = 0, isTotal = false, showAmo
 
 function Account() {
     const [messageApi, contextHolder] = message.useMessage();
-    const [showVerifyText, setShowVerifyText] = useState(false);
     const {
         closeAccountDrawer,
         account,
         fetchAccount,
         disconnectTwitter,
-        followTwitter,
         loading,
         clearAccount,
         setWalletConnected
@@ -64,7 +62,7 @@ function Account() {
     const [showClaimsModal, setShowClaimsModal] = useState<boolean>(false);
 
     const { chain, chains } = useNetwork();
-    const { address, connector } = useAccount();
+    const { address } = useAccount();
     const { disconnect } = useDisconnect({
         onSuccess: closeAccountDrawer
     });
@@ -91,22 +89,6 @@ function Account() {
 
     const disconnectHandler = () => {
         void disconnectTwitter();
-    };
-
-    const goToFollow = () => {
-        if (account) {
-            followTwitter(account.id);
-            setShowVerifyText(true);
-            const url = new URL('https://twitter.com/intent/follow');
-            url.searchParams.append('original_referer', process.env.APP_URL);
-            url.searchParams.append('region', 'follow_link');
-            url.searchParams.append('screen_name', 'Womex_io');
-            window.open(url, '_blank');
-            setTimeout(() => {
-                fetchAccount();
-                setShowVerifyText(false);
-            }, 30000);
-        }
     };
 
     useEffect(() => {
