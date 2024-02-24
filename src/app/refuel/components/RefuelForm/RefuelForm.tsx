@@ -53,10 +53,6 @@ function RefuelForm() {
         return chains.filter(c => c.id !== watchedFormData?.from);
     }, [chains, watchedFormData?.from]);
 
-    const setMax = () => {
-        form.setFieldsValue({ amount:  balance > (maxAmount || 0) ? maxAmount : balance})
-    }
-
     useEffect(() => {
         if (chains.length) {
             form.setFieldsValue({
@@ -191,27 +187,32 @@ function RefuelForm() {
                 5
             ).toString();
 
-            const { hash } = await refuel(
+            const { hash, result } = await refuel(
                 fromChain,
                 toChain,
                 amountToSend
             );
 
-            await ApiService.createRefuel({
-                metamaskWalletAddress: address as string,
-                chainFromNetwork: fromChain.network,
-                chainToNetwork: toChain.network,
-                transactionHash: hash
-            });
+            if (result) {
+                await ApiService.createRefuel({
+                    metamaskWalletAddress: address as string,
+                    chainFromNetwork: fromChain.network,
+                    chainToNetwork: toChain.network,
+                    transactionHash: hash
+                });
 
-            setRefueling(false);
-            await fetchAccount();
+                setRefueling(false);
+                await fetchAccount();
 
-            messageApi.success({
-                content: 'Refuel Successful',
-            });
+                messageApi.success({
+                    content: 'Refuel Successful',
+                });
 
-            await updateBalance();
+                await updateBalance();
+            } else {
+                setRefueling(false);
+                await messageApi.error('Oops, Something went wrong :(');
+            }
         } catch (e) {
             console.error(e);
             setRefueling(false);
@@ -275,8 +276,17 @@ function RefuelForm() {
         }
 
 
-        return output && output !== Infinity ? `${output} ${chainFrom?.token}` : null;
+        return output;
     }, [isConnected, maxAmount, fromPrice, toPrice]);
+
+    const amountMaxOutputFormatted = useMemo(() => {
+        const chainFrom = ChainStore.getChainById(watchedFormData?.from);
+        return amountMaxOutput && amountMaxOutput !== Infinity ? `${amountMaxOutput} ${chainFrom?.token}` : null;
+    }, [amountMaxOutput, watchedFormData]);
+
+    const setMax = () => {
+        form.setFieldsValue({ amount:  balance > (amountMaxOutput || 0) ? amountMaxOutput : balance})
+    }
 
     const estimatedTransferTime = useMemo(() => {
         if (!maxAmount) return '--'
@@ -387,7 +397,7 @@ function RefuelForm() {
                     }>
                         <Input type="number" rootClassName={cn.input} placeholder={`0 ${fromChain?.token || 'ETH'}`} />
                     </Form.Item>
-                    {!networkFromIsDifferent && <div className={cn.maxRefuel}>Max Refuel: {amountMaxOutput || '--'}</div>}
+                    {!networkFromIsDifferent && <div className={cn.maxRefuel}>Max Refuel: {amountMaxOutputFormatted || '--'}</div>}
 
                     <Divider />
 

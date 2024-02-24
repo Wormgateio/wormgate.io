@@ -23,19 +23,17 @@ export async function POST(request: NextRequest) {
     const data: CreateRefuelDto = await request.json();
 
     await prisma.$transaction(async (context) => {
-        const balanceLog = await context.balanceLog.create({
-            data: {
-                userId: user.id,
-                operation: BalanceOperation.Debit,
-                description: 'Начисление за Refuel',
-                type: BalanceLogType.Refuel,
-                amount: 0
-            }
-        });
-
         await context.refuelLog.create({
             data: {
-                balanceLogId: balanceLog.id,
+                balanceLog: {
+                    create: {
+                        userId: user.id,
+                        operation: BalanceOperation.Debit,
+                        description: 'Начисление за Refuel',
+                        type: BalanceLogType.Refuel,
+                        amount: 0
+                    }
+                },
                 transactionHash: data.transactionHash
             }
         });

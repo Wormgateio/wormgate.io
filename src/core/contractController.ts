@@ -388,28 +388,32 @@ export async function getReffererEarnedInNetwork(chain: ChainDto, accountAddress
 }
 
 export async function fetchPrice(symbol: string): Promise<number | null> {
-    let fetchSymbol = ""
-    if (symbol == "MNT") {
-        fetchSymbol = "MANTLE"
-    } else {
-        fetchSymbol = symbol
-    }
-
-    const url: string = `https://min-api.cryptocompare.com/data/price?fsym=${fetchSymbol.toUpperCase()}&tsyms=USDT`
-
-    try {
-        const response: AxiosResponse = await axios.get(url, { timeout: 10000 })
-
-        if (response.status === 200 && response.data) {
-            return parseFloat(response.data.USDT) || 0
+    if (symbol) {
+        let fetchSymbol = ""
+        if (symbol == "MNT") {
+            fetchSymbol = "MANTLE"
         } else {
+            fetchSymbol = symbol
+        }
+
+        const url: string = `https://min-api.cryptocompare.com/data/price?fsym=${fetchSymbol.toUpperCase()}&tsyms=USDT`
+
+        try {
+            const response: AxiosResponse = await axios.get(url, { timeout: 10000 })
+
+            if (response.status === 200 && response.data) {
+                return parseFloat(response.data.USDT) || 0
+            } else {
+                await new Promise(resolve => setTimeout(resolve, 1000))
+                return fetchPrice(symbol)
+            }
+        } catch (error) {
             await new Promise(resolve => setTimeout(resolve, 1000))
             return fetchPrice(symbol)
         }
-    } catch (error) {
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        return fetchPrice(symbol)
     }
+
+    return 0;
 }
 
 export async function getBalance(normalize = false) {
