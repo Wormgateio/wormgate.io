@@ -2,18 +2,16 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useAccount, useDisconnect, useNetwork } from "wagmi";
 import clsx from "clsx";
-import { Avatar, Flex, message, Spin } from 'antd';
+import { Flex, message, Spin } from 'antd';
 import { observer } from "mobx-react-lite";
 
-import styles from './Account.module.css';
+import styles from './Account.module.scss';
 import Button from "../../ui/Button/Button";
-import IconBtn from "../../ui/IconBtn/IconBtn";
 import FormControl from "../../ui/FormControl/FormControl";
 import Input from "../../ui/Input/Input";
 import AccountAddress from "../../AccountAddress/AccountAddress";
 import AppStore from "../../../store/AppStore";
 import { twitterApi } from "../../../utils/twitterApi";
-import { generateGradient } from "../../../utils/generators";
 import { convertAddress, fetchPrice, getReffererEarnedInNetwork } from "../../../core/contractController";
 import ChainStore from "../../../store/ChainStore";
 import ClaimsModal from "../ClaimsModal/ClaimsModal";
@@ -184,70 +182,34 @@ function Account() {
                     <Image src="/svg/ui/close.svg" width={32} height={32} alt="" className={styles.closeIcon} onClick={closeAccountDrawer} />
 
                     <div className={styles.card}>
-                        <Flex gap={10}>
-                            <Avatar size={48} src={account.twitter.user?.avatar} style={{ background: generateGradient(135) }} />
-                            <div>
-                                {account.twitter.user?.username ? (
-                                    <span className={styles.userName}>{account.twitter.user.username}</span>
-                                ) : (
-                                    <AccountAddress className={styles.userName} address={address} />
-                                )}
-                                <AccountAddress className={styles.userAddress} address={address} withCopy />
-                            </div>
-                        </Flex>
-
-                        <div className={styles.divider}></div>
-
-                        <Flex justify="space-between" align="center" gap={12}>
-                            <Flex align="center" gap={8}>
-                                <Image src="/svg/socials/twitter.svg" width={28} height={26} alt="Add Twitters" />
-                                <strong>Twitter</strong>
-                            </Flex>
-
-                            {account.twitter.user ? (
-                                <Flex gap={8} align="center" className={styles.twitterAccount}>
-                                    <strong className={styles.twitterUsername}>@{account.twitter.user.username}</strong>
-                                    {loading ? (
-                                        <Spin size="large" />
-                                    ) : (
-                                        <button className={styles.disconnectButton} onClick={disconnectHandler}>Disconnect</button>
-                                    )}
-                                </Flex>
-                            ) : (
-                                <button className={styles.connectButton} onClick={startTwitterAuth}>Connect</button>
+                        <Flex align="center" justify="space-between" className={styles.cardTitle}>
+                            Twitter
+                            {account.twitter.user && (
+                                <button className={styles.disconnectButton} onClick={disconnectHandler}>Remove</button>
                             )}
                         </Flex>
 
-                        <div className={styles.divider}></div>
-
-                        <Flex vertical gap={16} className={styles.subscribeInfo}>
-                            {showVerifyText ? (
-                                <Flex align="center" gap={8}>
-                                    <Spin />
-                                    <span>XP will be accrued after verification</span>
+                        <Flex justify="space-between" align="center" gap={12}>
+                            {account.twitter.user ? (
+                                <Flex gap={8} align="center" className={styles.twitterAccount}>
+                                    <Image src="/svg/socials/twitter.svg" width={28} height={26} alt="Add Twitters" />
+                                    <strong className={styles.twitterUsername}>@{account.twitter.user.username}</strong>
+                                    {loading && <Spin />}
                                 </Flex>
                             ) : (
-                                <>
-                                    <Flex align="center" gap={8}>
-                                        {account.twitter.followed && (<Image src="/svg/ui/successful.svg" width={24} height={24} alt="" />)}
-                                        <span>Subscribe to our social network</span>
-                                    </Flex>
-                                    <Button block onClick={goToFollow} disabled={account.twitter.followed || !account.twitter.connected}>Follow <strong>@Womex_io</strong></Button>
-                                </>
+                                <button className={styles.connectButton} onClick={startTwitterAuth}>
+                                    <Image src="/svg/socials/twitter.svg" width={28} height={26} alt="Add Twitters" />
+                                    <strong>Connect Twitter Account</strong>
+                                </button>
                             )}
                         </Flex>
                     </div>
 
                     <div className={styles.card}>
                         <div className={styles.cardTitle}>Refferal</div>
-                        <div className={styles.divider}></div>
                         <div>
-                            <FormControl className={styles.refferalLinkControl} title="Your refferal link">
-                                <Input value={refferalLink} onChange={() => {}} readOnly action={(
-                                    <IconBtn tooltip="Copy" onClick={handleCopy}>
-                                        <Image src="/svg/ui/copy.svg" width={24} height={24} alt="Copy" />
-                                    </IconBtn>
-                                )} />
+                            <FormControl title='' className={styles.refferalLinkControl}>
+                                <Input value={refferalLink} onClick={handleCopy} onChange={() => {}} readOnly />
                             </FormControl>
                         </div>
                         <div className={styles.divider}></div>
@@ -273,32 +235,28 @@ function Account() {
                                 </div>
                             </>
                         ) : <Spin />}
-                        <div className={styles.divider}></div>
-                        <Button
-                            block
-                            disabled={earnedClaims === '$0.00'}
-                            onClick={() => setShowClaimsModal(true)}
-                        >
-                            Claim {earnedClaims}
-                        </Button>
+                        <div style={{ marginTop: 12 }}>
+                            <Button
+                                block
+                                disabled={earnedClaims === '$0.00'}
+                                onClick={() => setShowClaimsModal(true)}
+                            >
+                                Claim {earnedClaims}
+                            </Button>
+                        </div>
                     </div>
                 </main>
 
                 <footer>
-                    <div className={styles.card}>
-                        <Flex justify="space-between" gap={8} align="center" className={styles.walletConnector}>
-                            <Flex align="center" gap={8}>
-                                <Image src="/svg/metamask.svg" width={32} height={32} alt="MetaMask" />
-                                <div className={styles.connector}>
-                                    <h2>{connector?.name}</h2>
-                                    <AccountAddress className={styles.connectorAddress} address={address} />
-                                </div>
-                            </Flex>
-                            <IconBtn tooltip="Logout" onClick={logout}>
-                                <Image src="/svg/ui/logout.svg" width={24} height={24} alt="Logout" />
-                            </IconBtn>
-                        </Flex>
-                    </div>
+                    <Flex justify="space-between" gap={8} align="center" className={styles.walletConnector}>
+                        <AccountAddress className={styles.connectorAddress} address={address} />
+                        <button className={styles.disconnectAccountButton} onClick={logout}>
+                            Disconnect
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M7 6C5.78639 7.02477 4.91697 8.39771 4.50943 9.93294C4.10189 11.4682 4.17592 13.0915 4.7215 14.5833C5.26708 16.0751 6.25786 17.3632 7.55971 18.2732C8.86156 19.1833 10.4116 19.6714 12 19.6714C13.5884 19.6714 15.1384 19.1833 16.4403 18.2732C17.7421 17.3632 18.7329 16.0751 19.2785 14.5833C19.8241 13.0915 19.8981 11.4682 19.4906 9.93294C19.083 8.39771 18.2136 7.02477 17 6M12 4V12" stroke="white" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
+                    </Flex>
                 </footer>
             </div>
 

@@ -15,7 +15,7 @@ export default function AccountAddress({ address = '', withCopy, className }: Ac
     const [messageApi, contextHolder] = message.useMessage();
 
     const value = useMemo(() => {
-        return `${address?.slice(0, 6)}...${address?.slice(-5)}`;
+        return `${address?.slice(0, 8)}...${address?.slice(-5)}`;
     }, [address]);
 
     const handleCopy = async () => {

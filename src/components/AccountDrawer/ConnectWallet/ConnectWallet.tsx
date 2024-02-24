@@ -27,8 +27,6 @@ export default function ConnectWallet() {
             <Image src="/svg/ui/close.svg" width={32} height={32} alt="" className={styles.closeIcon} onClick={closeAccountDrawer} />
             <div className={styles.wrapper}>
                 <div>
-                    <h2 className={styles.title}>Connect a Wallet</h2>
-
                     {connectors.map((connector) => (
                         <Button
                             disabled={!connector.ready}

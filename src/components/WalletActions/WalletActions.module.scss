@@ -4,6 +4,35 @@
     align-items: center;
     border: 1px solid #404851;
 
+    & > div {
+        transition: .3s;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        & > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        &:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            opacity: 0;
+            transition: .3s;
+            background: radial-gradient(50% 100% at 50% 100%, rgba(150, 106, 225, 0.20) 0%, rgba(150, 106, 225, 0.00) 100%);
+        }
+    }
+
+    & > div:hover:before {
+        opacity: 1;
+    }
+
     :global(.network-chain-select) {
         background: none;
         width: auto;

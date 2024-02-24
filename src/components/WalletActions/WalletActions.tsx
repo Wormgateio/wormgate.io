@@ -70,15 +70,19 @@ function WalletActions() {
             ) : (
                 <Flex gap={19}>
                     <div className={styles.account}>
-                        <NetworkChainSelect />
+                        <div>
+                            <NetworkChainSelect />
+                        </div>
 
-                        {address && (
-                            <button className={styles.btn} onClick={openAccountDrawer}>
-                                {account?.twitter.user?.username ? account.twitter.user.username : (
-                                    <AccountAddress address={address} />
-                                )}
-                            </button>
-                        )}
+                        <div>
+                            {address && (
+                                <button className={styles.btn} onClick={openAccountDrawer}>
+                                    {account?.twitter.user?.username ? account.twitter.user.username : (
+                                        <AccountAddress address={address} />
+                                    )}
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     <Space size={12}>

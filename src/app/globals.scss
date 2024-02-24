@@ -194,3 +194,46 @@ input.ant-input::placeholder {
 .ant-spin .ant-spin-dot-item {
   background-color: #9757FF !important;
 }
+
+div.ant-modal {
+  .ant-modal-content {
+    border-radius: 12px;
+    border: 1px solid #322B41;
+    background: linear-gradient(139deg, #191521 0.04%, #29174E 100.04%);
+    box-shadow: 0px 4px 24px 0px #352C43;
+    color: #fff;
+    padding: 24px;
+  }
+
+  .ant-modal-header {
+    background: transparent;
+    border-radius: 0;
+    color: #fff;
+    margin-bottom: 24px;
+  }
+
+  .ant-modal-title {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    font-family: inherit;
+  }
+
+  .ant-modal-footer:empty {
+    display: none;
+  }
+
+  .ant-modal-close {
+    right: 24px;
+    top: 24px;
+  }
+
+  .ant-modal-close-x {
+    font-size: 24px;
+
+    svg path {
+      fill: rgba(255,255,255,0.48);
+    }
+  }
+}
+
