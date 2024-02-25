@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Flex, Form } from "antd";
-import { useAccount, useNetwork } from "wagmi";
+import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import Image from "next/image";
 import { observer } from "mobx-react-lite";
 import cn from './SingleMintForm.module.scss';
@@ -30,14 +30,14 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
 
     const { account } = AppStore;
     const { chain } = useNetwork();
+    const { switchNetworkAsync } = useSwitchNetwork();
     const { chains } = ChainStore;
     const { address } = useAccount();
 
     const [bridgePriceList, setBridgePriceList] = useState<EstimationBridgeType>([]);
 
-    const chainFrom = ChainStore.getChainById(watchedFormData?.from);
-
     const estimateBridgeFee = async () => {
+        const chainFrom = ChainStore.getChainById(watchedFormData?.from);
         const nftChain = ChainStore.chains.find(c => c.chainId === chainFrom?.chainId);
         const chain = ChainStore.chains.find(c => c.id === watchedFormData?.to);
 
@@ -70,9 +70,7 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
     }, [chains, chain]);
 
     useEffect(() => {
-        if (chainFrom) {
-            estimateBridgeFee();
-        }
+        estimateBridgeFee();
     }, [watchedFormData, chain]);
 
     const chainsTo = useMemo(() => {
@@ -96,6 +94,17 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
         }
     }, [watchedFormData]);
 
+    const switchNetwork = async () => {
+        const chainFrom = ChainStore.getChainById(watchedFormData?.from);
+        if (chainFrom && switchNetworkAsync) {
+            await switchNetworkAsync(chainFrom.chainId);
+            form.setFieldsValue({ amount: undefined });
+        }
+    }
+
+    const fromChain = ChainStore.getChainById(watchedFormData?.from);
+    const networkFromIsDifferent = fromChain?.chainId !== chain?.id;
+
     return (
         <Form size="large" layout="vertical" form={form} onFinish={onSubmit}>
             <Flex align="center" gap={12}>
@@ -109,7 +118,11 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
             </Flex>
 
             <Flex align="center" gap={12}>
-                <Button block type="submit">Mint</Button>
+                {networkFromIsDifferent
+                    ? <Button type="button" block onClick={switchNetwork}>Switch network to {fromChain?.name}</Button>
+                    : <Button block type="submit">Mint</Button>
+                }
+
                 <Image src="/svg/coins/our-mint.svg" alt="+1" width={56} height={50} />
             </Flex>
 
