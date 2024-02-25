@@ -11,10 +11,9 @@ import ChainStore from "../../../../store/ChainStore";
 import ChainSelect from "../../../../components/ChainSelect/ChainSelect";
 import Button from "../../../../components/ui/Button/Button";
 import { estimateBridge, EstimationBridgeType } from "../../../../core/contractController";
-import { BRIDGE_ESTIMATION_TOKENS, CONTRACT_ADDRESS, UnailableNetworks } from "../../../../common/constants";
+import { BRIDGE_ESTIMATION_TOKENS, CONTRACT_ADDRESS } from "../../../../common/constants";
 import { NetworkName } from "../../../../common/enums/NetworkName";
 import AppStore from "../../../../store/AppStore";
-import { ChainDto } from "../../../../common/dto/ChainDto";
 
 interface SingleMintFormProps {
     onSubmit: (formData: SingleMintFormData) => void;
@@ -34,7 +33,6 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
     const { chains } = ChainStore;
     const { address } = useAccount();
 
-    const [_chains, setChains] = useState<ChainDto[]>([]);
     const [bridgePriceList, setBridgePriceList] = useState<EstimationBridgeType>([]);
 
     const chainFrom = ChainStore.getChainById(watchedFormData?.from);
@@ -46,7 +44,7 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
         if (chain) {
             let _currentNetwork: string = chainFrom?.network!;
 
-            const priceList = await estimateBridge(_chains, nftChain?.token!, {
+            const priceList = await estimateBridge(chains, nftChain?.token!, {
                 contractAddress: CONTRACT_ADDRESS[_currentNetwork as NetworkName],
                 chainToSend: {
                     id: chain.chainId,
@@ -72,32 +70,20 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
     }, [chains, chain]);
 
     useEffect(() => {
-        if (chains.length && watchedFormData?.from && chainFrom) {
-            const _chains = chains
-                .filter(x => x.id !== chainFrom.id)
-                .filter(x => !UnailableNetworks[x.network as NetworkName]?.includes(chainFrom.network as NetworkName));
-
-            setChains(_chains);
-        } else {
-            setChains(chains);
-        }
-    }, [chains, watchedFormData, chainFrom]);
-
-    useEffect(() => {
         if (chainFrom) {
             estimateBridgeFee();
         }
     }, [watchedFormData, chain]);
 
     const chainsTo = useMemo(() => {
-        return _chains.filter(c => c.id !== watchedFormData?.from);
-    }, [_chains, watchedFormData?.from])
+        return chains.filter(c => c.id !== watchedFormData?.from);
+    }, [chains, watchedFormData?.from])
 
     useEffect(() => {
-        if (chains.length) {
+        if (chains.length && chainsTo.length) {
             form.setFieldsValue({
                 from: selectedChain?.id || chains[0]?.id,
-                to: chainsTo?.[0]?.id
+                to: chains?.[0]?.id
             });
         }
     }, [chains, selectedChain]);
@@ -109,12 +95,6 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
             });
         }
     }, [watchedFormData]);
-
-    console.log({
-        chainsTo,
-        _chains,
-        watchedFormData
-    })
 
     return (
         <Form size="large" layout="vertical" form={form} onFinish={onSubmit}>
