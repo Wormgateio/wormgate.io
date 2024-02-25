@@ -58,11 +58,33 @@ export const LZ_RELAYER: Record<NetworkName, CryptoAddress> = {
     [NetworkName.Fantom]: '0x52eea5c490fb89c7a0084b32feab854eeff07c82',
 };
 
+export const BRIDGE_ESTIMATION_TOKENS: Record<NetworkName, number> = {
+    [NetworkName.Base]: 35000004,
+    [NetworkName.ArbitrumNova]: 90000008,
+    [NetworkName.LineaMainnet]: 5000001,
+    [NetworkName.Optimism]: 15000001,
+    [NetworkName.Polygon]: 20000003,
+    [NetworkName.Zora]: 40000001,
+    [NetworkName.Scroll]: 45000001,
+    [NetworkName.Mantle]: 100000003,
+    [NetworkName.Arbitrum]: 10000003,
+    [NetworkName.Avalanche]: 30000001,
+    [NetworkName.ZkSync]: 105000002,
+    [NetworkName.BSC]: 25000002,
+    [NetworkName.Celo]: 65000001,
+    [NetworkName.Core]: 60000001,
+    [NetworkName.Gnosis]: 85000001,
+    [NetworkName.Fantom]: 9500000,
+};
+
 export const UnailableNetworks: Record<NetworkName, NetworkName[]> = {
     [NetworkName.ArbitrumNova]: [
         NetworkName.Mantle,
         NetworkName.Scroll,
-        NetworkName.Zora
+        NetworkName.Zora,
+        // NetworkName.Celo,
+        // NetworkName.Core,
+        // NetworkName.Gnosis
     ],
     [NetworkName.Arbitrum]: [],
     [NetworkName.Avalanche]: [
