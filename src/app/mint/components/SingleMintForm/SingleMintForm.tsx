@@ -110,6 +110,12 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
         }
     }, [watchedFormData]);
 
+    console.log({
+        chainsTo,
+        _chains,
+        watchedFormData
+    })
+
     return (
         <Form size="large" layout="vertical" form={form} onFinish={onSubmit}>
             <Flex align="center" gap={12}>
