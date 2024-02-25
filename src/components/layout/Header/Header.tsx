@@ -10,14 +10,12 @@ import AppStore from "../../../store/AppStore";
 import styles from './Header.module.scss';
 
 function Header() {
-    const { metamaskWalletAddress, fetchAccount } = AppStore
+    const { fetchAccount } = AppStore
     const isTablet = useMedia({ maxWidth: '1320px' });
 
     useEffect(() => {
-        if (metamaskWalletAddress) {
-            void fetchAccount();
-        }
-    }, [fetchAccount, metamaskWalletAddress]);
+        fetchAccount();
+    }, []);
 
     return (
         <div className={styles.header}>
