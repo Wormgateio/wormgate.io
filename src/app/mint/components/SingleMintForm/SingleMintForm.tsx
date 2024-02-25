@@ -87,7 +87,7 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
         if (chainFrom) {
             estimateBridgeFee();
         }
-    }, [watchedFormData]);
+    }, [watchedFormData, chain]);
 
     const chainsTo = useMemo(() => {
         return _chains.filter(c => c.id !== watchedFormData?.from);
@@ -97,7 +97,7 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
         if (chains.length) {
             form.setFieldsValue({
                 from: selectedChain?.id || chains[0]?.id,
-                to: chainsTo[0]?.id
+                to: chainsTo?.[0]?.id
             });
         }
     }, [chains, selectedChain]);
