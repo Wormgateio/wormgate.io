@@ -206,6 +206,7 @@ function RefuelForm() {
 
                 messageApi.success({
                     content: 'Refuel Successful',
+                    duration: 60
                 });
 
                 await updateBalance();
