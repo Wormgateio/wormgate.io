@@ -21,22 +21,22 @@ export const CONTRACT_ADDRESS: Record<NetworkName, CryptoAddress> = {
 };
 
 export const CONTRACT_REFUEL_ADDRESS: Record<NetworkName, CryptoAddress> = {
-    [NetworkName.Base]: '0xef320c82266ef980b5eeb8172cc49e4f56d5a008',
-    [NetworkName.ArbitrumNova]: '0xef320c82266ef980b5eeb8172cc49e4f56d5a008',
-    [NetworkName.LineaMainnet]: '0xef320c82266ef980b5eeb8172cc49e4f56d5a008',
-    [NetworkName.Optimism]: '0xef320c82266ef980b5eeb8172cc49e4f56d5a008',
-    [NetworkName.Polygon]: '0xef320c82266ef980b5eeb8172cc49e4f56d5a008',
-    [NetworkName.Zora]: '0xef320C82266ef980B5EeB8172cC49E4f56d5A008',
-    [NetworkName.Scroll]: '0xef320c82266ef980b5eeb8172cc49e4f56d5a008',
-    [NetworkName.Mantle]: '0xef320c82266ef980b5eeb8172cc49e4f56d5a008',
-    [NetworkName.Arbitrum]: '0xef320c82266ef980b5eeb8172cc49e4f56d5a008',
-    [NetworkName.Avalanche]: '0xef320C82266ef980B5EeB8172cC49E4f56d5A008',
-    [NetworkName.ZkSync]: '0xf360CC2CC4a3af7e1eF24cC098923B3d675D530E',
-    [NetworkName.BSC]: '0xef320c82266ef980b5eeb8172cc49e4f56d5a008',
-    [NetworkName.Celo]: '0xef320c82266ef980b5eeb8172cc49e4f56d5a008',
-    [NetworkName.Core]: '0xef320C82266ef980B5EeB8172cC49E4f56d5A008',
-    [NetworkName.Gnosis]: '0xef320c82266ef980b5eeb8172cc49e4f56d5a008',
-    [NetworkName.Fantom]: '0xef320c82266ef980b5eeb8172cc49e4f56d5a008',
+    [NetworkName.Base]: '0x762f491a899525ec5270ed67697d8c8a6835e1d7',
+    [NetworkName.ArbitrumNova]: '0x762f491a899525ec5270ed67697d8c8a6835e1d7',
+    [NetworkName.LineaMainnet]: '0x762f491a899525ec5270ed67697d8c8a6835e1d7',
+    [NetworkName.Optimism]: '0x762f491a899525ec5270ed67697d8c8a6835e1d7',
+    [NetworkName.Polygon]: '0x762f491a899525ec5270ed67697d8c8a6835e1d7',
+    [NetworkName.Zora]: '0x762f491a899525ec5270ed67697d8c8a6835e1d7',
+    [NetworkName.Scroll]: '0x762f491a899525ec5270ed67697d8c8a6835e1d7',
+    [NetworkName.Mantle]: '0x762f491a899525ec5270ed67697d8c8a6835e1d7',
+    [NetworkName.Arbitrum]: '0x762f491a899525ec5270ed67697d8c8a6835e1d7',
+    [NetworkName.Avalanche]: '0x762f491a899525ec5270ed67697d8c8a6835e1d7',
+    [NetworkName.ZkSync]: '0x0E55617A818e4454A95255f42226A71C38F8f364',
+    [NetworkName.BSC]: '0x762f491a899525ec5270ed67697d8c8a6835e1d7',
+    [NetworkName.Celo]: '0x762f491a899525ec5270ed67697d8c8a6835e1d7',
+    [NetworkName.Core]: '0x762f491a899525ec5270ed67697d8c8a6835e1d7',
+    [NetworkName.Gnosis]: '0x762f491a899525ec5270ed67697d8c8a6835e1d7',
+    [NetworkName.Fantom]: '0x762f491a899525ec5270ed67697d8c8a6835e1d7',
 };
 
 export const LZ_RELAYER: Record<NetworkName, CryptoAddress> = {
