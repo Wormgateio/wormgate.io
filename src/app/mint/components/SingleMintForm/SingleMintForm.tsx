@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Flex, Form } from "antd";
-import { useNetwork } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import Image from "next/image";
 import { observer } from "mobx-react-lite";
 import cn from './SingleMintForm.module.scss';
@@ -10,6 +10,11 @@ import cn from './SingleMintForm.module.scss';
 import ChainStore from "../../../../store/ChainStore";
 import ChainSelect from "../../../../components/ChainSelect/ChainSelect";
 import Button from "../../../../components/ui/Button/Button";
+import { estimateBridge, EstimationBridgeType } from "../../../../core/contractController";
+import { BRIDGE_ESTIMATION_TOKENS, CONTRACT_ADDRESS, UnailableNetworks } from "../../../../common/constants";
+import { NetworkName } from "../../../../common/enums/NetworkName";
+import AppStore from "../../../../store/AppStore";
+import { ChainDto } from "../../../../common/dto/ChainDto";
 
 interface SingleMintFormProps {
     onSubmit: (formData: SingleMintFormData) => void;
@@ -24,8 +29,39 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
     const [form] = Form.useForm();
     const watchedFormData = Form.useWatch([], form);
 
+    const { account } = AppStore;
     const { chain } = useNetwork();
     const { chains } = ChainStore;
+    const { address } = useAccount();
+
+    const [_chains, setChains] = useState<ChainDto[]>([]);
+    const [bridgePriceList, setBridgePriceList] = useState<EstimationBridgeType>([]);
+
+    const chainFrom = ChainStore.getChainById(watchedFormData?.from);
+
+    const estimateBridgeFee = async () => {
+        const nftChain = ChainStore.chains.find(c => c.chainId === chainFrom?.chainId);
+        const chain = ChainStore.chains.find(c => c.id === watchedFormData?.to);
+
+        if (chain) {
+            let _currentNetwork: string = chainFrom?.network!;
+
+            const priceList = await estimateBridge(_chains, nftChain?.token!, {
+                contractAddress: CONTRACT_ADDRESS[_currentNetwork as NetworkName],
+                chainToSend: {
+                    id: chain.chainId,
+                    name: chain.name,
+                    network: chain.network,
+                    lzChain: chain.lzChain,
+                    token: chain.token
+                },
+                account,
+                accountAddress: address!
+            }, BRIDGE_ESTIMATION_TOKENS[chainFrom?.network as NetworkName], false, 0);
+
+            setBridgePriceList(priceList);
+        }
+    };
 
     const selectedChain = useMemo(() => {
         if (chain && chains.length) {
@@ -35,9 +71,25 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
         return null;
     }, [chains, chain]);
 
+    useEffect(() => {
+        if (chains.length && watchedFormData?.from && chainFrom) {
+            const _chains = chains
+                .filter(x => x.id !== chainFrom.id)
+                .filter(x => !UnailableNetworks[x.network as NetworkName]?.includes(chainFrom.network as NetworkName));
+
+            setChains(_chains);
+        }
+    }, [chains, watchedFormData, chainFrom]);
+
+    useEffect(() => {
+        if (chainFrom) {
+            estimateBridgeFee();
+        }
+    }, [watchedFormData]);
+
     const chainsTo = useMemo(() => {
-        return chains.filter(c => c.id !== watchedFormData?.from);
-    }, [chains, watchedFormData?.from])
+        return _chains.filter(c => c.id !== watchedFormData?.from);
+    }, [_chains, watchedFormData?.from])
 
     useEffect(() => {
         if (chains.length) {
@@ -64,7 +116,7 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
                 </Form.Item>
                 <Image src="/svg/arrows-left-right.svg" alt="" width={20} height={20} />
                 <Form.Item style={{ flex: 1 }} name="to" label="To">
-                    <ChainSelect chains={chainsTo} />
+                    <ChainSelect chains={chainsTo} priceList={bridgePriceList} />
                 </Form.Item>
             </Flex>
 
