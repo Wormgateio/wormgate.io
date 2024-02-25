@@ -78,6 +78,8 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
                 .filter(x => !UnailableNetworks[x.network as NetworkName]?.includes(chainFrom.network as NetworkName));
 
             setChains(_chains);
+        } else {
+            setChains(chains);
         }
     }, [chains, watchedFormData, chainFrom]);
 
