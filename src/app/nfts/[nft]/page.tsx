@@ -57,6 +57,7 @@ function Page({ params }: Props) {
     };
 
     useEffect(() => {
+        AppStore.fetchAccount();
         ChainStore.getChains();
     }, []);
 
