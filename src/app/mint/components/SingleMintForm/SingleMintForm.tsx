@@ -128,7 +128,7 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
 
             <div className={cn.mintCost}>
                 <span className={cn.mintCostLabel}>Mint Cost</span>
-                <span className={cn.mintCostCost}>0.25$</span>
+                <span className={cn.mintCostCost}>0.29$</span>
                 <span className={cn.mintCostExtra}>0.5$</span>
             </div>
         </Form>

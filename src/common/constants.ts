@@ -121,7 +121,7 @@ export const UnailableNetworks: Record<NetworkName, NetworkName[]> = {
     [NetworkName.Fantom]: [],
 }
 
-export const DEFAULT_REFUEL_COST_USD = 0.29;
+export const DEFAULT_REFUEL_COST_USD = 0.25;
 export const REFUEL_AMOUNT_USD = [DEFAULT_REFUEL_COST_USD, 0.5, 0.75, 1];
 
 export const TWEET_CONTENT = "Just created a unique omnichain NFT at @Womex_io. Mint NFT, and make bridges using Layer Zero and earn future project tokens.\nCheck out my NFT: ";
