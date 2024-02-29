@@ -16,10 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
         title: `Womex.io | ${nft.name}`,
         description: nft.description,
-        og:{
-            description: nft.description || undefined,
-            images: `${process.env.APP_URL}/api/image/${params.nft}`,
-        },
+        images: `${process.env.APP_URL}/api/image/${params.nft}`,
         twitter: {
             card: 'summary_large_image',
             title: `Womex.io | ${nft.name}`,
