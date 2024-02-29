@@ -16,6 +16,10 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'Womex.io',
   metadataBase: new URL(process.env.APP_URL),
+  og: {
+    description: 'Join Womex.io, the first platform to mint, and bridge your NFTs with LayerZero. Dive into the new era of omnichain digital art.',
+    images: `${process.env.APP_URL}/twitter-image.jpg`,
+  },
   twitter: {
     card: 'summary',
     title: 'Mint Your Omnichain NFT on Womex.io',
