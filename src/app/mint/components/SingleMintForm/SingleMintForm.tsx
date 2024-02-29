@@ -1,138 +1,150 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from "react";
-import { Flex, Form } from "antd";
-import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
-import Image from "next/image";
-import { observer } from "mobx-react-lite";
+import React, { useEffect, useMemo, useState } from 'react';
+import { Flex, Form } from 'antd';
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import Image from 'next/image';
+import { observer } from 'mobx-react-lite';
 import cn from './SingleMintForm.module.scss';
 
-import ChainStore from "../../../../store/ChainStore";
-import ChainSelect from "../../../../components/ChainSelect/ChainSelect";
-import Button from "../../../../components/ui/Button/Button";
-import { estimateBridge, EstimationBridgeType } from "../../../../core/contractController";
-import { BRIDGE_ESTIMATION_TOKENS, CONTRACT_ADDRESS } from "../../../../common/constants";
-import { NetworkName } from "../../../../common/enums/NetworkName";
-import AppStore from "../../../../store/AppStore";
+import ChainStore from '../../../../store/ChainStore';
+import ChainSelect from '../../../../components/ChainSelect/ChainSelect';
+import Button from '../../../../components/ui/Button/Button';
+import { estimateBridge, EstimationBridgeType } from '../../../../core/contractController';
+import { BRIDGE_ESTIMATION_TOKENS, CONTRACT_ADDRESS } from '../../../../common/constants';
+import { NetworkName } from '../../../../common/enums/NetworkName';
+import AppStore from '../../../../store/AppStore';
 
 interface SingleMintFormProps {
-    onSubmit: (formData: SingleMintFormData) => void;
+  onSubmit: (formData: SingleMintFormData) => void;
 }
 
 export interface SingleMintFormData {
-    from: string;
-    to: string;
+  from: string;
+  to: string;
 }
 
 function SingleMintForm({ onSubmit }: SingleMintFormProps) {
-    const [form] = Form.useForm();
-    const watchedFormData = Form.useWatch([], form);
+  const [form] = Form.useForm();
+  const watchedFormData = Form.useWatch([], form);
 
-    const { account } = AppStore;
-    const { chain } = useNetwork();
-    const { switchNetworkAsync } = useSwitchNetwork();
-    const { chains } = ChainStore;
-    const { address } = useAccount();
+  const { account } = AppStore;
+  const { chain } = useNetwork();
+  const { switchNetworkAsync } = useSwitchNetwork();
+  const { chains } = ChainStore;
+  const { address } = useAccount();
 
-    const [bridgePriceList, setBridgePriceList] = useState<EstimationBridgeType>([]);
+  const [bridgePriceList, setBridgePriceList] = useState<EstimationBridgeType>([]);
 
-    const estimateBridgeFee = async () => {
-        const chainFrom = ChainStore.getChainById(watchedFormData?.from);
-        const nftChain = ChainStore.chains.find(c => c.chainId === chainFrom?.chainId);
-        const chain = ChainStore.chains.find(c => c.id === watchedFormData?.to);
+  const estimateBridgeFee = async () => {
+    const chainFrom = ChainStore.getChainById(watchedFormData?.from);
+    const nftChain = ChainStore.chains.find((c) => c.chainId === chainFrom?.chainId);
+    const chain = ChainStore.chains.find((c) => c.id === watchedFormData?.to);
 
-        if (chain) {
-            let _currentNetwork: string = chainFrom?.network!;
+    if (chain) {
+      let _currentNetwork: string = chainFrom?.network!;
 
-            const priceList = await estimateBridge(chains, nftChain?.token!, {
-                contractAddress: CONTRACT_ADDRESS[_currentNetwork as NetworkName],
-                chainToSend: {
-                    id: chain.chainId,
-                    name: chain.name,
-                    network: chain.network,
-                    lzChain: chain.lzChain,
-                    token: chain.token
-                },
-                account,
-                accountAddress: address!
-            }, BRIDGE_ESTIMATION_TOKENS[chainFrom?.network as NetworkName], false, 0);
+      const priceList = await estimateBridge(
+        chains,
+        nftChain?.token!,
+        {
+          contractAddress: CONTRACT_ADDRESS[_currentNetwork as NetworkName],
+          chainToSend: {
+            id: chain.chainId,
+            name: chain.name,
+            network: chain.network,
+            lzChain: chain.lzChain,
+            token: chain.token,
+          },
+          account,
+          accountAddress: address!,
+        },
+        BRIDGE_ESTIMATION_TOKENS[chainFrom?.network as NetworkName],
+        false,
+        0
+      );
 
-            setBridgePriceList(priceList);
-        }
-    };
+      setBridgePriceList(priceList);
+    }
+  };
 
-    const selectedChain = useMemo(() => {
-        if (chain && chains.length) {
-            return chains.find(c => c.network === chain.network)
-        }
-
-        return null;
-    }, [chains, chain]);
-
-    useEffect(() => {
-        estimateBridgeFee();
-    }, [watchedFormData, chain]);
-
-    const chainsTo = useMemo(() => {
-        return chains.filter(c => c.id !== watchedFormData?.from);
-    }, [chains, watchedFormData?.from])
-
-    useEffect(() => {
-        if (chains.length && chainsTo.length) {
-            form.setFieldsValue({
-                from: selectedChain?.id || chains[0]?.id,
-                to: chains?.[0]?.id
-            });
-        }
-    }, [chains, selectedChain]);
-
-    useEffect(() => {
-        if (watchedFormData?.from === watchedFormData?.to) {
-            form.setFieldsValue({
-                to: chainsTo?.[0]?.id
-            });
-        }
-    }, [watchedFormData]);
-
-    const switchNetwork = async () => {
-        const chainFrom = ChainStore.getChainById(watchedFormData?.from);
-        if (chainFrom && switchNetworkAsync) {
-            await switchNetworkAsync(chainFrom.chainId);
-            form.setFieldsValue({ amount: undefined });
-        }
+  const selectedChain = useMemo(() => {
+    if (chain && chains.length) {
+      return chains.find((c) => c.network === chain.network);
     }
 
-    const fromChain = ChainStore.getChainById(watchedFormData?.from);
-    const networkFromIsDifferent = fromChain?.chainId !== chain?.id;
+    return null;
+  }, [chains, chain]);
 
-    return (
-        <Form size="large" layout="vertical" form={form} onFinish={onSubmit}>
-            <Flex align="center" gap={12}>
-                <Form.Item style={{ flex: 1 }} name="from" label="From">
-                    <ChainSelect chains={chains} />
-                </Form.Item>
-                <Image src="/svg/arrows-left-right.svg" alt="" width={20} height={20} />
-                <Form.Item style={{ flex: 1 }} name="to" label="To">
-                    <ChainSelect chains={chainsTo} priceList={bridgePriceList} />
-                </Form.Item>
-            </Flex>
+  useEffect(() => {
+    estimateBridgeFee();
+  }, [watchedFormData, chain]);
 
-            <Flex align="center" gap={12}>
-                {networkFromIsDifferent
-                    ? <Button type="button" block onClick={switchNetwork}>Switch network to {fromChain?.name}</Button>
-                    : <Button block type="submit">Mint</Button>
-                }
+  const chainsTo = useMemo(() => {
+    return chains.filter((c) => c.id !== watchedFormData?.from);
+  }, [chains, watchedFormData?.from]);
 
-                <Image src="/svg/coins/our-mint.svg" alt="+1" width={56} height={50} />
-            </Flex>
+  useEffect(() => {
+    if (chains.length && chainsTo.length) {
+      form.setFieldsValue({
+        from: selectedChain?.id || chains[0]?.id,
+        to: chains?.[0]?.id,
+      });
+    }
+  }, [chains, selectedChain]);
 
-            <div className={cn.mintCost}>
-                <span className={cn.mintCostLabel}>Mint Cost</span>
-                <span className={cn.mintCostCost}>0.29$</span>
-                <span className={cn.mintCostExtra}>0.5$</span>
-            </div>
-        </Form>
-    )
+  useEffect(() => {
+    if (watchedFormData?.from === watchedFormData?.to) {
+      form.setFieldsValue({
+        to: chainsTo?.[0]?.id,
+      });
+    }
+  }, [watchedFormData]);
+
+  const switchNetwork = async () => {
+    const chainFrom = ChainStore.getChainById(watchedFormData?.from);
+    if (chainFrom && switchNetworkAsync) {
+      await switchNetworkAsync(chainFrom.chainId);
+      form.setFieldsValue({ amount: undefined });
+    }
+  };
+
+  const fromChain = ChainStore.getChainById(watchedFormData?.from);
+  const networkFromIsDifferent = fromChain?.chainId !== chain?.id;
+
+  return (
+    <Form size="large" layout="vertical" form={form} onFinish={onSubmit}>
+      <Flex className={cn.formInputs} align="center">
+        <Form.Item className={cn.input} style={{ flex: 1 }} name="from" label="From">
+          <ChainSelect chains={chains} />
+        </Form.Item>
+        <Image className={cn.arrowsImage} src="/svg/arrows-left-right.svg" alt="" width={20} height={20} />
+        <Form.Item className={cn.input} style={{ flex: 1 }} name="to" label="To">
+          <ChainSelect chains={chainsTo} priceList={bridgePriceList} />
+        </Form.Item>
+      </Flex>
+
+      <Flex align="center" gap={12}>
+        {networkFromIsDifferent ? (
+          <Button type="button" block onClick={switchNetwork}>
+            Switch network to {fromChain?.name}
+          </Button>
+        ) : (
+          <Button block type="submit">
+            Mint
+          </Button>
+        )}
+
+        <Image className={cn.mintBonusImage} src="/svg/coins/our-mint.svg" alt="+1" width={56} height={50} />
+      </Flex>
+
+      <div className={cn.mintCost}>
+        <span className={cn.mintCostLabel}>Mint Cost</span>
+        <span className={cn.mintCostCost}>0.29$</span>
+        <span className={cn.mintCostExtra}>0.5$</span>
+      </div>
+    </Form>
+  );
 }
 
 export default observer(SingleMintForm);

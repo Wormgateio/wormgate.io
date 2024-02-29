@@ -1,5 +1,7 @@
+@import '../../../../utils/mediaBreakpoints/mediaBreakpointsVariables.scss';
+
 .mintCost {
-  background: #231938 url("/bg/mintCost.png") no-repeat;
+  background: #231938 url('/bg/mintCost.png') no-repeat;
   background-size: cover;
   border-radius: 12px;
   padding: 8px 16px;
@@ -19,7 +21,7 @@
   &Cost {
     font-size: 20px;
     font-weight: 800;
-    background: linear-gradient(180deg, #D9C2FF 0%, #8962F9 100%);
+    background: linear-gradient(180deg, #d9c2ff 0%, #8962f9 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -29,12 +31,42 @@
   }
 
   &Extra {
-    color: #FFF;
+    color: #fff;
     opacity: 0.32;
     font-size: 16px;
     font-weight: 600;
     text-decoration: line-through;
     position: relative;
     top: 1px;
+  }
+}
+
+.formInputs {
+  gap: 12px;
+}
+
+@media screen and (max-width: $breakpoint-mobile) {
+  .formInputs {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .input {
+    width: 100%;
+
+    margin-bottom: 16px !important;
+  }
+
+  .arrowsImage {
+    transform: rotate(90deg);
+  }
+
+  .mintCost {
+    background-position-x: center;
+  }
+
+  .mintBonusImage {
+    width: 48px;
+    height: 42px;
   }
 }

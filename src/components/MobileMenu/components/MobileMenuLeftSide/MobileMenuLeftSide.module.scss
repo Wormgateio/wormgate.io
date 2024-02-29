@@ -1,0 +1,73 @@
+@import '../../../../utils/mediaBreakpoints/mediaBreakpointsVariables.scss';
+
+.root {
+  display: flex;
+  align-items: center;
+
+  :global(.network-chain-select__name) {
+    display: none;
+  }
+}
+
+.burger {
+  padding: 8px;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  appearance: none;
+
+  margin-right: 15px;
+}
+
+.burger img {
+  display: block;
+}
+
+.chainSelect {
+  background-color: transparent;
+  gap: 5px !important;
+  padding: 8px !important;
+  margin-left: 20px;
+
+  img {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
+.logo {
+  width: 30px;
+  height: 30px;
+  display: block;
+}
+
+.closeSidebarButton {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+
+  background: url('/svg/ui/dropdown-arrow.svg') center no-repeat;
+  transform: rotate(90deg) translate(-50%, 0);
+
+  width: 30px;
+  height: 30px;
+  border: 0;
+}
+
+@media screen and (max-width: $breakpoint-mobile) {
+  .chainSelect {
+    margin-left: 12px;
+    padding: 4px 8px !important;
+  }
+
+  .burger {
+    padding: 2px;
+    margin-right: 20px;
+
+    img {
+      width: 22px !important;
+      height: 22px !important;
+    }
+  }
+}

@@ -1,0 +1,82 @@
+@import './../utils/mediaBreakpoints/mediaBreakpointsVariables.scss';
+
+.wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+}
+
+.sidebar {
+  width: 242px;
+  height: 100%;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: auto;
+  flex-shrink: 0;
+}
+
+.inner {
+  flex: 1;
+}
+
+.wrapperHeader,
+.wrapperFooter {
+  flex-shrink: 0;
+}
+
+.wrapperHeader {
+  margin-bottom: 48px;
+}
+
+.main {
+  flex: 1;
+  padding: 20px;
+}
+
+.bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  mix-blend-mode: lighten;
+  background: url('/bg/hero.png') no-repeat right;
+  background-size: contain;
+  overflow: hidden;
+}
+
+.bg:before {
+  content: '';
+  width: 858px;
+  height: 572px;
+  background: url('/bg/bg1.png') center no-repeat;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+@media screen and (max-width: $breakpoint-tablet) {
+  .main {
+    padding: 16px 0;
+  }
+
+  .bgHero {
+    display: none;
+  }
+
+  .sidebar {
+    display: none;
+  }
+}
+
+@media screen and (max-width: $breakpoint-mobile) {
+  .wrapperHeader {
+    padding-top: 24px;
+    margin-bottom: 14px;
+  }
+
+  .bg {
+    background-position-x: center;
+    background-size: cover;
+  }
+}

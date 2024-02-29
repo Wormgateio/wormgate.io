@@ -1,72 +1,109 @@
-.sidebar {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+@import '../../../utils/mediaBreakpoints/mediaBreakpointsVariables.scss';
 
-    &Top {
-        flex: 1;
-        padding-bottom: 32px;
-    }
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &Top {
+    flex: 1;
+    padding-bottom: 32px;
+  }
 }
 
 .logo {
-    display: block;
-    padding: 9px 16px;
-    margin-bottom: 24px;
+  position: relative;
+  display: block;
+  padding: 9px 16px;
+  margin-bottom: 24px;
 }
 
 .menuItem {
+  display: block;
+  padding: 20px 24px 24px;
+  position: relative;
+
+  &:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, rgba(150, 106, 225, 0.2), rgba(150, 106, 225, 0));
+    opacity: 0;
+    transition: 0.15s opacity;
+  }
+
+  &Active:before,
+  &:hover:not(.menuItemDisabled):before {
+    opacity: 1;
+  }
+
+  &Active .menuItemIcon {
+    opacity: 1;
+    margin-left: 0;
+    margin-right: 4px;
+  }
+
+  &Active .menuItemName span {
+    text-shadow: 0 0 6px #b087f3, 0 0 16px #b087f3;
+  }
+
+  &Icon {
+    opacity: 0;
+    margin-left: -30px;
+    transition: 0.1s ease-in;
+  }
+
+  &Name {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+
+    span {
+      font-size: 16px;
+      font-weight: 700;
+    }
+  }
+
+  &Descr {
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.48;
+  }
+}
+
+.menuItemTitle {
+  color: #fff;
+}
+
+.menuItemDescription {
+  color: #ffffff7a;
+}
+
+.burger {
+  padding: 8px;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  appearance: none;
+
+  img {
     display: block;
-    padding: 20px 24px 24px;
-    position: relative;
+  }
+}
 
-    &:before {
-        content: '';
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        background: linear-gradient(90deg, rgba(150, 106, 225, 0.20), rgba(150, 106, 225, 0));
-        opacity: 0;
-        transition: 0.15s opacity;
-    }
+@media screen and (max-width: $breakpoint-tablet) {
+  .header {
+    padding: 12px 16px;
+  }
 
-    &Active:before,
-    &:hover:not(.menuItemDisabled):before {
-        opacity: 1;
-    }
+  .logo {
+    display: flex;
+    justify-content: center;
 
-    &Active .menuItemIcon {
-        opacity: 1;
-        margin-left: 0;
-    }
-
-    &Active .menuItemName span {
-        text-shadow: 0 0 6px #B087F3, 0 0 16px #B087F3;
-    }
-
-    &Icon {
-        opacity: 0;
-        margin-left: -30px;
-        transition: 0.1s ease-in;
-    }
-
-    &Name {
-        display: flex;
-        gap: 4px;
-        align-items: center;
-        margin-bottom: 8px;
-
-        span {
-            font-size: 16px;
-            font-weight: 700;
-        }
-    }
-
-    &Descr {
-        font-size: 14px;
-        font-weight: 600;
-        opacity: 0.48;
-    }
+    margin-top: 24px;
+  }
 }
