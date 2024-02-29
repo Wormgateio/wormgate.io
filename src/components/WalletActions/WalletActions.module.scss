@@ -1,100 +1,108 @@
+@import '../../utils/mediaBreakpoints/mediaBreakpointsVariables.scss';
+
+.root {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .account {
-    border-radius: 12px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #404851;
+
+  & > div {
+    transition: 0.3s;
+    height: 100%;
     display: flex;
     align-items: center;
-    border: 1px solid #404851;
+    position: relative;
 
-    & > div {
-        transition: .3s;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        position: relative;
-
-        & > * {
-            position: relative;
-            z-index: 1;
-        }
-
-        &:before {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            opacity: 0;
-            transition: .3s;
-            background: radial-gradient(50% 100% at 50% 100%, rgba(150, 106, 225, 0.20) 0%, rgba(150, 106, 225, 0.00) 100%);
-        }
+    & > * {
+      position: relative;
+      z-index: 1;
     }
 
-    & > div:hover:before {
-        opacity: 1;
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      opacity: 0;
+      transition: 0.3s;
+      background: radial-gradient(50% 100% at 50% 100%, rgba(150, 106, 225, 0.2) 0%, rgba(150, 106, 225, 0) 100%);
     }
+  }
 
-    :global(.network-chain-select) {
-        background: none;
-        width: auto;
-        border-radius: 0;
-        border-right: 1px solid #404851;
-        padding: 9px 12px;
-        gap: 2px !important;
-    }
+  & > div:hover:before {
+    opacity: 1;
+  }
 
-    :global(.network-chain-select img) {
-        width: 20px;
-        height: 20px;
-    }
+  :global(.network-chain-select) {
+    background: none;
+    width: auto;
+    border-radius: 0;
+    border-right: 1px solid #404851;
+    padding: 9px 12px;
+    gap: 2px !important;
+  }
 
-    :global(.network-chain-select__name) {
-        display: none;
-    }
+  :global(.network-chain-select img) {
+    width: 20px;
+    height: 20px;
+  }
+
+  :global(.network-chain-select__name) {
+    display: none;
+  }
 }
 
 button.btn {
-    background: transparent;
-    border: none;
-    color: #fff;
-    position: relative;
-    cursor: pointer;
-    padding: 9px 12px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  position: relative;
+  cursor: pointer;
+  padding: 9px 12px;
 }
 
 .counterWrap {
-    min-width: 46px;
-    height: 23px;
-    position: relative;
-    background: transparent;
-    padding: 4px 8px;
-    text-align: center;
+  min-width: 46px;
+  height: 23px;
+  position: relative;
+  background: transparent;
+  padding: 4px 8px;
+  text-align: center;
 }
 
 .counterWrap::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    inset: 0;
-    padding: 0.09em;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    border-radius: 27px;
-    background: linear-gradient(90deg, currentColor, rgba(0,0,0,.32));
-    -webkit-mask:
-            linear-gradient(#fff 0 0) content-box,
-            linear-gradient(#fff 0 0);
-    mask:
-            linear-gradient(#fff 0 0) content-box,
-            linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  padding: 0.09em;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 27px;
+  background: linear-gradient(90deg, currentColor, rgba(0, 0, 0, 0.32));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
 }
 
 .counter {
-    color: #fff;
-    font-size: 12px;
-    font-weight: 600;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
 
+@media screen and (max-width: $breakpoint-tablet) {
+  button.btn {
+    padding: 6px 8px;
+  }
 }

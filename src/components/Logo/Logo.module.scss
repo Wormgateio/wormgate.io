@@ -1,0 +1,21 @@
+@import '../../utils/mediaBreakpoints/mediaBreakpointsVariables.scss';
+
+.logo {
+  font-size: 32px;
+  margin: 0;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 0;
+}
+
+.imageWithText {
+  width: 203px;
+  height: 60px;
+}
+
+@media screen and (max-width: $breakpoint-tablet) {
+  .imageWithText {
+    width: 150px;
+    height: 40px;
+  }
+}

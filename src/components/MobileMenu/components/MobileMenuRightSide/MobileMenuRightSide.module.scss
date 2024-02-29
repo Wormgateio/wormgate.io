@@ -1,0 +1,67 @@
+@import '../../../../utils/mediaBreakpoints/mediaBreakpointsVariables.scss';
+
+.counterWrap {
+  min-width: 46px;
+  height: 23px;
+  position: relative;
+  background: #00000052;
+  padding: 4px 8px;
+  text-align: center;
+  margin-left: 4px;
+  border-radius: 27px;
+}
+
+.counterWrap::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  padding: 0.09em;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 27px;
+  background: linear-gradient(90deg, currentColor, rgba(0, 0, 0, 0.32));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.counter {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.profileButton {
+  background-color: transparent;
+  border: 0;
+  border-radius: 10px;
+  padding: 3px 4px;
+  margin-left: 5px;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.walletButton {
+  background-color: transparent;
+  border: 0;
+  border-radius: 10px;
+  padding: 3px 4px;
+  margin-left: 5px;
+}
+
+@media screen and (max-width: $breakpoint-mobile) {
+  .profileButton {
+    margin-left: 2px;
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}

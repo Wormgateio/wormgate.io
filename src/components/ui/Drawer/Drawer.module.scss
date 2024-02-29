@@ -1,0 +1,28 @@
+@import '../../../utils/mediaBreakpoints/mediaBreakpointsVariables.scss';
+
+.drawer {
+  border-radius: 12px 0 0 12px;
+  background: #161d27 !important;
+  padding: 24px;
+  color: #fff;
+}
+
+.drawer :global(.ant-drawer-body) {
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media screen and (max-width: $breakpoint-desktop) {
+  .drawer {
+    border-radius: 0;
+    padding: 16px;
+  }
+}
+
+@media screen and (max-width: $breakpoint-mobile) {
+  .drawer {
+    padding: 0;
+  }
+}
