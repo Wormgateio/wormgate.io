@@ -7,7 +7,7 @@ import ChainLabel from "../../../../components/ChainLabel/ChainLabel";
 import { NFTDto } from "../../../../common/dto/NFTDto";
 import ListCard from "../../../../components/ListCard/ListCard";
 
-import styles from "./NftList.module.css";
+import styles from "./NftList.module.scss";
 
 function NftList({ data }: { data: NFTDto[] }) {
     const router = useRouter();
