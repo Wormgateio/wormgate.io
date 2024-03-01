@@ -76,6 +76,7 @@ function NftPage({ params, searchParams }: NftPageProps) {
 
             <div className={cn.nft}>
                 <ListCard
+                    className={cn.card}
                     tokenId={nft.tokenId}
                     image={<PinataImage hash={nft.pinataImageHash} fileName={nft.pinataFileName} name={nft.name} />}
                     onClick={() => handleCardClick(nft)}

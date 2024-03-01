@@ -37,5 +37,26 @@
 }
 
 @media screen and (max-width: $breakpoint-tablet) {
+  .title {
+    flex-wrap: wrap;
+  }
 
+  .card {
+    width: auto;
+    height: auto;
+  }
+}
+
+@media screen and (max-width: $breakpoint-mobile) {
+  .title {
+    font-size: 20px;
+    margin-bottom: 32px;
+    padding: 0 10px;
+    gap: 0;
+    text-align: center;
+  }
+
+  .back {
+    margin-bottom: 16px;
+  }
 }
