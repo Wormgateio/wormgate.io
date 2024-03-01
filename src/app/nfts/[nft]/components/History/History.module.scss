@@ -1,3 +1,5 @@
+@import './../../../../../utils/mediaBreakpoints/mediaBreakpointsVariables.scss';
+
 .container {
     padding: 16px;
     border-radius: 12px;
@@ -80,17 +82,12 @@
 }
 
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $breakpoint-tablet) {
     .scheme {
-        flex-direction: column;
         gap: 4px;
         flex-grow: 1;
-        align-items: center;
+        justify-content: center;
         margin-top: 10px;
-    }
-
-    .scheme img {
-        transform: rotate(90deg);
     }
 
     .icon {
@@ -100,5 +97,19 @@
 
     .chainLabel {
         font-size: 12px;
+    }
+
+    .card {
+        display: block;
+    }
+
+    .info {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .value {
+        color: #FFFFFFA3
     }
 }

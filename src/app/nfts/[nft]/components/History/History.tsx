@@ -10,7 +10,7 @@ import { OperationHistoryDto } from "../../../../../common/dto/OperationHistoryD
 import ChainLabel from "../../../../../components/ChainLabel/ChainLabel";
 import ChainStore from "../../../../../store/ChainStore";
 
-import styles from "./History.module.css";
+import styles from "./History.module.scss";
 
 const OPERATION_ICONS = {
     [BalanceLogType.Mint]: '/svg/mint-operation.svg',
@@ -50,19 +50,16 @@ function History({ history, loading, className }: Props) {
                         <div key={index} className={styles.card}>
                             <div className={styles.info}>
                                 <div>
-                                    <div className={styles.label}>Action</div>
                                     <div className={styles.operation}>
                                         <Image src={OPERATION_ICONS[item.type]} width={20} height={20} alt="" />
                                         <span>{OPERATION_NAME[item.type]}</span>
                                     </div>
                                 </div>
                                 <div>
-                                    <div className={styles.label}>Time</div>
                                     <div className={styles.value}>{intlFormatDistance(new Date(item.date), new Date(), { locale: 'en-US' })}</div>
                                 </div>
                             </div>
                             <div className={styles.chains}>
-                                <div className={styles.label}>Network</div>
                                 <div className={styles.scheme}>
                                     <ChainLabel network={chain.network} label={chain.name} justify="center" iconClassName={styles.icon} labelClassName={styles.chainLabel} />
                                     {targetChain && (
