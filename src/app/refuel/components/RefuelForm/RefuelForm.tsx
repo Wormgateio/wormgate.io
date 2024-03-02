@@ -374,18 +374,18 @@ function RefuelForm() {
                         </Flex>
                     </Flex>
 
-                    <Flex align="center" gap={12}>
-                        <Form.Item style={{ flex: 1 }} name="from" label="From">
+                    <Flex className={cn.formInputs} align="center" gap={12}>
+                        <Form.Item className={cn.chainInput}  style={{ flex: 1 }} name="from" label="From">
                             <ChainSelect
                                 chains={chains}
-                                className={styles.dropdown}
+                                className={cn.dropdown}
                             />
                         </Form.Item>
-                        <Image src="/svg/arrows-left-right.svg" alt="" width={20} height={20} />
-                        <Form.Item style={{ flex: 1 }} name="to" label="To">
+                        <Image className={cn.arrowsImage} src="/svg/arrows-left-right.svg" alt="" width={20} height={20} />
+                        <Form.Item className={cn.chainInput} style={{ flex: 1 }} name="to" label="To">
                             <ChainSelect
                                 chains={chainsTo}
-                                className={styles.dropdown}
+                                className={cn.dropdown}
                             />
                         </Form.Item>
                     </Flex>
@@ -400,7 +400,7 @@ function RefuelForm() {
                     </Form.Item>
                     {!networkFromIsDifferent && <div className={cn.maxRefuel}>Max Refuel: {amountMaxOutputFormatted || '--'}</div>}
 
-                    <Divider />
+                    <Divider className={cn.divider}/>
 
                     <div className={cn.refuelInfo}>
                         <Flex className={cn.refuelInfoItem} justify="space-between" align="center" wrap="wrap">

@@ -17,8 +17,8 @@
     }
 
     .listItem {
-        width: 180px;
-        height: 180px;
+        width: 180px !important;
+        height: 180px !important;
     }
 
     .chain {
@@ -37,7 +37,7 @@
 
 @media screen and (max-width: $breakpoint-mobile) {
     .listItem {
-        width: 140px;
-        height: 140px;
+        width: 140px !important;
+        height: 140px !important;
     }
 }

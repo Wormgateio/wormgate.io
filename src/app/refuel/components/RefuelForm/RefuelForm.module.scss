@@ -1,3 +1,5 @@
+@import '../../../../utils/mediaBreakpoints/mediaBreakpointsVariables.scss';
+
 .card {
   max-width: 530px;
   margin: auto;
@@ -79,5 +81,54 @@
     & > div {
       width: 100%;
     }
+  }
+}
+
+@media screen and (max-width: $breakpoint-mobile) {
+  .refuelCostBanner {
+    margin-bottom: 16px;
+  }
+
+  .formInputs {
+    flex-direction: column;
+    gap: 0 !important;
+  }
+
+  .chainInput {
+    width: 100%;
+
+    margin-bottom: 16px !important;
+
+    :global label {
+      font-size: 12px !important;
+    }
+  }
+
+  .amount {
+    margin-bottom: 4px !important; 
+
+    :global div {
+      font-size: 12px !important;
+    }
+  }
+
+  .arrowsImage {
+    transform: rotate(90deg);
+  }
+
+  .maxRefuel {
+    font-size: 12px;
+  }
+
+  .refuelInfo {
+    margin-bottom: 16px;
+
+    :global div {
+      font-size: 12px !important;
+    }
+  }
+
+  .divider {
+    margin: 16px 0 !important;
   }
 }
