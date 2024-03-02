@@ -94,18 +94,16 @@ function Page({ params }: Props) {
                         <div className={styles.main}>
                             <div className={styles.nftName}>{nft.name}</div>
 
-                            <Space style={{ width: '100%' }} direction="vertical" size={[0, 8]}>
+                            <Space className={styles.description} style={{ width: '100%' }} direction="vertical" size={[0, 8]}>
                                 <div className={styles.descrItem}>
                                     <div>ID</div>
                                     <div>{nft.tokenId}</div>
                                 </div>
                                 <div className={styles.descrItem}>
                                     <div>Network</div>
-                                    <div>
                                         <div className={styles.chain}>
                                             <ChainLabel network={nft.chainNetwork} label={nft.chainName} />
                                         </div>
-                                    </div>
                                 </div>
                             </Space>
                         </div>

@@ -1,3 +1,5 @@
+@import './../../../utils/mediaBreakpoints/mediaBreakpointsVariables.scss';
+
 .page {
     max-width: 772px;
     margin: auto;
@@ -111,13 +113,6 @@
     font-weight: 600;
 }
 
-.description {
-    margin-top: 12px;
-    font-size: 14px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.64);
-}
-
 .form {
     margin-top: 12px;
 }
@@ -141,7 +136,23 @@
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: $breakpoint-laptop) {
+    .info {
+        flex-direction: column;
+        align-items: stretch;
+        margin-top: 20px;
+    }
+
+    .card {
+        flex-direction: column;
+    }
+
+    .image {
+        align-self: center;
+    }
+}
+
+@media screen and (max-width: $breakpoint-tablet) {
     .back {
         font-size: 14px;
     }
@@ -160,14 +171,8 @@
     }
 
     .image {
-        padding: 8px;
         height: 311px;
-    }
-
-    .info {
-        flex-direction: column;
-        align-items: stretch;
-        margin-top: 20px;
+        width: 311px;
     }
 
     .account {
@@ -180,5 +185,34 @@
 
     .form {
         margin-top: 20px;
+    }
+}
+
+@media screen and (max-width: $breakpoint-mobile) {
+   .description {
+        flex-direction: row !important;
+        justify-content: space-between;
+
+        & > div {
+            width: 40%;
+        }
+   }
+
+   .descrItem {
+        flex-direction: column;
+        gap: 4px;
+        align-items: flex-start;
+   }
+
+   .info {
+        margin-top: 0;
+   }
+
+   .form {
+        margin-top: 0;
+    }
+
+    .back {
+        margin-bottom: 12px;
     }
 }

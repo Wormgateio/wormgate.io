@@ -1,3 +1,5 @@
+@import '../../utils/mediaBreakpoints/mediaBreakpointsVariables.scss';
+
 .card {
     position: relative;
     width: 240px;
@@ -113,18 +115,25 @@
     opacity: 0.64;
 }
 
-@media screen and (max-width: 768px) {
-    .card {
-        padding: 8px;
+@media screen and (max-width: $breakpoint-tablet) {
+    .card {        
         border-radius: 8px;
         gap: 8px !important;
     }
 
+    .tokenId {
+        color: #fff;
+        opacity: 1 !important;
+    }
+
     .image {
-        padding: 4.79px;
+        padding: 0;
         margin: 0;
-        height: 134px;
         border-radius: 7.19px;
+       
+        img {
+            height: 100%;
+        }
     }
 
     .name {
@@ -141,5 +150,28 @@
 
     .xp span {
         font-size: 10px;
+    }
+
+    .footer {
+        padding: 6px 4px;
+
+        & > div:before {
+            opacity: 1;
+            background-color: #00000052;
+        }
+
+        & > div > div {
+            opacity: 1;
+        }
+    }
+}
+
+@media screen and (max-width: $breakpoint-mobile) {
+    .tokenId {
+        font-size: 10px;
+    }
+
+    .footer > div {
+        padding: 4px;
     }
 }

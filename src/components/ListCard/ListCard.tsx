@@ -2,7 +2,7 @@ import { Flex } from "antd";
 import { MouseEvent, ReactNode } from "react";
 import clsx from "clsx";
 
-import styles from "./ListCard.module.css";
+import styles from "./ListCard.module.scss";
 
 interface Props {
     image?: ReactNode;
@@ -16,7 +16,7 @@ interface Props {
 
 export default function ListCard({ image, label, className, tokenId, onClick }: Props) {
     return (
-        <Flex gap={12} vertical className={clsx(styles.card, className)} onClick={onClick}>
+        <Flex gap={12} vertical className={clsx(styles.card, className)} justify={label ? 'space-between' : 'center'} onClick={onClick}>
             {image && (
                 <Flex vertical align="center" justify="center" className={styles.image}>
                     {image}
@@ -25,7 +25,7 @@ export default function ListCard({ image, label, className, tokenId, onClick }: 
 
             <Flex className={styles.footer} justify={label ? 'space-between' : 'center'}>
                 {label && (<div><div className={styles.label}>{label}</div></div>)}
-                {tokenId && (<div><div>#{tokenId}</div></div>)}
+                {tokenId && (<div><div className={styles.tokenId}>#{tokenId}</div></div>)}
             </Flex>
         </Flex>
     )

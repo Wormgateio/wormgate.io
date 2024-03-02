@@ -1,0 +1,43 @@
+@import '../../../../utils/mediaBreakpoints/mediaBreakpointsVariables.scss';
+
+.listItem {
+    width: 240px;
+}
+
+
+@media screen and (max-width: $breakpoint-laptop) {
+    .list {
+        justify-content: space-evenly;
+    }
+}
+
+@media screen and (max-width: $breakpoint-tablet) {
+    .list {
+        gap: 16px !important;
+    }
+
+    .listItem {
+        width: 180px;
+        height: 180px;
+    }
+
+    .chain {
+        gap: 4.79px !important;
+    }
+
+    .chainIcon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .chainLabel {
+        display: none;
+    }
+}
+
+@media screen and (max-width: $breakpoint-mobile) {
+    .listItem {
+        width: 140px;
+        height: 140px;
+    }
+}
