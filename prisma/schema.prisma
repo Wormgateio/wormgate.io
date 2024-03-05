@@ -152,6 +152,18 @@ model Chain {
   @@map(name: "chains")
 }
 
+model RareNft {
+  id       Int         @id @default(autoincrement())
+  name     RareNftName @unique @map("name")
+  mintTime DateTime  @default(now()) @map("mint_time")
+
+  @@map(name: "rare_nft")
+}
+
+enum RareNftName {
+  goldAxe
+}
+
 enum BalanceOperation {
   credit
   debit

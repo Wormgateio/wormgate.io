@@ -18,6 +18,7 @@ import { CONTRACT_ADDRESS } from "../../common/constants";
 import { NetworkName } from "../../common/enums/NetworkName";
 import ApiService from "../../services/ApiService";
 import ChainStore from "../../store/ChainStore";
+import GoldenAxeBlock from "./components/GoldenAxeBlock/GoldenAxeBlock";
 
 function Page() {
     const router = useRouter();
@@ -114,7 +115,7 @@ function Page() {
         <>
             {contextHolder}
 
-            <Card isLoading={isLoading} className={styles.page} title="Mint and Bridge NFT">
+            <Card isLoading={isLoading} className={styles.page} title="Mint and Bridge NFT" afterCard={<GoldenAxeBlock />} >
                 <Tabs className={styles.tabs} defaultActiveKey="single" items={tabs} type="card" />
             </Card>
         </>

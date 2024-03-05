@@ -6,11 +6,12 @@ import { Spin } from 'antd';
 interface CardProps {
   children: ReactNode;
   title?: string | ReactNode;
+  afterCard?: ReactNode;
   className?: string;
   isLoading?: boolean;
 }
 
-export default function Card({ title, children, className, isLoading }: CardProps) {
+export default function Card({ title, children, className, afterCard, isLoading }: CardProps) {
   return (
     <div
       className={clsx(styles.card, className, {
@@ -24,6 +25,8 @@ export default function Card({ title, children, className, isLoading }: CardProp
       )}
 
       <div className={styles.cardBody}>{children}</div>
+
+      {afterCard}
 
       {isLoading && (
         <div className={styles.spinner}>
