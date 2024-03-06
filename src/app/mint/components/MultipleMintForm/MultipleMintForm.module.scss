@@ -1,0 +1,95 @@
+@import '../../../../utils/mediaBreakpoints/mediaBreakpointsVariables.scss';
+
+.wrapper {
+  gap: 12px;
+  align-items: center;
+}
+
+.chains {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex: 1;
+}
+
+.clearButton {
+  width: fit-content;
+  background: transparent;
+  border: 0;
+  padding: 4px 8px;
+  color: #B087F3A3;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.formChain {
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  gap: 8px;
+
+  padding: 12px;
+  border: 1px solid #B087F3A3;
+  border-radius: 12px;
+  box-shadow: 0px 0px 12px 0px #B087F340;
+  background: #FFFFFF0A;
+
+  width: 100%;
+
+  > span {
+    padding-inline-start: 0;
+    padding-inline-end: 0;
+
+    &:last-of-type {
+      flex: 1;
+    }
+  }
+
+  &:after {
+    content: none !important;
+  }
+
+  :global(.ant-checkbox-inner) {
+    background-color: transparent !important;
+    border-color: #B087F3 !important;
+    box-shadow: 0px 0px 12px 0px #B087F33D;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+
+    &:after {
+      border-color: #B087F3;
+      inset-inline-start: 30%;
+    }
+  }
+}
+
+.formField {
+  margin-bottom: 0 !important;
+  width: 100%;
+}
+
+.chainLabelWrapper {
+  display: flex;
+  gap: 8px;
+}
+
+.chainLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff
+}
+
+.sourceChainWrapper {
+  flex: 1;
+}
+
+@media screen and (max-width: $breakpoint-mobile) {
+  .mintBonusImage {
+    width: 48px;
+    height: 42px;
+  }
+}

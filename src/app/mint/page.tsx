@@ -10,7 +10,7 @@ import { AxiosError } from "axios";
 import styles from './page.module.scss';
 import Card from "../../components/ui/Card/Card";
 import SoonLabel from "../../components/SoonLabel/SoonLabel";
-import MultipleMintForm from "./components/MultipleMintForm/MultipleMintForm";
+import MultipleMintForm, { MultipleMintFormData } from "./components/MultipleMintForm/MultipleMintForm";
 import SingleMintForm, { SingleMintFormData } from "./components/SingleMintForm/SingleMintForm";
 import AppStore from "../../store/AppStore";
 import { mintNFT } from "../../core/contractController";
@@ -110,6 +110,10 @@ function Page() {
         }
     };
 
+    const mintMultiple = async (formData: MultipleMintFormData) => {
+        console.log(formData, 'formData');
+    }
+
     const tabs = [
         {
             key: 'single',
@@ -118,9 +122,10 @@ function Page() {
         },
         {
             key: 'multiple',
-            label: <Space size={8}>Multiple <SoonLabel /></Space>,
-            children: <MultipleMintForm />,
-            disabled: true
+            label: 'Multiple',
+            // label: <Space size={8}>Multiple <SoonLabel /></Space>,
+            children: <MultipleMintForm onSubmit={mintMultiple} />,
+            // disabled: true
         }
     ];
 
