@@ -1,16 +1,17 @@
 'use client';
 
-import { Flex, Form } from 'antd';
+import { useCallback, useEffect } from 'react';
+import { Flex, Form, Skeleton } from 'antd';
 import { observer } from 'mobx-react-lite';
 import ChainStore from '../../../../store/ChainStore';
 import MultipleMintFormChain from './MultipleMintFormChain';
-import { useNetwork } from 'wagmi';
-import { useEffect, useMemo } from 'react';
+import { useNetwork, useSwitchNetwork } from 'wagmi';
 import Image from 'next/image';
-import { ChainDto } from '../../../../common/dto/ChainDto';
 
 import cn from './MultipleMintForm.module.scss';
 import ChainSelect from '../../../../components/ChainSelect/ChainSelect';
+import Button from '../../../../components/ui/Button/Button';
+import { toDictionary } from '@utils/toDictionary';
 
 interface MultipleMintFormProps {
     onSubmit: (formData: MultipleMintFormData) => void;
@@ -18,63 +19,134 @@ interface MultipleMintFormProps {
 
 export interface MultipleMintFormData {
     from: string;
-    to: string[];
+    to: {
+        id: string
+        name: string
+        network: string,
+        checked: boolean, 
+    }[];
 }
+
+const skeletonChains = new Array(10).fill(0).map((_, i) => i)
 
 function MultipleMintForm({ onSubmit }: MultipleMintFormProps) {
     const [form] = Form.useForm();
-    const watchedFormData = Form.useWatch([], form);
+    const watchedFormData = Form.useWatch<MultipleMintFormData>([], form);
 
+    const { switchNetworkAsync } = useSwitchNetwork();
     const { chains } = ChainStore;
     const { chain } = useNetwork();
 
-    const { sourceChain, otherChains } = useMemo(() => {
-        if (!watchedFormData?.from) {
-            return { sourceChain: null, otherChains: [] }
+    useEffect(() => {
+        if (chain && chains.length) {
+            const formData: MultipleMintFormData = {
+                from: '',
+                to: [],
+            }
+
+            chains.forEach((c) => {
+                if (chain && c.network === chain.network) {
+                    formData.from = c.id
+                } else {
+                    formData.to.push({
+                        checked: true, 
+                        network: c.network,
+                        name: c.name,
+                        id: c.id
+                    })
+                }
+            })
+
+            form.setFieldsValue(formData)
         }
-        
-        let sourceChain = null as ChainDto | null;
-        const otherChains: ChainDto[] = []
+    }, [chains, chain]);
+
+    const switchNetwork = async () => {
+        const chainFrom = ChainStore.getChainById(watchedFormData?.from);
+        if (chainFrom && switchNetworkAsync) {
+          await switchNetworkAsync(chainFrom.chainId);
+          form.setFieldsValue({ amount: undefined });
+        }
+    };
+
+    const changeSourceChain = (key: string) => {
+        const formValues: MultipleMintFormData= form.getFieldsValue();
+        const formData: MultipleMintFormData = {
+            from: '',
+            to: [],
+        }
+
+        const targetChainsById = toDictionary(formValues.to, c => c.id);
 
         chains.forEach((c) => {
-            if (chain && c.id === watchedFormData.from) {
-                sourceChain = c
+            if (c.id === key) {
+                formData.from = c.id
             } else {
-                otherChains.push(c)
+                formData.to.push({
+                    checked: targetChainsById[c.id] ? targetChainsById[c.id].checked : true, 
+                    network: c.network,
+                    name: c.name,
+                    id: c.id
+                })
             }
         })
 
-        return { sourceChain, otherChains }
-    }, [chains, watchedFormData?.from, watchedFormData?.from]);
+        form.setFieldsValue(formData)
+    }
 
-    useEffect(() => {
-        if (chain) {
-            form.setFieldsValue({ from: chain.id });
-        }
-    }, [chain]);
+    const onToggleChain = useCallback((idx: number, newValue: boolean) => {
+        const fields: MultipleMintFormData['to'] = form.getFieldValue('to')
+
+        form.setFieldValue('to', [
+            ...fields.slice(0, idx),
+            {
+                ...fields[idx],
+                checked: newValue
+            },
+            ...fields.slice(idx + 1),
+        ])
+    }, [])
+
+    const clearAllChains = () => {
+        form.setFieldValue('to', watchedFormData.to.map((c) => ({...c, checked: false})))
+    }
+
+    const fromChain = ChainStore.getChainById(watchedFormData?.from);
+    const networkFromIsDifferent = fromChain?.chainId !== chain?.id;
+
+    const showLoader = !chains.length || !chain || !watchedFormData?.to?.length
     
     return (
         <Form size="large" layout="vertical" form={form} onFinish={onSubmit}>
             <Flex className={cn.wrapper}>
                 <Flex className={cn.sourceChainWrapper}>
                     <Form.Item className={cn.formField} name="from">
-                        <ChainSelect chains={chains} value={watchedFormData?.from} />
+                        <ChainSelect chains={chains} value={watchedFormData?.from} onChange={changeSourceChain}/>
                     </Form.Item>
                 </Flex>
 
                 <div>
-                    <Image src='/svg/multipleMint.svg' width={23} height={23} alt='>' />
+                    <Image className={cn.multipleMintImage} src='/svg/multipleMint.svg' width={23} height={31} alt='>' />
                 </div>
 
-                <div className={cn.chains}>
-                    <button className={cn.clearButton}>Clear All</button>
+                <div className={cn.chainsWrapper}>
+                    <button className={cn.clearButton} onClick={clearAllChains}>Clear All</button>
 
-                    {otherChains.map((chain) => <MultipleMintFormChain value={chain.id} network={chain?.network} label={chain?.name} />)}
+                    <div className={cn.chains}>
+                        <Form.List name="to">
+                            {() => (
+                                showLoader ? 
+                                    skeletonChains.map((idx) => <Skeleton.Button key={idx} className={cn.chainSkeleton} />)
+                                : 
+                                    watchedFormData.to.map((chain, idx) => <MultipleMintFormChain key={chain.id} idx={idx} onChange={onToggleChain} network={chain?.network} label={chain?.name} checked={chain.checked} />)
+                            )}
+                        </Form.List> 
+                    </div>
                 </div>
             </Flex>
 
-            <Flex align="center" gap={12}>
-                {/* {networkFromIsDifferent ? (
+            <Flex className={cn.footer} align="center" gap={12}>
+                {networkFromIsDifferent ? (
                   <Button type="button" block onClick={switchNetwork}>
                     Switch network to {fromChain?.name}
                   </Button>
@@ -82,7 +154,7 @@ function MultipleMintForm({ onSubmit }: MultipleMintFormProps) {
                   <Button block type="submit">
                     Mint
                   </Button>
-                )} */}
+                )}
 
                 <Image className={cn.mintBonusImage} src="/svg/coins/our-mint.svg" alt="+1" width={56} height={50} />
             </Flex>

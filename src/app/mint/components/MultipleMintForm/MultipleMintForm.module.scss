@@ -1,8 +1,16 @@
 @import '../../../../utils/mediaBreakpoints/mediaBreakpointsVariables.scss';
 
 .wrapper {
-  gap: 12px;
+  gap: 2px;
   align-items: center;
+  margin-bottom: 24px;
+}
+
+.chainsWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex: 1;
 }
 
 .chains {
@@ -10,7 +18,11 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 8px;
-  flex: 1;
+  width: 100%;
+
+  max-height: 50vh;
+  overflow-y: overlay;
+  padding: 10px 10px 10px 12px;
 }
 
 .clearButton {
@@ -55,14 +67,14 @@
   :global(.ant-checkbox-inner) {
     background-color: transparent !important;
     border-color: #B087F3 !important;
-    box-shadow: 0px 0px 12px 0px #B087F33D;
+    box-shadow: inset 0px 0px 12px 0px #B087F33D;
     width: 20px;
     height: 20px;
     border-radius: 4px;
 
     &:after {
       border-color: #B087F3;
-      inset-inline-start: 30%;
+      inset-inline-start: 28%;
     }
   }
 }
@@ -85,9 +97,81 @@
 
 .sourceChainWrapper {
   flex: 1;
+  margin-right: 10px;
+}
+
+.multipleMintImage {
+  display: block;
+}
+
+.chainSkeleton {
+  height: 50px;
+  width: 100% !important;
+
+  span {
+    width: 100% !important;
+    height: 50px !important;
+  }
+}
+
+@media screen and (max-width: $breakpoint-tablet) {
+  .chains {
+    max-height: 45vh;
+  }
 }
 
 @media screen and (max-width: $breakpoint-mobile) {
+  .wrapper {
+    flex-direction: column;
+    gap: 4
+  }
+
+  .chains {
+    width: 100%;
+    max-height: 40vh;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-left: 0;
+  }
+
+  .sourceChainWrapper {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .multipleMintImage {
+    transform: rotate(90deg);
+  }
+
+  .chainLabelWrapper {
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .formChain {
+    position: relative;
+    width: calc(50% - 8px);
+
+    padding: 8px;
+    gap: 0;
+  
+    :global(.ant-checkbox) {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+    }
+  }
+
+  .chainSkeleton {
+    width: calc(50% - 8px) !important;
+    height: 72px !important;
+    
+    span {
+      height: 72px !important;
+    }
+  }
+
   .mintBonusImage {
     width: 48px;
     height: 42px;

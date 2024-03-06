@@ -122,10 +122,11 @@ function Page() {
         },
         {
             key: 'multiple',
-            label: 'Multiple',
-            // label: <Space size={8}>Multiple <SoonLabel /></Space>,
+            // todo: should replace after add logic for multiple mint
+            // label: 'Multiple',
+            label: <Space size={8}>Multiple <SoonLabel /></Space>,
             children: <MultipleMintForm onSubmit={mintMultiple} />,
-            // disabled: true
+            disabled: true
         }
     ];
 
