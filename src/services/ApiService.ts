@@ -9,6 +9,7 @@ import { LeaderDto } from "../common/dto/LeaderDto";
 import { RandomImageDto } from "../common/dto/RandomImageDto";
 import { OperationHistoryDto } from "../common/dto/OperationHistoryDto";
 import { CreateRefuelDto } from "../common/dto/RefuelDto";
+import { RareNftDto } from "../common/dto/RareNftDto";
 
 class ApiService {
     async getAccount(): Promise<AccountDto> {
@@ -114,6 +115,16 @@ class ApiService {
 
     async getNftHistory(nftId: string, currentNetwork: string) {
         const response = await apiClient.get<OperationHistoryDto[]>('history', { params: { nftId, currentNetwork } });
+        return response.data;
+    }
+
+    async getRareNfts() {
+        const response = await apiClient.get<RareNftDto>('rare-nft');
+        return response.data;
+    }
+
+    async createRareNft() {
+        const response = await apiClient.post<RareNftDto>('rare-nft');
         return response.data;
     }
 }

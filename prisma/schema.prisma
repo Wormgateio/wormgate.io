@@ -74,6 +74,7 @@ model MintLog {
   id              String     @id @default(uuid())
   nft             Nft        @relation(fields: [nftId], references: [id])
   nftId           String     @map("nft_id")
+  nftType         NftType    @map("nft_type")
   balanceLog      BalanceLog @relation(fields: [balanceLogId], references: [id])
   balanceLogId    String     @unique @map("balance_log_id")
   transactionHash String     @map("transaction_hash")
@@ -85,6 +86,7 @@ model MintCustomLog {
   id              String     @id @default(uuid())
   nft             Nft        @relation(fields: [nftId], references: [id])
   nftId           String     @map("nft_id")
+  nftType         NftType    @map("nft_type")
   balanceLog      BalanceLog @relation(fields: [balanceLogId], references: [id])
   balanceLogId    String     @unique @map("balance_log_id")
   transactionHash String     @map("transaction_hash")
@@ -154,14 +156,15 @@ model Chain {
 
 model RareNft {
   id       Int         @id @default(autoincrement())
-  name     RareNftName @unique @map("name")
-  mintTime DateTime  @default(now()) @map("mint_time")
+  type     NftType     @unique @map("type")
+  mintTime DateTime    @default(now()) @map("mint_time")
 
   @@map(name: "rare_nft")
 }
 
-enum RareNftName {
-  goldAxe
+enum NftType {
+  goldenAxe
+  common
 }
 
 enum BalanceOperation {

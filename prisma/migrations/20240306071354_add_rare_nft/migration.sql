@@ -1,10 +1,10 @@
 -- CreateEnum
-CREATE TYPE "RareNftName" AS ENUM ('goldAxe');
+CREATE TYPE "NftType" AS ENUM ('goldenAxe');
 
 -- CreateTable
 CREATE TABLE "rare_nft" (
     "id" SERIAL NOT NULL,
-    "name" "RareNftName" NOT NULL,
+    "name" "NftType" NOT NULL,
     "mint_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "rare_nft_pkey" PRIMARY KEY ("id")

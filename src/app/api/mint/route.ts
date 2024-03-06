@@ -7,7 +7,7 @@ import { BalanceLogType } from "../../../common/enums/BalanceLogType";
 import { BalanceOperationCost } from "../../../common/enums/BalanceOperationCost";
 import { CreateMintDto } from "../../../common/dto/MintDto";
 import { goldenAxeIpf, ipfs } from './ipfs';
-import { RareNftName } from "../../../common/enums/RareNftName";
+import { NftType } from "../../../common/enums/NftType";
 import { compareAsc } from "date-fns/compareAsc";
 import { getRandomTimeForNextDay } from "@utils/getRandomTimeForNextDay";
 
@@ -95,7 +95,7 @@ async function createNFT(data: CreateNFTDto, isGoldenAxe: boolean) {
 
         if (isGoldenAxe) {
             await context.rareNft.update({
-                where: { name: RareNftName.GoldAxe },
+                where: { type: NftType.GoldenAxe },
                 data: { mintTime: getRandomTimeForNextDay() }
             })
         }
@@ -114,7 +114,8 @@ async function createNFT(data: CreateNFTDto, isGoldenAxe: boolean) {
             data: {
                 balanceLogId: balanceLog.id,
                 nftId: nft.id,
-                transactionHash: data.transactionHash
+                transactionHash: data.transactionHash,
+                nftType: isGoldenAxe ? NftType.GoldenAxe : NftType.Common
             }
         });
 
@@ -144,7 +145,7 @@ async function createNFT(data: CreateNFTDto, isGoldenAxe: boolean) {
 
 async function getNft() {
     const goldenAxeOptions = await prisma.rareNft.findFirst({
-        where: { name: RareNftName.GoldAxe }
+        where: { type: NftType.GoldenAxe }
     });
 
     if (goldenAxeOptions) {

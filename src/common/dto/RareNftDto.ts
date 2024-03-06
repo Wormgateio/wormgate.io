@@ -1,7 +1,7 @@
-import { RareNftName } from "../enums/RareNftName";
+import { NftType } from "../enums/NftType";
 
 export interface RareNftDto {
     id: string,
-    name: RareNftName,
+    name: NftType,
     mintTime: string
 }

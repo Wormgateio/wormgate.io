@@ -6,6 +6,7 @@ import { BalanceOperation } from "../../../../common/enums/BalanceOperation";
 import { BalanceLogType } from "../../../../common/enums/BalanceLogType";
 import { BalanceOperationCost } from "../../../../common/enums/BalanceOperationCost";
 import { sendNFTImage } from "../../nft/sendNFTImage";
+import { NftType } from "../../../../common/enums/NftType";
 
 /**
  * Mint операция
@@ -109,7 +110,8 @@ async function createNFT(data: CreateNFTDto) {
             data: {
                 balanceLogId: balanceLog.id,
                 nftId: nft.id,
-                transactionHash: data.transactionHash
+                transactionHash: data.transactionHash,
+                nftType: NftType.Common
             }
         });
 

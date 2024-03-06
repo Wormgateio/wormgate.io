@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { message, Space, Tabs } from 'antd';
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
@@ -111,12 +111,23 @@ function Page() {
         }
     ];
 
+    useEffect(() => {
+        ApiService.getRareNfts().then((data) => {
+            console.log(new Date(data[0].mintTime), 'data');
+        })
+    }, [])
+
+    const createqwe = () => {
+        ApiService.createRareNft()
+    }
+
     return (
         <>
             {contextHolder}
 
             <Card isLoading={isLoading} className={styles.page} title="Mint and Bridge NFT" afterCard={<GoldenAxeBlock />} >
                 <Tabs className={styles.tabs} defaultActiveKey="single" items={tabs} type="card" />
+                <button onClick={createqwe}>qweqweqwe</button>
             </Card>
         </>
     )
