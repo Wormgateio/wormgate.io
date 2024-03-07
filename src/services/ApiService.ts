@@ -117,6 +117,11 @@ class ApiService {
         const response = await apiClient.get<OperationHistoryDto[]>('history', { params: { nftId, currentNetwork } });
         return response.data;
     }
+
+    async getGoldenAxeReward() {
+        const response = await apiClient.get('golden-axe-reward');
+        return response.data;
+    }
 }
 
 export default new ApiService();

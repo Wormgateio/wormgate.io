@@ -1,10 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from "next/image";
 import { Modal, Tooltip } from 'antd';
 import cn from './GoldenAxeBlock.module.scss';
+import AppStore from '../../../../store/AppStore';
 
 export default function GoldenAxeBlock() {
+    const { fetchGoldenAxeReward, goldenAxeReward } = AppStore;
     const [showModal, setShowModal] = useState(false);
+
+    useEffect(() => {
+        if (!goldenAxeReward) {
+            fetchGoldenAxeReward()
+        }
+    }, [])
+
+    if (!goldenAxeReward) {
+        return null
+    }
 
     const modalTitle = (
         <div className={cn.modalTitle}>
@@ -19,14 +31,14 @@ export default function GoldenAxeBlock() {
             <h3 className={cn.title}>Strike Gold with Every Mint!</h3>
             <p className={cn.text}>
               Discover the <span className={cn.yellowText}>Golden Axe</span> in your daily mint for 
-              a chance to win <span className={cn.blueText}>$100!</span> Multiple axes and winners every day.
+              a chance to win <span className={cn.blueText}>${goldenAxeReward}!</span> Multiple axes and winners every day.
               Is fortune on your side today? <span className={cn.preview} onClick={() => setShowModal(true)}>Preview</span>
             </p>
 
             <Tooltip rootClassName={cn.tooltip} title={(
                 <p className={cn.tooltipText}>
                     Every day, several Golden Axes are randomly awarded to users at various times. 
-                    If you&lsquo;re one of the lucky recipients of a Golden Axe, you&lsquo;ll receive $100 in USDT, 
+                    If you&lsquo;re one of the lucky recipients of a Golden Axe, you&lsquo;ll receive ${goldenAxeReward} in USDT, 
                     deposited directly into your BEP-20 network wallet within 3 days, subject to verification. 
                     Keep minting for your chance to strike gold!
                 </p>
