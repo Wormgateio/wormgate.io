@@ -6,7 +6,10 @@ import { BalanceOperation } from "../../../common/enums/BalanceOperation";
 import { BalanceLogType } from "../../../common/enums/BalanceLogType";
 import { BalanceOperationCost } from "../../../common/enums/BalanceOperationCost";
 import { CreateMintDto } from "../../../common/dto/MintDto";
-import { ipfs } from './ipfs';
+import { goldenAxeIpf, ipfs } from './ipfs';
+import { NftType } from "../../../common/enums/NftType";
+import { compareAsc } from "date-fns/compareAsc";
+import { getRandomTimeForNextDay } from "@utils/getRandomTimeForNextDay";
 
 /**
  * Mint операция
@@ -36,14 +39,14 @@ export async function POST(request: Request) {
         return new BadRequest(`Chain network ${data.chainFromNetwork} not found`);
     }
 
-    const randomNft = ipfs[Math.floor(Math.random() * ipfs.length)];
+    const { nft, isGoldenAxe} = await getNft()
 
     const createdNFT = await createNFT({
-        name: randomNft.name,
+        name: nft.name,
         description: '',
-        pinataImageHash: randomNft.hash,
+        pinataImageHash: nft.hash,
         pinataJsonHash: null,
-        pinataFileName: randomNft.fileName,
+        pinataFileName: nft.fileName,
         user,
         userId: user.id,
         tokenId: data.tokenId,
@@ -53,7 +56,7 @@ export async function POST(request: Request) {
         }))?.id!,
         transactionHash: data.transactionHash,
         isCustom: false
-    });
+    }, isGoldenAxe);
 
     return Response.json(createdNFT);
 }
@@ -73,7 +76,7 @@ interface CreateNFTDto {
     isCustom: boolean;
 }
 
-async function createNFT(data: CreateNFTDto) {
+async function createNFT(data: CreateNFTDto, isGoldenAxe: boolean) {
     return prisma.$transaction(async (context) => {
         const nft = await context.nft.create({
             data: {
@@ -90,6 +93,13 @@ async function createNFT(data: CreateNFTDto) {
             }
         });
 
+        if (isGoldenAxe) {
+            await context.rareNft.update({
+                where: { type: NftType.GoldenAxe },
+                data: { mintTime: getRandomTimeForNextDay() }
+            })
+        }
+
         const balanceLog = await context.balanceLog.create({
            data: {
                userId: data.userId,
@@ -104,7 +114,8 @@ async function createNFT(data: CreateNFTDto) {
             data: {
                 balanceLogId: balanceLog.id,
                 nftId: nft.id,
-                transactionHash: data.transactionHash
+                transactionHash: data.transactionHash,
+                nftType: isGoldenAxe ? NftType.GoldenAxe : NftType.Common
             }
         });
 
@@ -130,4 +141,20 @@ async function createNFT(data: CreateNFTDto) {
 
         return nft;
     });
+}
+
+async function getNft() {
+    const goldenAxeOptions = await prisma.rareNft.findFirst({
+        where: { type: NftType.GoldenAxe }
+    });
+
+    if (goldenAxeOptions) {
+        const isReturnGoldenAxe = compareAsc(new Date(), new Date(goldenAxeOptions?.mintTime)) !== -1
+
+        if (isReturnGoldenAxe) {
+            return { nft: goldenAxeIpf, isGoldenAxe: true }
+        }
+    }
+
+    return { nft: ipfs[Math.floor(Math.random() * ipfs.length)], isGoldenAxe: false } 
 }

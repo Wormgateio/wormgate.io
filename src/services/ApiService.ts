@@ -9,6 +9,7 @@ import { LeaderDto } from "../common/dto/LeaderDto";
 import { RandomImageDto } from "../common/dto/RandomImageDto";
 import { OperationHistoryDto } from "../common/dto/OperationHistoryDto";
 import { CreateRefuelDto } from "../common/dto/RefuelDto";
+import { RareNftDto } from "../common/dto/RareNftDto";
 
 class ApiService {
     async getAccount(): Promise<AccountDto> {
