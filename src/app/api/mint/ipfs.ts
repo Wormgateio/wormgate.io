@@ -51,12 +51,12 @@ export const ipfs = [
     },
     {
         name: 'Galactic Aegis',
-        hash: 'QmTiD6QNwuq5WKEaghs24N7iknYCQ7gQiDQzw9gjcB7HMz',
+        hash: 'QmcYrnKd1zxCLtNFFz2yNguPgdHEZwnEqCeFtSfBDkr17E',
         fileName: 'photo_2024-02-23_20-06-46.jpg'
     },
     {
         name: 'Golden Ax',
-        hash: 'QmVPg4naVwcgErWasrrPFJUbjMi3FSzE1oKRs1CrGFGWVe',
+        hash: 'QmTiD6QNwuq5WKEaghs24N7iknYCQ7gQiDQzw9gjcB7HMz',
         fileName: '102088fd025e47a2aa29004b494a2dff.jpg'
     },
 ];
