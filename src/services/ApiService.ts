@@ -117,16 +117,6 @@ class ApiService {
         const response = await apiClient.get<OperationHistoryDto[]>('history', { params: { nftId, currentNetwork } });
         return response.data;
     }
-
-    async getRareNfts() {
-        const response = await apiClient.get<RareNftDto>('rare-nft');
-        return response.data;
-    }
-
-    async createRareNft() {
-        const response = await apiClient.post<RareNftDto>('rare-nft');
-        return response.data;
-    }
 }
 
 export default new ApiService();
