@@ -26,7 +26,7 @@ export default function GoldenAxeBlock() {
             <Tooltip rootClassName={cn.tooltip} title={(
                 <p className={cn.tooltipText}>
                     Every day, several Golden Axes are randomly awarded to users at various times. 
-                    If you're one of the lucky recipients of a Golden Axe, you'll receive $100 in USDT, 
+                    If you&lsquo;re one of the lucky recipients of a Golden Axe, you&lsquo;ll receive $100 in USDT, 
                     deposited directly into your BEP-20 network wallet within 3 days, subject to verification. 
                     Keep minting for your chance to strike gold!
                 </p>
