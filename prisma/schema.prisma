@@ -157,7 +157,9 @@ model Chain {
 model RareNft {
   id       Int         @id @default(autoincrement())
   type     NftType     @unique @map("type")
-  mintTime DateTime    @default(now()) @map("mint_time")
+  mintTimes DateTime[]  @default([]) @map("mint_times")
+  perDay    Int
+  reward    Int
 
   @@map(name: "rare_nft")
 }
