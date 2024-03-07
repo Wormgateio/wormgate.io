@@ -9,7 +9,14 @@ import { CreateMintDto } from "../../../common/dto/MintDto";
 import { goldenAxeIpf, ipfs } from './ipfs';
 import { NftType } from "../../../common/enums/NftType";
 import { compareAsc } from "date-fns/compareAsc";
-import { getRandomTimeForNextDay } from "@utils/getRandomTimeForNextDay";
+import { getRandomTimesForDay } from "@utils/getRandomTimeForDay";
+import { addDays, getDay } from "date-fns";
+
+interface GoldenAxeMintOptions {
+    mintTime: Date,
+    mintTimes: Date[]
+    perDay: number
+}
 
 /**
  * Mint операция
@@ -39,7 +46,7 @@ export async function POST(request: Request) {
         return new BadRequest(`Chain network ${data.chainFromNetwork} not found`);
     }
 
-    const { nft, isGoldenAxe} = await getNft()
+    const { nft, goldenAxeOptions} = await getNft()
 
     const createdNFT = await createNFT({
         name: nft.name,
@@ -56,7 +63,7 @@ export async function POST(request: Request) {
         }))?.id!,
         transactionHash: data.transactionHash,
         isCustom: false
-    }, isGoldenAxe);
+    }, goldenAxeOptions);
 
     return Response.json(createdNFT);
 }
@@ -76,7 +83,7 @@ interface CreateNFTDto {
     isCustom: boolean;
 }
 
-async function createNFT(data: CreateNFTDto, isGoldenAxe: boolean) {
+async function createNFT(data: CreateNFTDto, goldenAxeOptions: GoldenAxeMintOptions | null) {
     return prisma.$transaction(async (context) => {
         const nft = await context.nft.create({
             data: {
@@ -93,10 +100,10 @@ async function createNFT(data: CreateNFTDto, isGoldenAxe: boolean) {
             }
         });
 
-        if (isGoldenAxe) {
+        if (goldenAxeOptions) {
             await context.rareNft.update({
                 where: { type: NftType.GoldenAxe },
-                data: { mintTime: getRandomTimeForNextDay() }
+                data: { mintTimes: getNewMintTimesForGoldenAxe(goldenAxeOptions) }
             })
         }
 
@@ -115,7 +122,7 @@ async function createNFT(data: CreateNFTDto, isGoldenAxe: boolean) {
                 balanceLogId: balanceLog.id,
                 nftId: nft.id,
                 transactionHash: data.transactionHash,
-                nftType: isGoldenAxe ? NftType.GoldenAxe : NftType.Common
+                nftType: goldenAxeOptions ? NftType.GoldenAxe : NftType.Common
             }
         });
 
@@ -149,12 +156,37 @@ async function getNft() {
     });
 
     if (goldenAxeOptions) {
-        const isReturnGoldenAxe = compareAsc(new Date(), new Date(goldenAxeOptions?.mintTime)) !== -1
+        const mintTime = goldenAxeOptions.mintTimes.find((time) => compareAsc(new Date(), new Date(time)) !== -1) 
 
-        if (isReturnGoldenAxe) {
-            return { nft: goldenAxeIpf, isGoldenAxe: true }
+        if (mintTime) {
+            return { 
+                nft: goldenAxeIpf, 
+                goldenAxeOptions: {
+                    mintTime,
+                    mintTimes: goldenAxeOptions.mintTimes,
+                    perDay: goldenAxeOptions.perDay
+                } 
+            }
         }
     }
 
-    return { nft: ipfs[Math.floor(Math.random() * ipfs.length)], isGoldenAxe: false } 
+    return { nft: ipfs[Math.floor(Math.random() * ipfs.length)], goldenAxeOptions: null } 
+}
+
+function getNewMintTimesForGoldenAxe(goldenAxeOptions: GoldenAxeMintOptions) {
+    const newMintTimes = goldenAxeOptions.mintTimes.filter((mintTime) => mintTime !== goldenAxeOptions.mintTime)
+
+    if (!newMintTimes.length) {
+        const currentDay = getDay(new Date())
+        const mintDay = getDay(goldenAxeOptions.mintTime)
+
+        // if we don't mint golden axe for previous day we need to generate new mint times for current day, not for next.
+        if (currentDay !== mintDay) {
+            return getRandomTimesForDay(goldenAxeOptions.perDay, new Date())
+        }
+        
+        return getRandomTimesForDay(goldenAxeOptions.perDay, addDays(new Date(), 1))
+    }
+
+    return newMintTimes
 }

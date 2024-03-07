@@ -14,19 +14,21 @@ import ListCard from "../../../components/ListCard/ListCard";
 import PinataImage from "../../../components/PinataImage";
 import { NFTDto } from "../../../common/dto/NFTDto";
 import BridgeForm from "./components/BridgeForm/BridgeForm";
+import { goldenAxeIpf } from "../../api/mint/ipfs";
 
 interface NftPageProps {
     params: { nft: string };
 }
 
 function NftPage({ params }: NftPageProps) {
-    const { fetchAccount } = AppStore;
+    const { fetchAccount, fetchGoldenAxeReward, goldenAxeReward } = AppStore;
     const router = useRouter();
     const [nft, setNft] = useState(NftStore.selectNftById(params.nft));
 
     const refetch = () => {
         NftStore.getNfts().then(() => setNft(NftStore.selectNftById(params.nft)));
         fetchAccount();
+        fetchGoldenAxeReward()
     }
 
     useEffect(() => {
@@ -46,10 +48,16 @@ function NftPage({ params }: NftPageProps) {
 
     const handleCardClick = (nft: NFTDto) => router.push(`/nfts/${nft.id}`);
 
+    const isGoldenAxe = nft.pinataImageHash === goldenAxeIpf.hash
+
     return (
         <>
             <div className={cn.title}>
-                Congratulation! NFT is done. You get
+                {isGoldenAxe ? 
+                    `YOU'VE GOT A GOLDEN AXE, AND SOON YOU'LL HAVE $${goldenAxeReward} IN YOUR ACCOUNT! CONGRATULATIONS!`
+                    : 
+                    "Congratulation! NFT is done. You get"
+                }
                 <Image src="/svg/coins/onemint.svg" alt={''} width={82} height={49} />
             </div>
 

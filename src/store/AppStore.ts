@@ -16,6 +16,7 @@ class AppStore {
     metamaskWalletAddress: string | undefined;
     referrerAddress: string = '';
     loading = false;
+    goldenAxeReward = 0;
 
     constructor() {
         makeAutoObservable(this, undefined, { autoBind: true });
@@ -27,6 +28,10 @@ class AppStore {
 
     async fetchAccount() {
         this.account = await ApiService.getAccount();
+    }
+
+    async fetchGoldenAxeReward() {
+        this.goldenAxeReward = await ApiService.getGoldenAxeReward();
     }
 
     setWalletConnected(isConnected: boolean) {
