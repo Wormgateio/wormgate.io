@@ -3,8 +3,9 @@ import Image from "next/image";
 import { Modal, Tooltip } from 'antd';
 import cn from './GoldenAxeBlock.module.scss';
 import AppStore from '../../../../store/AppStore';
+import { observer } from 'mobx-react-lite';
 
-export default function GoldenAxeBlock() {
+function GoldenAxeBlock() {
     const { fetchGoldenAxeReward, goldenAxeReward } = AppStore;
     const [showModal, setShowModal] = useState(false);
 
@@ -67,3 +68,5 @@ export default function GoldenAxeBlock() {
     </>
   )
 }
+
+export default observer(GoldenAxeBlock);
