@@ -9,10 +9,10 @@
 CREATE TYPE "NftType" AS ENUM ('goldenAxe', 'common');
 
 -- AlterTable
-ALTER TABLE "mint_custom_logs" ADD COLUMN     "nft_type" "NftType" NOT NULL;
+ALTER TABLE "mint_custom_logs" ADD COLUMN "nft_type" "NftType";
 
 -- AlterTable
-ALTER TABLE "mint_logs" ADD COLUMN     "nft_type" "NftType" NOT NULL;
+ALTER TABLE "mint_logs" ADD COLUMN "nft_type" "NftType";
 
 -- CreateTable
 CREATE TABLE "rare_nft" (
