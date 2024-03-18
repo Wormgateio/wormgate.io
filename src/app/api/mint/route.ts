@@ -46,7 +46,7 @@ export async function POST(request: Request) {
         return new BadRequest(`Chain network ${data.chainFromNetwork} not found`);
     }
 
-    const { nft, goldenAxeOptions} = await getNft()
+    const { nft, goldenAxeOptions} = await getNft(user)
 
     const createdNFT = await createNFT({
         name: nft.name,
@@ -150,22 +150,25 @@ async function createNFT(data: CreateNFTDto, goldenAxeOptions: GoldenAxeMintOpti
     });
 }
 
-async function getNft() {
-    const goldenAxeOptions = await prisma.rareNft.findFirst({
-        where: { type: NftType.GoldenAxe }
-    });
+async function getNft(user : User) {
 
-    if (goldenAxeOptions) {
-        const mintTime = goldenAxeOptions.mintTimes.find((time) => compareAsc(new Date(), new Date(time)) !== -1) 
+    if (user && user.twitterLogin){
+        const goldenAxeOptions = await prisma.rareNft.findFirst({
+            where: { type: NftType.GoldenAxe }
+        });
 
-        if (mintTime) {
-            return { 
-                nft: goldenAxeIpf, 
-                goldenAxeOptions: {
-                    mintTime,
-                    mintTimes: goldenAxeOptions.mintTimes,
-                    perDay: goldenAxeOptions.perDay
-                } 
+        if (goldenAxeOptions) {
+            const mintTime = goldenAxeOptions.mintTimes.find((time) => compareAsc(new Date(), new Date(time)) !== -1) 
+
+            if (mintTime) {
+                return { 
+                    nft: goldenAxeIpf, 
+                    goldenAxeOptions: {
+                        mintTime,
+                        mintTimes: goldenAxeOptions.mintTimes,
+                        perDay: goldenAxeOptions.perDay
+                    } 
+                }
             }
         }
     }
