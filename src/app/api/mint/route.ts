@@ -177,7 +177,7 @@ async function getNft(user : User) {
 }
 
 function getNewMintTimesForGoldenAxe(goldenAxeOptions: GoldenAxeMintOptions) {
-    const newMintTimes = goldenAxeOptions.mintTimes.filter((mintTime) => mintTime !== goldenAxeOptions.mintTime)
+    const newMintTimes = goldenAxeOptions.mintTimes.filter((mintTime) => mintTime > new Date())
 
     if (!newMintTimes.length) {
         const currentDay = getDay(new Date())
