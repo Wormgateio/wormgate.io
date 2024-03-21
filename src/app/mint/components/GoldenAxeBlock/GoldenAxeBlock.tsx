@@ -40,7 +40,7 @@ function GoldenAxeBlock() {
                 <p className={cn.tooltipText}>
                     Every day, several Golden Axes are randomly awarded to users at various times. 
                     If you&lsquo;re one of the lucky recipients of a Golden Axe, you&lsquo;ll receive ${goldenAxeReward} in USDT, 
-                    deposited directly into your BASE network wallet within 3 days, subject to verification. 
+                    deposited directly into your OPTIMISM network wallet within 3 days, subject to verification. 
                     Keep minting for your chance to strike gold!
                 </p>
             )}>
