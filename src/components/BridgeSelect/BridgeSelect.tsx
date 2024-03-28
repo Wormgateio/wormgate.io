@@ -4,7 +4,6 @@ import { Bridge } from '../../common/enums/Bridge';
 import styles from "./BridgeSelect.module.scss";
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams,  } from 'next/navigation'
-import ChainStore from '../../store/ChainStore';
 import { HYPERLANE_QUERY_PARAM_NAME } from '@utils/hyperlaneQueryParamName';
 
 export default function BridgeSelect() {
@@ -18,8 +17,6 @@ export default function BridgeSelect() {
         } else {
             router.push(`?${HYPERLANE_QUERY_PARAM_NAME}=true`);
         }
-
-        ChainStore.getChains(bridge as Bridge)
     };
 
     const tabs = [
