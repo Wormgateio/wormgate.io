@@ -5,6 +5,22 @@
     margin: auto;
 }
 
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.bridgeWrapper {
+    border-radius: 8px;
+    padding: 4px 20px;
+    background: #FFFFFF14;
+
+    img {
+        width: auto;
+    }
+}
+
 .back {
     display: inline-flex;
     align-items: center;
@@ -14,7 +30,6 @@
     color: #fff;
     font-size: 14px;
     font-weight: 500;
-    margin-bottom: 24px;
     cursor: pointer;
 
     &:hover {
@@ -212,7 +227,7 @@
         margin-top: 0;
     }
 
-    .back {
+    .header {
         margin-bottom: 12px;
     }
 }

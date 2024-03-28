@@ -1,3 +1,5 @@
+import { Bridge } from "../enums/Bridge";
+
 export interface ChainDto {
     id: string;
     name: string;
@@ -6,4 +8,5 @@ export interface ChainDto {
     lzChain: number;
     token: string;
     rpcUrl: string;
+    availableBridges: Bridge[]
 }

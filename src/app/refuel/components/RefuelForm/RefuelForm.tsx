@@ -21,6 +21,7 @@ import {
 import ApiService from "../../../../services/ApiService";
 import AppStore from "../../../../store/AppStore";
 import Card from "../../../../components/ui/Card/Card";
+import { useGetChains } from "../../../../hooks/use-get-chains";
 
 function RefuelForm() {
     const [messageApi, contextHolder] = message.useMessage();
@@ -31,6 +32,7 @@ function RefuelForm() {
     const { isConnected, address } = useAccount();
     const { chains } = ChainStore;
     const watchedFormData = Form.useWatch([], form);
+    const getChains = useGetChains()
 
     const [balance, setBalance] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
@@ -150,7 +152,7 @@ function RefuelForm() {
     }
 
     useEffect(() => {
-        ChainStore.getChains();
+        getChains()
     }, []);
 
     useEffect(() => {

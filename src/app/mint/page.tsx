@@ -19,12 +19,15 @@ import { NetworkName } from "../../common/enums/NetworkName";
 import ApiService from "../../services/ApiService";
 import ChainStore from "../../store/ChainStore";
 import GoldenAxeBlock from "./components/GoldenAxeBlock/GoldenAxeBlock";
+import BridgeSelect from "../../components/BridgeSelect/BridgeSelect";
+import { useGetChains } from "../../hooks/use-get-chains";
 
 function Page() {
     const router = useRouter();
     const [messageApi, contextHolder] = message.useMessage();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { account, walletConnected, openAccountDrawer, fetchAccount } = AppStore;
+    const getChains = useGetChains()
 
     const { switchNetworkAsync } = useSwitchNetwork();
     const { chain } = useNetwork();
@@ -38,7 +41,7 @@ function Page() {
         }
 
         if (!ChainStore.chains.length) {
-            await ChainStore.getChains();
+            await getChains()
         }
 
         const chainFrom = ChainStore.getChainById(formData.from);
@@ -116,6 +119,7 @@ function Page() {
             {contextHolder}
 
             <Card isLoading={isLoading} className={styles.page} title="Mint and Bridge NFT" afterCard={<GoldenAxeBlock />} >
+                <BridgeSelect />
                 <Tabs className={styles.tabs} defaultActiveKey="single" items={tabs} type="card" />
             </Card>
         </>
