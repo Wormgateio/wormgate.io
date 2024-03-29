@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { Bridge } from '../src/common/enums/Bridge';
+import { NetworkType } from '../src/common/enums/NetworkType';
 const prisma = new PrismaClient()
 
 const chains = [
@@ -10,7 +10,7 @@ const chains = [
         lzChain: 184,
         token: 'ETH',
         rpcUrl: 'https://mainnet.base.org',
-        availableBridges: [Bridge.LayerZero, Bridge.Hyperlane]
+        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
     },
     {
         chainId: 42170,
@@ -19,7 +19,7 @@ const chains = [
         lzChain: 175,
         token: 'ETH',
         rpcUrl: 'https://arbitrum-nova.drpc.org',
-        availableBridges: [Bridge.LayerZero]
+        availableNetworkTypes: [NetworkType.LayerZero]
     },
     {
         chainId: 42161,
@@ -28,7 +28,7 @@ const chains = [
         lzChain: 110,
         token: 'ETH',
         rpcUrl: 'https://arb1.arbitrum.io/rpc',
-        availableBridges: [Bridge.LayerZero, Bridge.Hyperlane]
+        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
     },
     {
         chainId: 43114,
@@ -37,7 +37,7 @@ const chains = [
         lzChain: 106,
         token: 'AVAX',
         rpcUrl: 'https://rpc.ankr.com/avalanche',
-        availableBridges: [Bridge.LayerZero, Bridge.Hyperlane]
+        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
     },
     {
         chainId: 59144,
@@ -46,7 +46,7 @@ const chains = [
         lzChain: 183,
         token: 'ETH',
         rpcUrl: 'https://linea.drpc.org',
-        availableBridges: [Bridge.LayerZero]
+        availableNetworkTypes: [NetworkType.LayerZero]
     },
     {
         chainId: 5000,
@@ -55,7 +55,7 @@ const chains = [
         lzChain: 181,
         token: 'MNT',
         rpcUrl: 'https://rpc.mantle.xyz',
-        availableBridges: [Bridge.LayerZero]
+        availableNetworkTypes: [NetworkType.LayerZero]
     },
     {
         chainId: 10,
@@ -64,7 +64,7 @@ const chains = [
         lzChain: 111,
         token: 'ETH',
         rpcUrl: 'https://rpc.ankr.com/optimism',
-        availableBridges: [Bridge.LayerZero, Bridge.Hyperlane]
+        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
     },
     {
         chainId: 137,
@@ -73,7 +73,7 @@ const chains = [
         lzChain: 109,
         token: 'MATIC',
         rpcUrl: 'https://rpc.ankr.com/polygon',
-        availableBridges: [Bridge.LayerZero, Bridge.Hyperlane]
+        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
     },
     {
         chainId: 1101,
@@ -82,7 +82,7 @@ const chains = [
         lzChain: 158,
         token: 'MATIC',
         rpcUrl: 'https://zkevm-rpc.com',
-        availableBridges: [],
+        availableNetworkTypes: [],
     },
     {
         chainId: 534352,
@@ -91,7 +91,7 @@ const chains = [
         lzChain: 214,
         token: 'ETH',
         rpcUrl: 'https://scroll.blockpi.network/v1/rpc/public',
-        availableBridges: [Bridge.LayerZero, Bridge.Hyperlane]
+        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
     },
     {
         chainId: 7777777,
@@ -100,7 +100,7 @@ const chains = [
         lzChain: 195,
         token: 'ETH',
         rpcUrl: 'https://rpc.zora.energy',
-        availableBridges: [Bridge.LayerZero]
+        availableNetworkTypes: [NetworkType.LayerZero]
     },
     {
         chainId: 324,
@@ -109,7 +109,7 @@ const chains = [
         lzChain: 165,
         token: 'ETH',
         rpcUrl: 'https://mainnet.era.zksync.io',
-        availableBridges: [Bridge.LayerZero]
+        availableNetworkTypes: [NetworkType.LayerZero]
     },
     {
         chainId: 56,
@@ -118,7 +118,7 @@ const chains = [
         lzChain: 102,
         token: 'BNB',
         rpcUrl: 'https://rpc.ankr.com/bsc',
-        availableBridges: [Bridge.LayerZero, Bridge.Hyperlane]
+        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
     },
     {
         chainId: 42220,
@@ -127,7 +127,7 @@ const chains = [
         lzChain: 125,
         token: 'CELO',
         rpcUrl: 'https://forno.celo.org',
-        availableBridges: [Bridge.LayerZero, Bridge.Hyperlane]
+        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
     },
     {
         chainId: 1666600000,
@@ -136,7 +136,7 @@ const chains = [
         lzChain: 116,
         token: 'ONE',
         rpcUrl: 'https://api.harmony.one',
-        availableBridges: [],
+        availableNetworkTypes: [],
     },
     {
         chainId: 1116,
@@ -145,7 +145,7 @@ const chains = [
         lzChain: 153,
         token: 'CORE',
         rpcUrl: 'https://rpc.coredao.org',
-        availableBridges: [Bridge.LayerZero]
+        availableNetworkTypes: [NetworkType.LayerZero]
     },
     {
         chainId: 100,
@@ -154,7 +154,7 @@ const chains = [
         lzChain: 145,
         token: 'xDAI',
         rpcUrl: 'https://rpc.gnosischain.com',
-        availableBridges: [Bridge.LayerZero, Bridge.Hyperlane]
+        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
     },
     {
         chainId: 250,
@@ -163,7 +163,7 @@ const chains = [
         lzChain: 112,
         token: 'FTM',
         rpcUrl: 'https://rpc.ankr.com/fantom',
-        availableBridges: [Bridge.LayerZero]
+        availableNetworkTypes: [NetworkType.LayerZero]
     }
 ];
 

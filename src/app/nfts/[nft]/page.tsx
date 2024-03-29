@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { Flex, Spin, notification, Space } from "antd";
 import Image from "next/image";
-import { notFound, useRouter, useSearchParams } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import Card from "../../../components/ui/Card/Card";
 import AppStore from "../../../store/AppStore";
 import ApiService from "../../../services/ApiService";
@@ -17,8 +17,9 @@ import { OperationHistoryDto } from "../../../common/dto/OperationHistoryDto";
 
 import styles from "./page.module.scss";
 import MiniCard from "../../../components/ui/MiniCard/MiniCard";
-import ChainStore from "../../../store/ChainStore";
 import { useGetChains } from "../../../hooks/use-get-chains";
+import NetworkTypeImage from "../../../components/NetworkTypeImage/NetworkTypeImage";
+import { NetworkType } from "../../../common/enums/NetworkType";
 
 interface Props {
     params: { nft: string },
@@ -32,7 +33,6 @@ function Page({ params }: Props) {
     const [isLoadingHistory, setIsLoadingHistory] = useState(false);
     const { account } = AppStore;
     const getChains = useGetChains()
-    const searchParams = useSearchParams()
 
     const refetch = async () => {
         if (params.nft) {
@@ -80,8 +80,6 @@ function Page({ params }: Props) {
         return notFound();
     }
 
-    const isHyperlaneBridge = searchParams.get('hyperlane')
-
     return (
         <Card title="NFT Info" className={styles.page}>
             <div className={styles.header}>
@@ -90,13 +88,7 @@ function Page({ params }: Props) {
                     <span>Back to Your NFT`s</span>
                 </div>
 
-                <div className={styles.bridgeWrapper}>
-                    {isHyperlaneBridge ? 
-                        <Image src="/hyperlane.png" width={111} height={24} alt="Hyperlane" />
-                        :
-                        <Image src="/svg/layer-zero.svg" width={111} height={24} alt="LayerZero" /> 
-                    }
-                </div>
+                <NetworkTypeImage className={styles.bridgeWrapper} networkType={NetworkType.Hyperlane} />
             </div>
 
             <div className={styles.container}>

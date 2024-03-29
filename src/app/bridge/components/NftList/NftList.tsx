@@ -1,6 +1,6 @@
 import { Flex } from "antd";
 import { observer } from "mobx-react-lite";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import PinataImage from "../../../../components/PinataImage";
 import ChainLabel from "../../../../components/ChainLabel/ChainLabel";
@@ -8,27 +8,28 @@ import { NFTDto } from "../../../../common/dto/NFTDto";
 import ListCard from "../../../../components/ListCard/ListCard";
 
 import styles from "./NftList.module.scss";
-import BridgeSelect from "../../../../components/BridgeSelect/BridgeSelect";
-import { HYPERLANE_QUERY_PARAM_NAME } from "@utils/hyperlaneQueryParamName";
+import NetworkTypeSelect from "../../../../components/NetworkTypeSelect/NetworkTypeSelect";
+import { NetworkType } from "../../../../common/enums/NetworkType";
 
-function NftList({ data }: { data: NFTDto[] }) {
+interface NftListProps {
+    data: NFTDto[];
+    setNetworkType(value: NetworkType): void
+    networkType: string
+}
+
+function NftList({ data, networkType, setNetworkType }: NftListProps) {
     const router = useRouter();
-    const searchParams = useSearchParams()
     const nfts = [...data].sort((a, b) => a.chainName.localeCompare(b.chainName));
 
     const handleCardClick = (nft: NFTDto) => {
-        const isHyperlaneBridge = searchParams.get(HYPERLANE_QUERY_PARAM_NAME)
-
-        router.push(`/nfts/${nft.id}${isHyperlaneBridge ? `?${HYPERLANE_QUERY_PARAM_NAME}=true` : ''}`);
+        router.push(`/nfts/${nft.id}`);
     };
 
     return (
         <div>
-            {!!nfts.length && (
-                <div className={styles.bridgeSelect}>
-                    <BridgeSelect />
-                </div>
-            )}
+            <div className={styles.networkTypeSelect}>
+                <NetworkTypeSelect value={networkType} onChange={setNetworkType}/>
+            </div>
             
             <Flex gap={24} wrap="wrap" className={styles.list}>
                 {nfts.length === 0 && "NFT's list is empty"}

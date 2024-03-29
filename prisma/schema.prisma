@@ -141,15 +141,15 @@ model RefferalLog {
 }
 
 model Chain {
-  id                 String  @id @default(uuid())
-  name               String
-  network            String
-  chainId            Int     @unique @map("chain_id")
-  lzChain            Int     @map("lz_chain")
-  rpcUrl             String?
-  token              String?
-  Nft                Nft[]
-  availableBridges   Bridge[]  @default([]) @map("available_bridges")
+  id                      String  @id @default(uuid())
+  name                    String
+  network                 String
+  chainId                 Int     @unique @map("chain_id")
+  lzChain                 Int     @map("lz_chain")
+  rpcUrl                  String?
+  token                   String?
+  Nft                     Nft[]
+  availableNetworkTypes   NetworkType[]  @default([]) @map("available_network_types")
 
   @@map(name: "chains")
 }
@@ -169,9 +169,9 @@ enum NftType {
   common
 }
 
-enum Bridge {
-  LayerZero
-  Hyperlane
+enum NetworkType {
+  layer_zero
+  hyperlane
 }
 
 enum BalanceOperation {

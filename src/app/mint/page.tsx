@@ -4,7 +4,7 @@ import { useState } from "react";
 import { observer } from "mobx-react-lite";
 import { message, Space, Tabs } from 'antd';
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AxiosError } from "axios";
 
 import styles from './page.module.scss';
@@ -19,11 +19,15 @@ import { NetworkName } from "../../common/enums/NetworkName";
 import ApiService from "../../services/ApiService";
 import ChainStore from "../../store/ChainStore";
 import GoldenAxeBlock from "./components/GoldenAxeBlock/GoldenAxeBlock";
-import BridgeSelect from "../../components/BridgeSelect/BridgeSelect";
 import { useGetChains } from "../../hooks/use-get-chains";
+import { HYPERLANE_QUERY_PARAM_NAME } from "@utils/hyperlaneQueryParamName";
+import { NetworkType } from "../../common/enums/NetworkType";
+import NetworkTypeSelect from "../../components/NetworkTypeSelect/NetworkTypeSelect";
 
 function Page() {
     const router = useRouter();
+    const pathname = usePathname()
+    const searchParams = useSearchParams()
     const [messageApi, contextHolder] = message.useMessage();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { account, walletConnected, openAccountDrawer, fetchAccount } = AppStore;
@@ -114,12 +118,24 @@ function Page() {
         }
     ];
 
+    const changeNetworkType = (networkType: string) => {
+        if (networkType === NetworkType.LayerZero) {
+            router.replace(pathname);
+        } else {
+            router.push(`?${HYPERLANE_QUERY_PARAM_NAME}=true`);
+        }
+
+        ChainStore.getChains(networkType as NetworkType)
+    };
+
+    const isHyperlaneNetworkType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME)
+
     return (
         <>
             {contextHolder}
 
             <Card isLoading={isLoading} className={styles.page} title="Mint and Bridge NFT" afterCard={<GoldenAxeBlock />} >
-                <BridgeSelect />
+                <NetworkTypeSelect onChange={changeNetworkType} value={isHyperlaneNetworkType ? NetworkType.Hyperlane : NetworkType.LayerZero} />
                 <Tabs className={styles.tabs} defaultActiveKey="single" items={tabs} type="card" />
             </Card>
         </>

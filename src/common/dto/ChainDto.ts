@@ -1,4 +1,4 @@
-import { Bridge } from "../enums/Bridge";
+import { NetworkType } from "../enums/NetworkType";
 
 export interface ChainDto {
     id: string;
@@ -8,5 +8,5 @@ export interface ChainDto {
     lzChain: number;
     token: string;
     rpcUrl: string;
-    availableBridges: Bridge[]
+    availableNetworkTypes: NetworkType[]
 }

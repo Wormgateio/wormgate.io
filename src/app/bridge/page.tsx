@@ -12,6 +12,7 @@ import NftStore from "../../store/NftStore";
 import styles from "./page.module.scss";
 import Button from "../../components/ui/Button/Button";
 import AppStore from "../../store/AppStore";
+import { NetworkType } from "../../common/enums/NetworkType";
 
 enum Tabs {
     All,
@@ -22,6 +23,7 @@ enum Tabs {
 function Page() {
     const { address, isConnected, isConnecting } = useAccount();
     const [activeTab, setActiveTab] = useState(Tabs.All);
+    const [networkType, setNetworkType] = useState(NetworkType.LayerZero)
 
     useEffect(() => {
         NftStore.getNfts();
@@ -75,7 +77,7 @@ function Page() {
                 ))}*/}
             </div>
         )}>
-            <NftList data={data} />
+            <NftList data={data} setNetworkType={setNetworkType} networkType={networkType} />
         </Card>
     )
 }

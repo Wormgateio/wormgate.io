@@ -5,8 +5,8 @@
 
 */
 -- CreateEnum
-CREATE TYPE "Bridge" AS ENUM ('LayerZero', 'Hyperlane');
+CREATE TYPE "NetworkType" AS ENUM ('layer_zero', 'hyperlane');
 
 -- AlterTable
 ALTER TABLE "chains" DROP COLUMN "visible",
-ADD COLUMN     "available_bridges" "Bridge"[] DEFAULT ARRAY[]::"Bridge"[];
+ADD COLUMN     "available_network_types" "NetworkType"[] DEFAULT ARRAY[]::"NetworkType"[];
