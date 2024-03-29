@@ -10,7 +10,7 @@ import { RandomImageDto } from "../common/dto/RandomImageDto";
 import { OperationHistoryDto } from "../common/dto/OperationHistoryDto";
 import { CreateRefuelDto } from "../common/dto/RefuelDto";
 import { RareNftDto } from "../common/dto/RareNftDto";
-import { NetworkType } from "../common/enums/NetworkType";
+import { BridgeType } from "../common/enums/BridgeType";
 
 class ApiService {
     async getAccount(): Promise<AccountDto> {
@@ -64,8 +64,8 @@ class ApiService {
         return response.data;
     }
 
-    async getChains(networkType: NetworkType) {
-        const response = await apiClient.get<ChainDto[]>('chains',  { params: { networkType } });
+    async getChains(bridgeType: BridgeType) {
+        const response = await apiClient.get<ChainDto[]>('chains',  { params: { bridgeType } });
         return response.data;
     }
 

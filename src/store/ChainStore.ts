@@ -2,7 +2,7 @@ import { enableStaticRendering } from "mobx-react-lite";
 import { makeAutoObservable } from "mobx";
 import { ChainDto } from "../common/dto/ChainDto";
 import ApiService from "../services/ApiService";
-import { NetworkType } from "../common/enums/NetworkType";
+import { BridgeType } from "../common/enums/BridgeType";
 
 enableStaticRendering(typeof window === 'undefined');
 
@@ -14,11 +14,11 @@ class ChainStore {
         makeAutoObservable(this, undefined, { autoBind: true });
     }
 
-    async getChains(networkType: NetworkType) {
+    async getChains(bridgeType: BridgeType) {
         this.loading = true;
 
         try {
-            const chains = await ApiService.getChains(networkType);
+            const chains = await ApiService.getChains(bridgeType);
             this.chains = chains.sort((a, b) => a.name.localeCompare(b.name));
         } finally {
             this.loading = false;

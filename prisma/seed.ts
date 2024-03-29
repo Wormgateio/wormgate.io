@@ -1,5 +1,6 @@
-import { PrismaClient } from '@prisma/client'
-import { NetworkType } from '../src/common/enums/NetworkType';
+import { Nft, Prisma, PrismaClient } from '@prisma/client'
+import { BridgeType } from '../src/common/enums/BridgeType'
+
 const prisma = new PrismaClient()
 
 const chains = [
@@ -8,175 +9,214 @@ const chains = [
         name: 'Base',
         network: 'base',
         lzChain: 184,
+        hyperlaneChain: 8453,
         token: 'ETH',
         rpcUrl: 'https://mainnet.base.org',
-        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
+        availableBridgeTypes: [BridgeType.LayerZero, BridgeType.Hyperlane]
     },
     {
         chainId: 42170,
         name: 'Arbitrum Nova',
         network: 'arbitrum-nova',
         lzChain: 175,
+        hyperlaneChain: null,
         token: 'ETH',
         rpcUrl: 'https://arbitrum-nova.drpc.org',
-        availableNetworkTypes: [NetworkType.LayerZero]
+        availableBridgeTypes: [BridgeType.LayerZero]
     },
     {
         chainId: 42161,
         name: 'Arbitrum One',
         network: 'arbitrum',
         lzChain: 110,
+        hyperlaneChain: 42161,
         token: 'ETH',
         rpcUrl: 'https://arb1.arbitrum.io/rpc',
-        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
+        availableBridgeTypes: [BridgeType.LayerZero, BridgeType.Hyperlane]
     },
     {
         chainId: 43114,
         name: 'Avalance',
         network: 'avalanche',
         lzChain: 106,
+        hyperlaneChain: 43114,
         token: 'AVAX',
         rpcUrl: 'https://rpc.ankr.com/avalanche',
-        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
+        availableBridgeTypes: [BridgeType.LayerZero, BridgeType.Hyperlane]
     },
     {
         chainId: 59144,
         name: 'Linea Mainnet',
         network: 'linea-mainnet',
         lzChain: 183,
+        hyperlaneChain: null,
         token: 'ETH',
         rpcUrl: 'https://linea.drpc.org',
-        availableNetworkTypes: [NetworkType.LayerZero]
+        availableBridgeTypes: [BridgeType.LayerZero]
     },
     {
         chainId: 5000,
         name: 'Mantle',
         network: 'mantle',
         lzChain: 181,
+        hyperlaneChain: null,
         token: 'MNT',
         rpcUrl: 'https://rpc.mantle.xyz',
-        availableNetworkTypes: [NetworkType.LayerZero]
+        availableBridgeTypes: [BridgeType.LayerZero]
     },
     {
         chainId: 10,
         name: 'OP Mainnet',
         network: 'optimism',
         lzChain: 111,
+        hyperlaneChain: 10,
         token: 'ETH',
         rpcUrl: 'https://rpc.ankr.com/optimism',
-        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
+        availableBridgeTypes: [BridgeType.LayerZero, BridgeType.Hyperlane]
     },
     {
         chainId: 137,
         name: 'Polygon',
         network: 'matic',
         lzChain: 109,
+        hyperlaneChain: 137,
         token: 'MATIC',
         rpcUrl: 'https://rpc.ankr.com/polygon',
-        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
+        availableBridgeTypes: [BridgeType.LayerZero, BridgeType.Hyperlane]
     },
     {
         chainId: 1101,
         name: 'Polygon zkEVM',
         network: 'polygon-zkevm',
         lzChain: 158,
+        hyperlaneChain: 1101,
         token: 'MATIC',
         rpcUrl: 'https://zkevm-rpc.com',
-        availableNetworkTypes: [],
+        availableBridgeTypes: [],
     },
     {
         chainId: 534352,
         name: 'Scroll',
         network: 'scroll',
         lzChain: 214,
+        hyperlaneChain: 534352,
         token: 'ETH',
         rpcUrl: 'https://scroll.blockpi.network/v1/rpc/public',
-        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
+        availableBridgeTypes: [BridgeType.LayerZero, BridgeType.Hyperlane]
     },
     {
         chainId: 7777777,
         name: 'Zora',
         network: 'zora',
         lzChain: 195,
+        hyperlaneChain: null,
         token: 'ETH',
         rpcUrl: 'https://rpc.zora.energy',
-        availableNetworkTypes: [NetworkType.LayerZero]
+        availableBridgeTypes: [BridgeType.LayerZero]
     },
     {
         chainId: 324,
         name: 'zkSync Era',
         network: 'zksync-era',
         lzChain: 165,
+        hyperlaneChain: null,
         token: 'ETH',
         rpcUrl: 'https://mainnet.era.zksync.io',
-        availableNetworkTypes: [NetworkType.LayerZero]
+        availableBridgeTypes: [BridgeType.LayerZero]
     },
     {
         chainId: 56,
         name: 'BNB Smart Chain',
         network: 'bsc',
         lzChain: 102,
+        hyperlaneChain: 56,
         token: 'BNB',
         rpcUrl: 'https://rpc.ankr.com/bsc',
-        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
+        availableBridgeTypes: [BridgeType.LayerZero, BridgeType.Hyperlane]
     },
     {
         chainId: 42220,
         name: 'Celo',
         network: 'celo',
         lzChain: 125,
+        hyperlaneChain: 42220,
         token: 'CELO',
         rpcUrl: 'https://forno.celo.org',
-        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
+        availableBridgeTypes: [BridgeType.LayerZero, BridgeType.Hyperlane]
     },
     {
         chainId: 1666600000,
         name: 'Harmony',
         network: 'harmony',
         lzChain: 116,
+        hyperlaneChain: null,
         token: 'ONE',
         rpcUrl: 'https://api.harmony.one',
-        availableNetworkTypes: [],
+        availableBridgeTypes: [],
     },
     {
         chainId: 1116,
         name: 'Core',
         network: 'coreDao',
         lzChain: 153,
+        hyperlaneChain: null,
         token: 'CORE',
         rpcUrl: 'https://rpc.coredao.org',
-        availableNetworkTypes: [NetworkType.LayerZero]
+        availableBridgeTypes: [BridgeType.LayerZero]
     },
     {
         chainId: 100,
         name: 'Gnosis',
         network: 'gnosis',
         lzChain: 145,
+        hyperlaneChain: 100,
         token: 'xDAI',
         rpcUrl: 'https://rpc.gnosischain.com',
-        availableNetworkTypes: [NetworkType.LayerZero, NetworkType.Hyperlane]
+        availableBridgeTypes: [BridgeType.LayerZero, BridgeType.Hyperlane]
     },
     {
         chainId: 250,
         name: 'Fantom',
         network: 'fantom',
         lzChain: 112,
+        hyperlaneChain: null,
         token: 'FTM',
         rpcUrl: 'https://rpc.ankr.com/fantom',
-        availableNetworkTypes: [NetworkType.LayerZero]
+        availableBridgeTypes: [BridgeType.LayerZero]
     }
 ];
 
 async function seed() {
-    await prisma.$transaction(
-        chains.map(chain =>
+    await prisma.$transaction(async (context) => {
+        const nfts = await context.nft.findMany();
+        
+        const nftPromises = nfts.reduce((res: Prisma.Prisma__NftClient<Nft>[], ntf) => {
+            if (!ntf.bridgeType) {
+                res.push(
+                    prisma.nft.update({
+                        data: {
+                            bridgeType: BridgeType.LayerZero
+                        },
+                        where: { id: ntf.id }
+                    })
+                )
+            }
+            return res
+        }, [])
+
+        await Promise.all(nftPromises)
+
+
+        const chainsForCreate = chains.map(chain =>
             prisma.chain.upsert({
                 where: { chainId: chain.chainId },
                 update: chain,
                 create: chain,
             })
         )
-    );
+
+        return Promise.all(chainsForCreate)
+    });
 }
 
 seed()

@@ -1,16 +1,16 @@
 import React from 'react'
-import { NetworkType } from '../../common/enums/NetworkType'
+import { BridgeType } from '../../common/enums/BridgeType'
 import Image from 'next/image'
-import styles from "./NetworkTypeImage.module.scss";
+import styles from "./BridgeTypeImage.module.scss";
 
-interface NetworkTypeImageProps {
-    networkType: NetworkType;
+interface BridgeTypeImageProps {
+    bridgeType: BridgeType;
     className?: string
     imageClassName?: string
 }
 
-export default function NetworkTypeImage({ networkType, className, imageClassName }: NetworkTypeImageProps) {
-    if (networkType === NetworkType.Hyperlane) {
+export default function BridgeTypeImage({ bridgeType, className, imageClassName }: BridgeTypeImageProps) {
+    if (bridgeType === BridgeType.Hyperlane) {
         return (
             <div className={`${styles.wrapper}${` ${className}` || ''}`}>
                 <Image className={imageClassName} src="/hyperlane.png" width={111} height={24} alt="Hyperlane" />
@@ -18,7 +18,7 @@ export default function NetworkTypeImage({ networkType, className, imageClassNam
         ) 
     }
 
-    if (networkType === NetworkType.LayerZero) {
+    if (bridgeType === BridgeType.LayerZero) {
         return (
             <div className={`${styles.wrapper}${` ${className}` || ''}`}>
                 <Image className={imageClassName} src="/svg/layer-zero.svg" width={111} height={24} alt="LayerZero" /> 

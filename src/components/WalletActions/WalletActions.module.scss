@@ -46,16 +46,11 @@
     border-radius: 0;
     border-right: 1px solid #404851;
     padding: 9px 12px;
-    gap: 2px !important;
   }
 
   :global(.network-chain-select img) {
     width: 20px;
     height: 20px;
-  }
-
-  :global(.network-chain-select__name) {
-    display: none;
   }
 }
 

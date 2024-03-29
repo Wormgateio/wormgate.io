@@ -7,6 +7,7 @@ import { BalanceLogType } from "../../../../common/enums/BalanceLogType";
 import { BalanceOperationCost } from "../../../../common/enums/BalanceOperationCost";
 import { sendNFTImage } from "../../nft/sendNFTImage";
 import { NftType } from "../../../../common/enums/NftType";
+import { BridgeType } from "../../../../common/enums/BridgeType";
 
 /**
  * Mint операция
@@ -34,6 +35,7 @@ export async function POST(request: Request) {
     const tokenId = parseInt(formData.get('tokenId') as string);
     const chainNetwork = formData.get('chainNetwork') as string;
     const transactionHash = formData.get('transactionHash') as string;
+    const bridgeType = formData.get('bridgeType') as BridgeType;
 
     const chain = await prisma.chain.findFirst({
         where: { network: chainNetwork }
@@ -62,7 +64,8 @@ export async function POST(request: Request) {
         userId: user.id,
         tokenId,
         chainId: chain.id,
-        transactionHash
+        transactionHash,
+        bridgeType
     });
 
     return Response.json(createdNFT);
@@ -78,6 +81,7 @@ interface CreateNFTDto {
     tokenId: number;
     chainId: string;
     transactionHash: string;
+    bridgeType: BridgeType
 }
 
 async function createNFT(data: CreateNFTDto) {
@@ -91,6 +95,7 @@ async function createNFT(data: CreateNFTDto) {
                 pinataJsonHash: data.pinataJsonHash,
                 tokenId: data.tokenId,
                 chainId: data.chainId,
+                bridgeType: data.bridgeType,
                 chainIdToFirstBridge: null,
                 isCustom: true
             }

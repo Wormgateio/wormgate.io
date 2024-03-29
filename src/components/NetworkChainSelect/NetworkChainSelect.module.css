@@ -72,10 +72,6 @@
     border-radius: 12px 0 0 12px !important;
 }
 
-.dropdownBtn.wrong :global(.network-chain-select__name) {
-    display: block;
-}
-
 .value {
     flex-grow: 1;
     overflow: hidden;
@@ -96,8 +92,8 @@
     }
 }
 
-@media screen and (max-width: 400px) {
-    .dropdownBtn.wrong :global(.network-chain-select__name) {
+@media screen and (max-width: 430px) {
+    .dropdownBtn :global(.network-chain-select__name) {
         display: none;
     }
 }

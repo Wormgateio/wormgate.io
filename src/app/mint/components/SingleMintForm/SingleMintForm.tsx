@@ -11,9 +11,12 @@ import ChainStore from '../../../../store/ChainStore';
 import ChainSelect from '../../../../components/ChainSelect/ChainSelect';
 import Button from '../../../../components/ui/Button/Button';
 import { estimateBridge, EstimationBridgeType } from '../../../../core/contractController';
-import { BRIDGE_ESTIMATION_TOKENS, CONTRACT_ADDRESS } from '../../../../common/constants';
+import { BRIDGE_ESTIMATION_TOKENS, getContractAddress } from '../../../../common/constants';
 import { NetworkName } from '../../../../common/enums/NetworkName';
 import AppStore from '../../../../store/AppStore';
+import { HYPERLANE_QUERY_PARAM_NAME } from '@utils/hyperlaneQueryParamName';
+import { BridgeType } from '../../../../common/enums/BridgeType';
+import { useSearchParams } from 'next/navigation';
 
 interface SingleMintFormProps {
   onSubmit: (formData: SingleMintFormData) => void;
@@ -25,6 +28,7 @@ export interface SingleMintFormData {
 }
 
 function SingleMintForm({ onSubmit }: SingleMintFormProps) {
+  const searchParams = useSearchParams()
   const [form] = Form.useForm();
   const watchedFormData = Form.useWatch([], form);
 
@@ -43,12 +47,14 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
 
     if (chain) {
       let _currentNetwork: string = chainFrom?.network!;
+      const bridgeType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME) ? BridgeType.Hyperlane : BridgeType.LayerZero
 
       const priceList = await estimateBridge(
         chains,
         nftChain?.token!,
         {
-          contractAddress: CONTRACT_ADDRESS[_currentNetwork as NetworkName],
+          contractAddress: getContractAddress(bridgeType, _currentNetwork as NetworkName),
+          bridgeType,
           chainToSend: {
             id: chain.chainId,
             name: chain.name,

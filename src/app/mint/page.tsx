@@ -14,15 +14,15 @@ import MultipleMintForm from "./components/MultipleMintForm/MultipleMintForm";
 import SingleMintForm, { SingleMintFormData } from "./components/SingleMintForm/SingleMintForm";
 import AppStore from "../../store/AppStore";
 import { mintNFT } from "../../core/contractController";
-import { CONTRACT_ADDRESS } from "../../common/constants";
+import { getContractAddress } from "../../common/constants";
 import { NetworkName } from "../../common/enums/NetworkName";
 import ApiService from "../../services/ApiService";
 import ChainStore from "../../store/ChainStore";
 import GoldenAxeBlock from "./components/GoldenAxeBlock/GoldenAxeBlock";
 import { useGetChains } from "../../hooks/use-get-chains";
 import { HYPERLANE_QUERY_PARAM_NAME } from "@utils/hyperlaneQueryParamName";
-import { NetworkType } from "../../common/enums/NetworkType";
-import NetworkTypeSelect from "../../components/NetworkTypeSelect/NetworkTypeSelect";
+import { BridgeType } from "../../common/enums/BridgeType";
+import BridgeTypeSelect from "../../components/BridgeTypeSelect/BridgeTypeSelect";
 
 function Page() {
     const router = useRouter();
@@ -57,14 +57,18 @@ function Page() {
             setIsLoading(true);
 
             try {
+                const bridgeType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME) ? BridgeType.Hyperlane : BridgeType.LayerZero
+
                 const result = await mintNFT({
-                    contractAddress: CONTRACT_ADDRESS[chain.network as NetworkName],
+                    contractAddress: getContractAddress(bridgeType, chain.network as NetworkName),
+                    bridgeType,
                     chainToSend: {
                         id: chain.id,
                         name: chain.name,
                         network: chain.network,
                         lzChain: null,
-                        token: 'ETH'
+                        token: 'ETH',
+                        
                     },
                     account,
                     accountAddress: address!
@@ -79,7 +83,8 @@ function Page() {
                         tokenId: result.blockId!,
                         chainFromNetwork: chainFrom?.network!,
                         chainToNetwork: chainTo?.network!,
-                        transactionHash: result?.transactionHash!
+                        transactionHash: result?.transactionHash!,
+                        bridgeType
                     });
 
                     router.push(`/mint/${nft.id}?successful=true`);
@@ -118,24 +123,24 @@ function Page() {
         }
     ];
 
-    const changeNetworkType = (networkType: string) => {
-        if (networkType === NetworkType.LayerZero) {
+    const changeBridgeType = (bridgeType: string) => {
+        if (bridgeType === BridgeType.LayerZero) {
             router.replace(pathname);
         } else {
             router.push(`?${HYPERLANE_QUERY_PARAM_NAME}=true`);
         }
 
-        ChainStore.getChains(networkType as NetworkType)
+        ChainStore.getChains(bridgeType as BridgeType)
     };
 
-    const isHyperlaneNetworkType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME)
+    const isHyperlaneBridgeType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME)
 
     return (
         <>
             {contextHolder}
 
             <Card isLoading={isLoading} className={styles.page} title="Mint and Bridge NFT" afterCard={<GoldenAxeBlock />} >
-                <NetworkTypeSelect onChange={changeNetworkType} value={isHyperlaneNetworkType ? NetworkType.Hyperlane : NetworkType.LayerZero} />
+                <BridgeTypeSelect onChange={changeBridgeType} value={isHyperlaneBridgeType ? BridgeType.Hyperlane : BridgeType.LayerZero} />
                 <Tabs className={styles.tabs} defaultActiveKey="single" items={tabs} type="card" />
             </Card>
         </>

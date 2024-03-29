@@ -1,3 +1,5 @@
+import { BridgeType } from "../enums/BridgeType";
+
 export interface NFTDto {
     id: string;
     pinataImageHash: string;
@@ -16,4 +18,5 @@ export interface NFTDto {
     userName: string | null;
     tweeted: boolean;
     isCustom: boolean;
+    bridgeType: BridgeType
 }

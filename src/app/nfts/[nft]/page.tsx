@@ -18,8 +18,7 @@ import { OperationHistoryDto } from "../../../common/dto/OperationHistoryDto";
 import styles from "./page.module.scss";
 import MiniCard from "../../../components/ui/MiniCard/MiniCard";
 import { useGetChains } from "../../../hooks/use-get-chains";
-import NetworkTypeImage from "../../../components/NetworkTypeImage/NetworkTypeImage";
-import { NetworkType } from "../../../common/enums/NetworkType";
+import BridgeTypeImage from "../../../components/BridgeTypeImage/BridgeTypeImage";
 
 interface Props {
     params: { nft: string },
@@ -88,7 +87,7 @@ function Page({ params }: Props) {
                     <span>Back to Your NFT`s</span>
                 </div>
 
-                <NetworkTypeImage className={styles.bridgeWrapper} networkType={NetworkType.Hyperlane} />
+                <BridgeTypeImage className={styles.bridgeWrapper} bridgeType={nft.bridgeType} />
             </div>
 
             <div className={styles.container}>

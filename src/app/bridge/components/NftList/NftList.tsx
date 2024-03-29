@@ -8,16 +8,16 @@ import { NFTDto } from "../../../../common/dto/NFTDto";
 import ListCard from "../../../../components/ListCard/ListCard";
 
 import styles from "./NftList.module.scss";
-import NetworkTypeSelect from "../../../../components/NetworkTypeSelect/NetworkTypeSelect";
-import { NetworkType } from "../../../../common/enums/NetworkType";
+import BridgeTypeSelect from "../../../../components/BridgeTypeSelect/BridgeTypeSelect";
+import { BridgeType } from "../../../../common/enums/BridgeType";
 
 interface NftListProps {
     data: NFTDto[];
-    setNetworkType(value: NetworkType): void
-    networkType: string
+    setBridgeType(value: BridgeType): void
+    bridgeType: string
 }
 
-function NftList({ data, networkType, setNetworkType }: NftListProps) {
+function NftList({ data, bridgeType, setBridgeType }: NftListProps) {
     const router = useRouter();
     const nfts = [...data].sort((a, b) => a.chainName.localeCompare(b.chainName));
 
@@ -27,8 +27,8 @@ function NftList({ data, networkType, setNetworkType }: NftListProps) {
 
     return (
         <div>
-            <div className={styles.networkTypeSelect}>
-                <NetworkTypeSelect value={networkType} onChange={setNetworkType}/>
+            <div className={styles.bridgeTypeSelect}>
+                <BridgeTypeSelect value={bridgeType} onChange={setBridgeType}/>
             </div>
             
             <Flex gap={24} wrap="wrap" className={styles.list}>

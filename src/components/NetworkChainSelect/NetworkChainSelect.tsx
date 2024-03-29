@@ -12,6 +12,8 @@ import { toDictionary } from '../../utils/to-dictionary';
 import { useGetChains } from '../../hooks/use-get-chains';
 import { useSearchParams } from 'next/navigation';
 import { HYPERLANE_QUERY_PARAM_NAME } from '@utils/hyperlaneQueryParamName';
+import { useMedia } from 'use-media';
+import { MediaBreakpoint } from '@utils/mediaBreakpoints';
 
 const WRONG_NETWORK = 'Wrong Network'
 
@@ -21,6 +23,7 @@ interface NetworkChainSelectProps {
 
 function NetworkChainSelect({ className }: NetworkChainSelectProps) {
   const searchParams = useSearchParams()
+  const isMobile = useMedia({ maxWidth: MediaBreakpoint.Mobile });
   const [messageApi, contextHolder] = message.useMessage();
   const { chain, chains: allChains } = useNetwork();
   const { chains: availableChains } = ChainStore;
@@ -109,7 +112,11 @@ function NetworkChainSelect({ className }: NetworkChainSelectProps) {
         >
           {chainLogo && <Image src={chainLogo} width={24} height={24} alt="" />}
 
-          <div className={clsx(styles.value, 'network-chain-select__name')}>{chainName}</div>
+          {isMobile && !isKnownChain ? 
+            <Image src="/svg/ui/error-circle.svg" width={24} height={24} alt="" />
+            : 
+            <div className={clsx(styles.value, 'network-chain-select__name')}>{chainName}</div>          
+          }
 
           <Image src="/svg/ui/dropdown-arrow.svg" width={24} height={24} alt="" />
         </Flex>
