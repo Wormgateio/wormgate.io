@@ -16,7 +16,7 @@ export default function Logo({ imageClassName, withCompanyName = true }: Props) 
           <Image
             className={clsx(styles.imageWithText, imageClassName)}
             priority={true}
-            src="/svg/logo.svg"
+            src="/logo.png"
             width={203}
             height={60}
             alt="Womex"
@@ -31,7 +31,7 @@ export default function Logo({ imageClassName, withCompanyName = true }: Props) 
       <Image
         className={clsx(styles.image, imageClassName)}
         priority={true}
-        src="/svg/companyLogo.svg"
+        src="/companyLogo.png"
         width={203}
         height={60}
         alt="Womex"

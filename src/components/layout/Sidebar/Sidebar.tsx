@@ -31,7 +31,7 @@ function MenuItem(props: MenuItemProps) {
       })}
     >
       <div className={cn.menuItemName}>
-        <Image className={cn.menuItemIcon} src="/svg/menu-active.svg" alt="" width={30} height={30} />
+        <Image className={cn.menuItemIcon} src="/menu-active.png" alt="" width={30} height={30} />
         <span className={cn.menuItemTitle}>{props.name}</span>
       </div>
       <div className={cn.menuItemDescription}>{props.description}</div>
