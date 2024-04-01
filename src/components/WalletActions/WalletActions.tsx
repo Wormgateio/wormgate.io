@@ -11,6 +11,7 @@ import AccountAddress from '../AccountAddress/AccountAddress';
 import AppStore from '../../store/AppStore';
 import NetworkChainSelect from '../NetworkChainSelect/NetworkChainSelect';
 import { Crystal } from './Crystal/Crystal';
+
 function WalletActions() {
   const { account, openAccountDrawer, setWalletConnected, setWalletAddress } = AppStore;
 
