@@ -3,10 +3,6 @@
 .root {
   display: flex;
   align-items: center;
-
-  :global(.network-chain-select__name) {
-    display: none;
-  }
 }
 
 .burger {

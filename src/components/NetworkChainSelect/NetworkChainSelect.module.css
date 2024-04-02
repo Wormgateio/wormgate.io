@@ -66,9 +66,10 @@
 }
 
 .dropdownBtn.wrong {
-    background-color: rgba(255, 50, 50, 0.2);
+    background-color: rgba(255, 50, 50, 0.2) !important;
     color: #f00;
     text-align: center;
+    border-radius: 12px 0 0 12px !important;
 }
 
 .value {
@@ -82,5 +83,17 @@
 @media screen and (max-width: 1320px) {
     .dropdownBtn {
         width: auto;
+    }
+}
+
+@media screen and (max-width: 770px) {
+    .dropdownBtn.wrong {
+        border-radius: 12px !important;
+    }
+}
+
+@media screen and (max-width: 430px) {
+    .dropdownBtn :global(.network-chain-select__name) {
+        display: none;
     }
 }

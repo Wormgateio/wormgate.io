@@ -16,6 +16,7 @@ import PinataImage from "../../../components/PinataImage";
 import { NFTDto } from "../../../common/dto/NFTDto";
 import styles from "../../mint/[nft]/components/BridgeForm/BridgeForm.module.css";
 import ChainLabel from "../../../components/ChainLabel/ChainLabel";
+import { useGetChains } from "../../../hooks/use-get-chains";
 
 interface NftPageProps {
     params: { nft: string };
@@ -27,7 +28,8 @@ function NftPage({ params, searchParams }: NftPageProps) {
     const router = useRouter();
     const [nft, setNft] = useState(NftStore.selectNftById(params.nft));
     const { from, to } = searchParams;
-
+    const getChains = useGetChains()
+    
     const refetch = () => {
         NftStore.getNfts().then(() => setNft(NftStore.selectNftById(params.nft)));
         fetchAccount();
@@ -35,7 +37,7 @@ function NftPage({ params, searchParams }: NftPageProps) {
 
     useEffect(() => {
         refetch();
-        ChainStore.getChains();
+        getChains()
     }, []);
 
     if (!nft) {

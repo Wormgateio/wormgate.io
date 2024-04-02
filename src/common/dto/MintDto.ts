@@ -1,3 +1,5 @@
+import { BridgeType } from "../enums/BridgeType";
+
 export interface MintDto {
     id: string;
     pinataImageHash: string;
@@ -20,4 +22,5 @@ export interface CreateMintDto {
     chainFromNetwork: string;
     chainToNetwork: string;
     transactionHash: string;
+    bridgeType: BridgeType
 }

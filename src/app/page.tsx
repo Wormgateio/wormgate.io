@@ -6,12 +6,14 @@ import Page from "./mint/page";
 import ConfirmDialog from "../components/ConfirmDialog/ConfirmDialog";
 import AppStore from "../store/AppStore";
 import ChainStore from "../store/ChainStore";
+import { useGetChains } from "../hooks/use-get-chains";
 
 export default function Home() {
     const [showConfirm, setShowConfirm] = useState(false);
     const params = useSearchParams();
     const { clearTwitter, setReffererAddress } = AppStore;
     const router = useRouter();
+    const getChains = useGetChains()
 
     const handleClear = async (id: string) => {
         const status = await clearTwitter(id);
@@ -51,7 +53,7 @@ export default function Home() {
     }, [params]);
 
     useEffect(() => {
-        ChainStore.getChains();
+        getChains()
     }, []);
 
     return (

@@ -2,37 +2,62 @@ import { Dropdown, Flex, MenuProps, message } from 'antd';
 import Image from 'next/image';
 import { useEffect, useMemo } from 'react';
 import clsx from 'clsx';
-import { useNetwork, useSwitchNetwork } from 'wagmi';
+import { Chain, useNetwork, useSwitchNetwork } from 'wagmi';
 import { getChainLogo } from '../../utils/getChainLogo';
-import { NetworkName } from '../../common/enums/NetworkName';
 
 import styles from './NetworkChainSelect.module.css';
+import ChainStore from '../../store/ChainStore';
+import { observer } from 'mobx-react-lite';
+import { toDictionary } from '../../utils/to-dictionary';
+import { useGetChains } from '../../hooks/use-get-chains';
+import { useSearchParams } from 'next/navigation';
+import { HYPERLANE_QUERY_PARAM_NAME } from '@utils/hyperlaneQueryParamName';
+import { useMedia } from 'use-media';
+import { MediaBreakpoint } from '@utils/mediaBreakpoints';
+
+const WRONG_NETWORK = 'Wrong Network'
 
 interface NetworkChainSelectProps {
   className?: string;
 }
 
-export default function NetworkChainSelect({ className }: NetworkChainSelectProps) {
+function NetworkChainSelect({ className }: NetworkChainSelectProps) {
+  const searchParams = useSearchParams()
+  const isMobile = useMedia({ maxWidth: MediaBreakpoint.Mobile });
   const [messageApi, contextHolder] = message.useMessage();
-  const { chain, chains } = useNetwork();
+  const { chain, chains: allChains } = useNetwork();
+  const { chains: availableChains } = ChainStore;
   const { reset, switchNetwork, error } = useSwitchNetwork({
     onSettled: () => {
       reset();
     },
   });
+  const getChains = useGetChains()
+
+  useEffect(() => {
+    getChains()
+  }, [searchParams.get(HYPERLANE_QUERY_PARAM_NAME)])
+
+  const chains = useMemo(() => {
+    const chainsById = toDictionary(allChains, x => x.id);
+
+    return availableChains.reduce((chains: Chain[], { chainId }) => {
+      const chain = chainsById[chainId]
+
+      if (chain) {
+        chains.push(chain)
+      }
+
+      return chains;
+    }, [])
+  }, [allChains, availableChains])
 
   const chainName = useMemo(() => {
-    const chainNetworks = Object.values(NetworkName);
-    if (chain && chainNetworks.some((network) => network === chain.network)) {
+    if (chain && chains.some(({ network }) => network === chain.network)) {
       return chain.name;
     }
-    return 'Wrong Network';
-  }, [chain]);
-
-  const isKnownChain = useMemo(() => {
-    const chainNetworks = Object.values(NetworkName);
-    return chain && chainNetworks.some((network) => network === chain.network);
-  }, [chain]);
+    return WRONG_NETWORK;
+  }, [chain, chains]);
 
   const chainsMenu = useMemo(() => {
     const items: MenuProps['items'] = [...chains]
@@ -46,7 +71,7 @@ export default function NetworkChainSelect({ className }: NetworkChainSelectProp
     return items;
   }, [chains]);
 
-  const chainLogo = useMemo(() => getChainLogo(chain?.network!), [chain]);
+  const chainLogo = useMemo(() => chainName === WRONG_NETWORK ? '' : getChainLogo(chain?.network!), [chain, chainName]);
 
   const handleSwitchNetwork = (chainId: number) => {
     if (switchNetwork) {
@@ -63,6 +88,8 @@ export default function NetworkChainSelect({ className }: NetworkChainSelectProp
   if (!chain || !switchNetwork) {
     return null;
   }
+
+  const isKnownChain = chainName !== WRONG_NETWORK
 
   return (
     <>
@@ -81,11 +108,15 @@ export default function NetworkChainSelect({ className }: NetworkChainSelectProp
         <Flex
           align="center"
           gap={8}
-          className={clsx('network-chain-select', styles.dropdownBtn, { [styles.wrong]: !isKnownChain }, className)}
+          className={clsx('network-chain-select', styles.dropdownBtn, !isKnownChain && styles.wrong, className)}
         >
           {chainLogo && <Image src={chainLogo} width={24} height={24} alt="" />}
 
-          <div className={clsx(styles.value, 'network-chain-select__name')}>{chainName}</div>
+          {isMobile && !isKnownChain ? 
+            <Image src="/svg/ui/error-circle.svg" width={24} height={24} alt="" />
+            : 
+            <div className={clsx(styles.value, 'network-chain-select__name')}>{chainName}</div>          
+          }
 
           <Image src="/svg/ui/dropdown-arrow.svg" width={24} height={24} alt="" />
         </Flex>
@@ -93,3 +124,5 @@ export default function NetworkChainSelect({ className }: NetworkChainSelectProp
     </>
   );
 }
+
+export default observer(NetworkChainSelect)

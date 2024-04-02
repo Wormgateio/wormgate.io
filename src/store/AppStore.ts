@@ -4,7 +4,6 @@ import { AccountDto } from "../common/dto/AccountDto";
 import ApiService from "../services/ApiService";
 import { CreateTweetDto } from "../common/dto/CreateTweetDto";
 import NftStore from "./NftStore";
-import { notification } from "antd";
 import { decodeAddress } from "../core/contractController";
 
 enableStaticRendering(typeof window === 'undefined');
@@ -129,6 +128,5 @@ class AppStore {
             console.error(e);
         }
     }
-
 }
 export default new AppStore();

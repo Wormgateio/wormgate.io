@@ -1,15 +1,17 @@
-import { ethers } from "ethers";
+import { InterfaceAbi, ethers } from "ethers";
 import { hexToNumber } from "web3-utils";
 import axios, { AxiosResponse } from "axios";
 
-import ABI from "./abi.json";
+import lzAbi from "./abi.json";
+import hyperlineAbi from "./hyperlane-abi.json";
 import ABI_RELAYER from './abi-relayer.json';
 import ABI_REFUEL from './abi-refuel.json';
 import { NetworkName } from "../common/enums/NetworkName";
-import { CONTRACT_ADDRESS, CONTRACT_REFUEL_ADDRESS, DEFAULT_REFUEL_COST_USD, LZ_RELAYER } from "../common/constants";
+import { LZ_CONTRACT_ADDRESS, CONTRACT_REFUEL_ADDRESS, DEFAULT_REFUEL_COST_USD, LZ_RELAYER } from "../common/constants";
 import { AccountDto } from "../common/dto/AccountDto";
 import { wait } from "../utils/wait";
 import { ChainDto } from "../common/dto/ChainDto";
+import { BridgeType } from "../common/enums/BridgeType";
 
 interface ChainToSend {
     id: number;
@@ -24,6 +26,7 @@ interface ControllerFunctionProps {
     accountAddress: string;
     contractAddress: string;
     chainToSend: ChainToSend;
+    bridgeType: BridgeType
 }
 
 interface ControllerFunctionResult {
@@ -37,19 +40,34 @@ interface ControllerFunctionResult {
 const TRANSACTION_WAIT: number = 60000;
 const LZ_VERSION = 1;
 
+const getAbi = (type: BridgeType): InterfaceAbi => {
+    if (type === BridgeType.LayerZero) {
+        return lzAbi;
+    }
+
+    if (type === BridgeType.Hyperlane) {
+        return hyperlineAbi;
+    }
+
+    return lzAbi;
+}
+
+
 /**
  * Mint NFT Functionality
  * @param contractAddress Contract address for selected chain
  * @param chainToSend Current chain to send NFT
  * @param account User account
  */
-export const mintNFT = async ({ contractAddress, chainToSend, account }: ControllerFunctionProps): Promise<ControllerFunctionResult> => {
+export const mintNFT = async ({ contractAddress, bridgeType, chainToSend, account }: ControllerFunctionProps): Promise<ControllerFunctionResult> => {
     const provider = new ethers.BrowserProvider((window as any).ethereum);
+    // const provider2 = new HyperlaneProvider()
 
     const signer = await provider.getSigner();
     const sender = await signer.getAddress();
 
-    const contract = new ethers.Contract(contractAddress, ABI, signer);
+    const abi = getAbi(bridgeType);
+    const contract = new ethers.Contract(contractAddress, abi, signer);
     const mintFee = await contract.mintFee();
 
     const userBalance = await provider.getBalance(sender);
@@ -112,7 +130,7 @@ export type EstimationBridgeType = (EstimationBridge | null)[]
 export const estimateBridge = async (
     chains: ChainDto[],
     token: string,
-    { contractAddress }: ControllerFunctionProps,
+    { contractAddress, bridgeType }: ControllerFunctionProps,
     tokenId: number,
     refuel: boolean = false,
     refuelCost: number = DEFAULT_REFUEL_COST_USD
@@ -129,7 +147,8 @@ export const estimateBridge = async (
             ["address"], [sender]
         );
 
-        const contract = new ethers.Contract(contractAddress, ABI, signer);
+        const abi = getAbi(bridgeType);
+        const contract = new ethers.Contract(contractAddress, abi, signer);
         const _dstChainId = chainToSend?.lzChain;
 
         const MIN_DST_GAS = await contract.minDstGasLookup(_dstChainId, LZ_VERSION);
@@ -188,18 +207,9 @@ export const estimateBridge = async (
     return list.filter(x => x.status === 'fulfilled').map((x: any) => x.value);
 };
 
-/**
- * Bridge NFT Functionality
- * @param contractAddress Contract address for selected chain
- * @param chainToSend Current chain to send NFT
- * @param account User account
- * @param tokenId NFT token id for sending to another chain
- * @param refuel Refuel enabled
- * @param refuelCost Refuel cost in dollars
- *
- */
-export const bridgeNFT = async (
-    { contractAddress, chainToSend }: ControllerFunctionProps,
+
+const lzBridge = async (
+    { contractAddress, chainToSend, bridgeType }: ControllerFunctionProps,
     tokenId: number,
     refuel: boolean = false,
     refuelCost: number = DEFAULT_REFUEL_COST_USD
@@ -213,7 +223,8 @@ export const bridgeNFT = async (
         ["address"], [sender]
     );
 
-    const contract = new ethers.Contract(contractAddress, ABI, signer);
+    const abi = getAbi(bridgeType);
+    const contract = new ethers.Contract(contractAddress, abi, signer);
     const _dstChainId = chainToSend?.lzChain;
 
     const MIN_DST_GAS = await contract.minDstGasLookup(_dstChainId, LZ_VERSION);
@@ -308,6 +319,150 @@ export const bridgeNFT = async (
     };
 };
 
+const hyperlaneBridge = async (
+    { contractAddress, chainToSend, bridgeType }: ControllerFunctionProps,
+    tokenId: number,
+    refuel: boolean = false,
+    refuelCost: number = DEFAULT_REFUEL_COST_USD
+): Promise<ControllerFunctionResult> => {
+    const provider = new ethers.BrowserProvider((window as any).ethereum);
+
+    const signer = await provider.getSigner();
+    const sender = await signer.getAddress();
+
+    const _toAddress = ethers.solidityPacked(
+        ["address"], [sender]
+    );
+
+    const abi = getAbi(bridgeType);
+    const contract = new ethers.Contract(contractAddress, abi, signer);
+    const _dstChainId = chainToSend?.lzChain;
+
+    const MIN_DST_GAS = await contract.minDstGasLookup(_dstChainId, LZ_VERSION);
+
+    let adapterParams;
+    if (refuel) {
+        const price = await fetchPrice(chainToSend?.token);
+
+        if (!price) {
+            return {
+                result: false,
+                message: 'Something went wrong :(',
+                transactionHash: ''
+            }
+        }
+
+        const REFUEL_AMOUNT = (refuelCost / price).toFixed(8);
+
+        const refuelAmountEth = ethers.parseUnits(
+            REFUEL_AMOUNT,
+            18
+        );
+
+        adapterParams = ethers.solidityPacked(
+            ["uint16", "uint256", "uint256", "address"],
+            [2, MIN_DST_GAS, refuelAmountEth, sender]
+        );
+    } else {
+        adapterParams = ethers.solidityPacked(
+            ["uint16", "uint256"],
+            [LZ_VERSION, MIN_DST_GAS]
+        );
+    }
+
+    const nativeFee = await contract.getHyperlaneMessageFee(
+        _dstChainId,
+        _toAddress
+    );
+
+    const userBalance = await provider.getBalance(sender);
+
+    if (userBalance < nativeFee) {
+        return {
+            result: false,
+            message: 'Not enough funds to send',
+            transactionHash: ''
+        }
+    }
+
+    const bridgeOptions = {
+        value: nativeFee,
+        gasLimit: BigInt(0)
+    }
+
+    bridgeOptions.gasLimit = await contract.transferRemote.estimateGas(
+        sender,
+        _dstChainId,
+        _toAddress,
+        tokenId,
+        sender,
+        ethers.ZeroAddress,
+        adapterParams,
+        bridgeOptions
+    );
+
+    const transaction = await contract.transferRemote(
+        _dstChainId,
+        _toAddress,
+        tokenId
+    );
+
+    await wait();
+
+    // Magic for working functionality. Don't remove
+    console.log("Bridging..", { id: chainToSend?.id, name: chainToSend?.name, hash: transaction?.hash });
+
+    const receipt = await transaction.wait(null, TRANSACTION_WAIT)
+
+    return {
+        result: receipt?.status === 1,
+        message: receipt?.status === 1 ? 'Successful send' : (receipt?.status == null ? 'Send not confirmed' : 'Send failed'),
+        receipt,
+        transactionHash: transaction?.hash
+    };
+}
+
+/**
+ * Bridge NFT Functionality
+ * @param contractAddress Contract address for selected chain
+ * @param chainToSend Current chain to send NFT
+ * @param account User account
+ * @param tokenId NFT token id for sending to another chain
+ * @param refuel Refuel enabled
+ * @param refuelCost Refuel cost in dollars
+ *
+ */
+export const bridgeNFT = async (
+    { contractAddress, chainToSend, bridgeType }: ControllerFunctionProps,
+    tokenId: number,
+    refuel: boolean = false,
+    refuelCost: number = DEFAULT_REFUEL_COST_USD
+): Promise<ControllerFunctionResult> => {
+    if (bridgeType === BridgeType.LayerZero) {
+        return lzBridge(
+            {contractAddress, chainToSend, bridgeType, account: null, accountAddress: ''},
+            tokenId,
+            refuel,
+            refuelCost
+        );
+    }
+
+    if (bridgeType === BridgeType.Hyperlane) {
+        return hyperlaneBridge(
+            {contractAddress, chainToSend, bridgeType, account: null, accountAddress: ''},
+            tokenId,
+            refuel,
+            refuelCost
+        );
+    }
+
+    return {
+        result: false,
+        message: 'Something went wrong :(',
+        transactionHash: ''
+    };
+};
+
 export async function refuel(fromChain: ChainDto, toChain: ChainDto, amount: string): Promise<any> {
     try {
         const provider = new ethers.BrowserProvider((window as any).ethereum)
@@ -358,7 +513,7 @@ export async function claimReferralFee(chain: ChainDto) {
 
         const signer = await provider.getSigner();
 
-        const contract = new ethers.Contract(CONTRACT_ADDRESS[chain.network as NetworkName], ABI, signer);
+        const contract = new ethers.Contract(LZ_CONTRACT_ADDRESS[chain.network as NetworkName], lzAbi, signer);
 
         const txResponse = await contract.claimReferrerEarnings();
         const receipt = await txResponse.wait(null, 60000);
@@ -382,7 +537,7 @@ export async function claimReferralFee(chain: ChainDto) {
 
 export async function getReffererEarnedInNetwork(chain: ChainDto, accountAddress: string) {
     const provider = new ethers.JsonRpcProvider(chain.rpcUrl);
-    const contract = new ethers.Contract(CONTRACT_ADDRESS[chain.network as NetworkName], ABI, provider);
+    const contract = new ethers.Contract(LZ_CONTRACT_ADDRESS[chain.network as NetworkName], lzAbi, provider);
     const earned = await contract.referrersEarnedAmount(accountAddress);
     return ethers.formatEther(earned);
 }

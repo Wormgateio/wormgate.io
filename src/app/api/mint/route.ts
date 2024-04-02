@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { BridgeType, User } from "@prisma/client";
 
 import prisma from "../../../utils/prismaClient";
 import { BadRequest } from "../utils/responses";
@@ -62,7 +62,8 @@ export async function POST(request: Request) {
             where: { network: data.chainToNetwork }
         }))?.id!,
         transactionHash: data.transactionHash,
-        isCustom: false
+        isCustom: false,
+        bridgeType: data.bridgeType
     }, goldenAxeOptions);
 
     return Response.json(createdNFT);
@@ -81,6 +82,7 @@ interface CreateNFTDto {
     chainIdToFirstBridge: string;
     transactionHash: string;
     isCustom: boolean;
+    bridgeType: BridgeType;
 }
 
 async function createNFT(data: CreateNFTDto, goldenAxeOptions: GoldenAxeMintOptions | null) {
@@ -96,7 +98,8 @@ async function createNFT(data: CreateNFTDto, goldenAxeOptions: GoldenAxeMintOpti
                 tokenId: data.tokenId,
                 chainId: data.chainId,
                 chainIdToFirstBridge: data.chainIdToFirstBridge,
-                isCustom: data.isCustom
+                isCustom: data.isCustom,
+                bridgeType: data.bridgeType
             }
         });
 

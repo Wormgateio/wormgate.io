@@ -12,8 +12,10 @@ import NftStore from "../../store/NftStore";
 import styles from "./page.module.scss";
 import Button from "../../components/ui/Button/Button";
 import AppStore from "../../store/AppStore";
+import { getFilteredNfts } from "./helpers/get-filtered-nfts";
+import { BridgeType } from "../../common/enums/BridgeType";
 
-enum Tabs {
+export enum BridgePageTab {
     All,
     Womex,
     Custom
@@ -21,7 +23,8 @@ enum Tabs {
 
 function Page() {
     const { address, isConnected, isConnecting } = useAccount();
-    const [activeTab, setActiveTab] = useState(Tabs.All);
+    const [activeTab, setActiveTab] = useState(BridgePageTab.All);
+    const [bridgeType, setBridgeType] = useState(BridgeType.LayerZero)
 
     useEffect(() => {
         NftStore.getNfts();
@@ -29,30 +32,20 @@ function Page() {
 
     const tabs = [
         {
-            key: Tabs.All,
+            key: BridgePageTab.All,
             label: 'All NFT'
         },
         {
-            key: Tabs.Womex,
+            key: BridgePageTab.Womex,
             label: 'Womex NFT'
         },
         {
-            key: Tabs.Custom,
+            key: BridgePageTab.Custom,
             label: 'Custom NFT'
         }
     ];
 
-    const data = useMemo(() => {
-        if (activeTab === Tabs.Womex) {
-            return NftStore.nfts.filter(nft => !nft.isCustom);
-        }
-
-        if (activeTab === Tabs.Custom) {
-            return NftStore.nfts.filter(nft => nft.isCustom);
-        }
-
-        return NftStore.nfts;
-    }, [activeTab, NftStore.nfts]);
+    const data = useMemo(() => getFilteredNfts(NftStore.nfts, activeTab, bridgeType), [activeTab, NftStore.nfts, bridgeType]);
 
     if (NftStore.loading || isConnecting) {
         return <Card title="All NFT"><Spin size="large" /></Card>
@@ -75,7 +68,7 @@ function Page() {
                 ))}*/}
             </div>
         )}>
-            <NftList data={data} />
+            <NftList data={data} setBridgeType={setBridgeType} bridgeType={bridgeType} />
         </Card>
     )
 }

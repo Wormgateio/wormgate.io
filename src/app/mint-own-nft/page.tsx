@@ -12,10 +12,12 @@ import Card from "../../components/ui/Card/Card";
 import MintForm, { MintSubmitEvent } from "./components/MintForm/MintForm";
 import ApiService from "../../services/ApiService";
 import AppStore from "../../store/AppStore";
-import { CONTRACT_ADDRESS } from "../../common/constants";
+import { getContractAddress } from "../../common/constants";
 import { NetworkName } from "../../common/enums/NetworkName";
 import { mintNFT } from "../../core/contractController";
 import NftStore from "../../store/NftStore";
+import { HYPERLANE_QUERY_PARAM_NAME } from "@utils/hyperlaneQueryParamName";
+import { BridgeType } from "../../common/enums/BridgeType";
 
 function Page() {
     const [messageApi, contextHolder] = message.useMessage();
@@ -35,6 +37,8 @@ function Page() {
         }
 
         if (chain) {
+            const bridgeType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME) ? BridgeType.Hyperlane : BridgeType.LayerZero
+
             setIsNFTPending(true);
 
             try {
@@ -44,7 +48,8 @@ function Page() {
                 });
 
                 const result = await mintNFT({
-                    contractAddress: CONTRACT_ADDRESS[chain.network as NetworkName],
+                    contractAddress: getContractAddress(bridgeType, chain.network as NetworkName),
+                    bridgeType,
                     chainToSend: {
                         id: chain.id,
                         name: chain.name,

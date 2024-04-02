@@ -4,6 +4,9 @@
     width: 240px;
 }
 
+.bridgeTypeSelect {
+    max-width: 450px;
+}
 
 @media screen and (max-width: $breakpoint-laptop) {
     .list {

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { observer } from "mobx-react-lite";
 import { message, Space, Tabs } from 'antd';
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AxiosError } from "axios";
 
 import styles from './page.module.scss';
@@ -14,17 +14,24 @@ import MultipleMintForm from "./components/MultipleMintForm/MultipleMintForm";
 import SingleMintForm, { SingleMintFormData } from "./components/SingleMintForm/SingleMintForm";
 import AppStore from "../../store/AppStore";
 import { mintNFT } from "../../core/contractController";
-import { CONTRACT_ADDRESS } from "../../common/constants";
+import { getContractAddress } from "../../common/constants";
 import { NetworkName } from "../../common/enums/NetworkName";
 import ApiService from "../../services/ApiService";
 import ChainStore from "../../store/ChainStore";
 import GoldenAxeBlock from "./components/GoldenAxeBlock/GoldenAxeBlock";
+import { useGetChains } from "../../hooks/use-get-chains";
+import { HYPERLANE_QUERY_PARAM_NAME } from "@utils/hyperlaneQueryParamName";
+import { BridgeType } from "../../common/enums/BridgeType";
+import BridgeTypeSelect from "../../components/BridgeTypeSelect/BridgeTypeSelect";
 
 function Page() {
     const router = useRouter();
+    const pathname = usePathname()
+    const searchParams = useSearchParams()
     const [messageApi, contextHolder] = message.useMessage();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { account, walletConnected, openAccountDrawer, fetchAccount } = AppStore;
+    const getChains = useGetChains()
 
     const { switchNetworkAsync } = useSwitchNetwork();
     const { chain } = useNetwork();
@@ -38,7 +45,7 @@ function Page() {
         }
 
         if (!ChainStore.chains.length) {
-            await ChainStore.getChains();
+            await getChains()
         }
 
         const chainFrom = ChainStore.getChainById(formData.from);
@@ -50,14 +57,18 @@ function Page() {
             setIsLoading(true);
 
             try {
+                const bridgeType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME) ? BridgeType.Hyperlane : BridgeType.LayerZero
+
                 const result = await mintNFT({
-                    contractAddress: CONTRACT_ADDRESS[chain.network as NetworkName],
+                    contractAddress: getContractAddress(bridgeType, chain.network as NetworkName),
+                    bridgeType,
                     chainToSend: {
                         id: chain.id,
                         name: chain.name,
                         network: chain.network,
                         lzChain: null,
-                        token: 'ETH'
+                        token: 'ETH',
+                        
                     },
                     account,
                     accountAddress: address!
@@ -72,7 +83,8 @@ function Page() {
                         tokenId: result.blockId!,
                         chainFromNetwork: chainFrom?.network!,
                         chainToNetwork: chainTo?.network!,
-                        transactionHash: result?.transactionHash!
+                        transactionHash: result?.transactionHash!,
+                        bridgeType
                     });
 
                     router.push(`/mint/${nft.id}?successful=true`);
@@ -111,11 +123,24 @@ function Page() {
         }
     ];
 
+    const changeBridgeType = (bridgeType: string) => {
+        if (bridgeType === BridgeType.LayerZero) {
+            router.replace(pathname);
+        } else {
+            router.push(`?${HYPERLANE_QUERY_PARAM_NAME}=true`);
+        }
+
+        ChainStore.getChains(bridgeType as BridgeType)
+    };
+
+    const isHyperlaneBridgeType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME)
+
     return (
         <>
             {contextHolder}
 
             <Card isLoading={isLoading} className={styles.page} title="Mint and Bridge NFT" afterCard={<GoldenAxeBlock />} >
+                <BridgeTypeSelect onChange={changeBridgeType} value={isHyperlaneBridgeType ? BridgeType.Hyperlane : BridgeType.LayerZero} />
                 <Tabs className={styles.tabs} defaultActiveKey="single" items={tabs} type="card" />
             </Card>
         </>

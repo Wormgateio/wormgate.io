@@ -47,6 +47,7 @@ model Nft {
   chainIdToFirstBridge String?         @map("chain_id_to_first_bridge")
   chainId              String          @map("chain_id")
   chain                Chain           @relation(fields: [chainId], references: [id])
+  bridgeType           BridgeType?    @default(layer_zero) @map("bridge_type")
 
   @@map(name: "nfts")
 }
@@ -141,15 +142,16 @@ model RefferalLog {
 }
 
 model Chain {
-  id      String  @id @default(uuid())
-  name    String
-  network String
-  chainId Int     @unique @map("chain_id")
-  lzChain Int     @map("lz_chain")
-  rpcUrl  String?
-  token   String?
-  visible Boolean @default(true)
-  Nft     Nft[]
+  id                      String  @id @default(uuid())
+  name                    String
+  network                 String
+  chainId                 Int     @unique @map("chain_id")
+  lzChain                 Int     @map("lz_chain")
+  hyperlaneChain          Int?    @map("hyperlane_chain")
+  rpcUrl                  String?
+  token                   String?
+  Nft                     Nft[]
+  availableBridgeTypes    BridgeType[]  @default([]) @map("available_bridge_types")
 
   @@map(name: "chains")
 }
@@ -167,6 +169,11 @@ model RareNft {
 enum NftType {
   goldenAxe
   common
+}
+
+enum BridgeType {
+  layer_zero
+  hyperlane
 }
 
 enum BalanceOperation {

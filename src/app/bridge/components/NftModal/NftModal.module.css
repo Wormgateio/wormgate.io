@@ -51,7 +51,6 @@
     z-index: 101;
 }
 
-
 @media screen and (max-width: 768px) {
     .footer {
         flex-direction: column !important;

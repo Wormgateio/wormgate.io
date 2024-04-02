@@ -17,7 +17,8 @@ import { OperationHistoryDto } from "../../../common/dto/OperationHistoryDto";
 
 import styles from "./page.module.scss";
 import MiniCard from "../../../components/ui/MiniCard/MiniCard";
-import ChainStore from "../../../store/ChainStore";
+import { useGetChains } from "../../../hooks/use-get-chains";
+import BridgeTypeImage from "../../../components/BridgeTypeImage/BridgeTypeImage";
 
 interface Props {
     params: { nft: string },
@@ -30,6 +31,7 @@ function Page({ params }: Props) {
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingHistory, setIsLoadingHistory] = useState(false);
     const { account } = AppStore;
+    const getChains = useGetChains()
 
     const refetch = async () => {
         if (params.nft) {
@@ -58,7 +60,7 @@ function Page({ params }: Props) {
 
     useEffect(() => {
         AppStore.fetchAccount();
-        ChainStore.getChains();
+        getChains()
     }, []);
 
     useEffect(() => {
@@ -79,9 +81,13 @@ function Page({ params }: Props) {
 
     return (
         <Card title="NFT Info" className={styles.page}>
-            <div className={styles.back} onClick={goToBack}>
-                <Image src="/svg/ui/back-arrow.svg" width={24} height={24} alt="" />
-                <span>Back to Your NFT`s</span>
+            <div className={styles.header}>
+                <div className={styles.back} onClick={goToBack}>
+                    <Image src="/svg/ui/back-arrow.svg" width={24} height={24} alt="" />
+                    <span>Back to Your NFT`s</span>
+                </div>
+
+                <BridgeTypeImage className={styles.bridgeWrapper} bridgeType={nft.bridgeType} />
             </div>
 
             <div className={styles.container}>
