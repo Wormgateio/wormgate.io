@@ -14,12 +14,7 @@ import Button from "../../components/ui/Button/Button";
 import AppStore from "../../store/AppStore";
 import { getFilteredNfts } from "./helpers/get-filtered-nfts";
 import { BridgeType } from "../../common/enums/BridgeType";
-
-export enum BridgePageTab {
-    All,
-    Womex,
-    Custom
-}
+import { BridgePageTab } from "./constants";
 
 function Page() {
     const { address, isConnected, isConnecting } = useAccount();

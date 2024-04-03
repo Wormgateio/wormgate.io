@@ -8,14 +8,12 @@ import { useRouter } from "next/navigation";
 import cn from './page.module.scss';
 
 import NftStore from "../../../store/NftStore";
-import ChainStore from "../../../store/ChainStore";
 import AppStore from "../../../store/AppStore";
 import ListCard from "../../../components/ListCard/ListCard";
 import PinataImage from "../../../components/PinataImage";
 import { NFTDto } from "../../../common/dto/NFTDto";
 import BridgeForm from "./components/BridgeForm/BridgeForm";
 import { goldenAxeIpf } from "../../api/mint/ipfs";
-import { useGetChains } from "../../../hooks/use-get-chains";
 
 interface NftPageProps {
     params: { nft: string };
@@ -25,7 +23,6 @@ function NftPage({ params }: NftPageProps) {
     const { fetchAccount, fetchGoldenAxeReward, goldenAxeReward } = AppStore;
     const router = useRouter();
     const [nft, setNft] = useState(NftStore.selectNftById(params.nft));
-    const getChains = useGetChains()
 
     const refetch = () => {
         NftStore.getNfts().then(() => setNft(NftStore.selectNftById(params.nft)));
@@ -35,7 +32,6 @@ function NftPage({ params }: NftPageProps) {
 
     useEffect(() => {
         refetch();
-        getChains()
     }, []);
 
     if (!nft) {

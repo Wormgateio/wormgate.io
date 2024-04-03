@@ -9,7 +9,7 @@ CREATE TYPE "BridgeType" AS ENUM ('layer_zero', 'hyperlane');
 
 -- AlterTable
 ALTER TABLE "chains" DROP COLUMN "visible",
-ADD COLUMN     "available_network_types" "BridgeType"[] DEFAULT ARRAY[]::"BridgeType"[],
+ADD COLUMN     "available_bridge_types" "BridgeType"[] DEFAULT ARRAY[]::"BridgeType"[],
 ADD COLUMN     "hyperlane_chain" INTEGER;
 
 -- AlterTable

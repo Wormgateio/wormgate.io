@@ -1,6 +1,6 @@
 import { NFTDto } from "../../../common/dto/NFTDto";
 import { BridgeType } from "../../../common/enums/BridgeType";
-import { BridgePageTab } from "../page";
+import { BridgePageTab } from "../constants";
 
 export function getFilteredNfts(nfts: NFTDto[], activeTab: BridgePageTab, bridgeType: BridgeType) {
     return nfts.filter((nft) => {

@@ -17,7 +17,6 @@ import { OperationHistoryDto } from "../../../common/dto/OperationHistoryDto";
 
 import styles from "./page.module.scss";
 import MiniCard from "../../../components/ui/MiniCard/MiniCard";
-import { useGetChains } from "../../../hooks/use-get-chains";
 import BridgeTypeImage from "../../../components/BridgeTypeImage/BridgeTypeImage";
 
 interface Props {
@@ -31,7 +30,6 @@ function Page({ params }: Props) {
     const [isLoading, setIsLoading] = useState(true);
     const [isLoadingHistory, setIsLoadingHistory] = useState(false);
     const { account } = AppStore;
-    const getChains = useGetChains()
 
     const refetch = async () => {
         if (params.nft) {
@@ -60,7 +58,6 @@ function Page({ params }: Props) {
 
     useEffect(() => {
         AppStore.fetchAccount();
-        getChains()
     }, []);
 
     useEffect(() => {
