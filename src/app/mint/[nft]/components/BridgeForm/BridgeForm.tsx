@@ -11,6 +11,7 @@ import ChainSelect from "../../../../../components/ChainSelect/ChainSelect";
 import { NFTDto } from "../../../../../common/dto/NFTDto";
 import RefuelSwitch from "../../../../../components/RefuelSwitch/RefuelSwitch";
 import { useBridge } from "../../../../../common/useBridge";
+import { BridgeType } from "../../../../../common/enums/BridgeType";
 
 interface Props {
     nft: NFTDto;
@@ -65,7 +66,7 @@ export default function BridgeForm(props: Props) {
 
     return (
         <Flex vertical gap={12} className={className}>
-            {!simple && (
+            {!simple && nft.bridgeType !== BridgeType.Hyperlane && (
                 <RefuelSwitch
                     refuel={refuelCost}
                     onChangeRefuelGas={onChangeRefuelGas}

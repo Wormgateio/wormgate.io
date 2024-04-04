@@ -12,6 +12,7 @@ import { useBridge } from "../../../../../common/useBridge";
 
 import styles from "./BridgeForm.module.css";
 import { ChainDto } from "../../../../../common/dto/ChainDto";
+import { BridgeType } from "../../../../../common/enums/BridgeType";
 
 interface Props {
     nft: NFTDto;
@@ -47,14 +48,14 @@ function BridgeForm({ nft, className, onAfterBridge }: Props) {
 
     return (
         <div className={clsx(styles.container, className)}>
-           <div className={styles.refuel}>
+           {nft.bridgeType !== BridgeType.Hyperlane && <div className={styles.refuel}>
                <RefuelSwitch
                    refuel={refuelCost}
                    onChangeRefuelGas={onChangeRefuelGas}
                    checked={refuelEnabled}
                    onChange={onChangeRefuelEnabled}
                />
-           </div>
+           </div>}
 
             <div className={styles.actions}>
                 <ChainSelect chains={chains} value={selectedChain} onChange={onChangeChain} priceList={bridgePriceList} />

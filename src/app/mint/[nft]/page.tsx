@@ -27,11 +27,14 @@ function NftPage({ params }: NftPageProps) {
     const refetch = () => {
         NftStore.getNfts().then(() => setNft(NftStore.selectNftById(params.nft)));
         fetchAccount();
-        fetchGoldenAxeReward()
     }
 
     useEffect(() => {
         refetch();
+
+        if (!goldenAxeReward) {
+            fetchGoldenAxeReward()
+        }
     }, []);
 
     if (!nft) {

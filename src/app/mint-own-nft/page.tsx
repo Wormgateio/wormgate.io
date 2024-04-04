@@ -54,6 +54,7 @@ function Page() {
                         id: chain.id,
                         name: chain.name,
                         network: chain.network,
+                        hyperlaneChain: null,
                         lzChain: null,
                         token: 'ETH'
                     },

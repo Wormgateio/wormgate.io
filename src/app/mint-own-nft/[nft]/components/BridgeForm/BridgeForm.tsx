@@ -12,6 +12,7 @@ import ChainSelect from "../../../../../components/ChainSelect/ChainSelect";
 import { NFTDto } from "../../../../../common/dto/NFTDto";
 import RefuelSwitch from "../../../../../components/RefuelSwitch/RefuelSwitch";
 import { useBridge } from "../../../../../common/useBridge";
+import { BridgeType } from "../../../../../common/enums/BridgeType";
 
 
 interface Props {
@@ -62,13 +63,15 @@ export default function BridgeForm({ className, nft, onAfterBridge }: Props) {
                 <CostLabel cost={10} />
             </Flex>
 
-            <RefuelSwitch
-                refuel={refuelCost}
-                onChangeRefuelGas={onChangeRefuelGas}
-                checked={refuelEnabled}
-                onChange={onChangeRefuelEnabled}
-                className={styles.switch}
-            />
+            {nft.bridgeType !== BridgeType.Hyperlane && 
+                <RefuelSwitch
+                    refuel={refuelCost}
+                    onChangeRefuelGas={onChangeRefuelGas}
+                    checked={refuelEnabled}
+                    onChange={onChangeRefuelEnabled}
+                    className={styles.switch}
+                />
+            }
 
             <div className={clsx(styles.footer, isPending && styles.footerPending)}>
                 <Flex gap={8} className={styles.formActions}>

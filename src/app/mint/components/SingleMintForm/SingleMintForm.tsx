@@ -60,6 +60,7 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
             name: chain.name,
             network: chain.network,
             lzChain: chain.lzChain,
+            hyperlaneChain: chain.hyperlaneChain,
             token: chain.token,
           },
           account,

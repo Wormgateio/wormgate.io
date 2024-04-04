@@ -51,6 +51,7 @@ export function useBridge(nft: NFTDto, onAfterBridge?: (previousChain?: ChainDto
                         name: chain.name,
                         network: chain.network,
                         lzChain: chain.lzChain,
+                        hyperlaneChain: chain.hyperlaneChain,
                         token: chain.token
                     },
                     bridgeType: nft.bridgeType,
@@ -90,6 +91,7 @@ export function useBridge(nft: NFTDto, onAfterBridge?: (previousChain?: ChainDto
                     name: chainToSend.name,
                     network: chainToSend.network,
                     lzChain: chainToSend.lzChain,
+                    hyperlaneChain: chainToSend.hyperlaneChain,
                     token: chainToSend.token
                 },
                 account,
@@ -133,8 +135,8 @@ export function useBridge(nft: NFTDto, onAfterBridge?: (previousChain?: ChainDto
     useEffect(() => {
         if (chains.length && nft) {
             const _chains = chains
-                .filter(x => x.id !== nft.chainId)
-                .filter(x => !UnailableNetworks[x.network as NetworkName]?.includes(nft.chainNetwork as NetworkName));
+                .filter(x => x.id !== nft.chainId && x.availableBridgeTypes.includes(nft.bridgeType))
+                .filter(x => !UnailableNetworks[x.network as NetworkName]?.includes(nft.chainNetwork as NetworkName))
 
             setChains(_chains);
 

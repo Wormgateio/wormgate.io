@@ -44,8 +44,6 @@ export default function Navigation() {
     const searchParams = useSearchParams();
     const isHyperlaneBridge = !!searchParams.get(HYPERLANE_QUERY_PARAM_NAME);
 
-    console.log(isHyperlaneBridge, 'isHyperlaneBridge');
-
     return (
         <nav className={styles.nav}>
             <NavLink href={getPathWithBridgeParam('/', isHyperlaneBridge)} title="Mint" cost={20} />
