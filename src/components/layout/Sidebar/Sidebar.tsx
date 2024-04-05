@@ -8,8 +8,6 @@ import clsx from 'clsx';
 
 import cn from './Sidebar.module.scss';
 import Footer from '../Footer/Footer';
-import { Space } from 'antd';
-import SoonLabel from '../../SoonLabel/SoonLabel';
 import LogoWithText from '../../Logo/Logo';
 import { HYPERLANE_QUERY_PARAM_NAME } from '@utils/hyperlaneQueryParamName';
 
@@ -22,7 +20,8 @@ interface MenuItemProps {
 
 function MenuItem(props: MenuItemProps) {
   const pathname = usePathname();
-  const isActive = pathname === props.href;
+  const searchParams = useSearchParams()
+  const isActive = props.href === `${pathname}${searchParams.size ? `?${searchParams}` : ''}`
 
   const content = (
     <div
@@ -52,6 +51,7 @@ const menu = [
     href: '/',
     name: 'Mint NFT',
     description: 'Make a mint our NFT',
+    withBridgeType: true
   },
   /*{
         key: 'mintOwn',
@@ -67,12 +67,14 @@ const menu = [
     href: '/bridge',
     name: 'Bridge NFT',
     description: 'Seamlessly transfer NFTs across blockchains',
+    withBridgeType: true
   },
   {
     key: 'refuel',
     href: '/refuel',
     name: 'Refuel',
     description: 'Send native tokens across networks',
+    withBridgeType: false
   },
 ];
 
@@ -103,7 +105,12 @@ export default function Sidebar({ closeIcon }: SidebarProps) {
 
         <nav className={cn.menu}>
           {menu.map((item) => (
-            <MenuItem key={item.key} href={getPathWithBridgeParam(item.href, isHyperlaneBridge)} name={item.name} description={item.description} />
+            <MenuItem 
+              key={item.key} 
+              href={item.withBridgeType ? getPathWithBridgeParam(item.href, isHyperlaneBridge) : item.href} 
+              name={item.name} 
+              description={item.description} 
+            />
           ))}
         </nav>
       </div>

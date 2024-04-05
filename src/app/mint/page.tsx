@@ -2,14 +2,13 @@
 
 import { useState } from "react";
 import { observer } from "mobx-react-lite";
-import { message, Space, Tabs } from 'antd';
+import { message, Tabs } from 'antd';
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AxiosError } from "axios";
 
 import styles from './page.module.scss';
 import Card from "../../components/ui/Card/Card";
-import SoonLabel from "../../components/SoonLabel/SoonLabel";
 import MultipleMintForm, { MultipleMintFormData } from "./components/MultipleMintForm/MultipleMintForm";
 import SingleMintForm, { SingleMintFormData } from "./components/SingleMintForm/SingleMintForm";
 import AppStore from "../../store/AppStore";
@@ -23,6 +22,7 @@ import { useGetChains } from "../../hooks/use-get-chains";
 import { HYPERLANE_QUERY_PARAM_NAME } from "@utils/hyperlaneQueryParamName";
 import { BridgeType } from "../../common/enums/BridgeType";
 import BridgeTypeSelect from "../../components/BridgeTypeSelect/BridgeTypeSelect";
+import { NFT_IDS_DIVIDER } from "@utils/nftIdsDivider";
 
 function Page() {
     const router = useRouter();
@@ -37,7 +37,7 @@ function Page() {
     const { chain } = useNetwork();
     const { address } = useAccount();
 
-    const mintSingle = async (formData: SingleMintFormData) => {
+    const mint = async (from: string, mintAction: () => Promise<any>) => {
         if (!walletConnected) {
             openAccountDrawer();
             messageApi.info('Connect a wallet before Mint!');
@@ -48,7 +48,7 @@ function Page() {
             await getChains()
         }
 
-        const chainFrom = ChainStore.getChainById(formData.from);
+        const chainFrom = ChainStore.getChainById(from);
         if (chain?.network !== chainFrom?.network) {
             await switchNetworkAsync?.(chainFrom?.chainId);
         }
@@ -57,43 +57,7 @@ function Page() {
             setIsLoading(true);
 
             try {
-                const bridgeType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME) ? BridgeType.Hyperlane : BridgeType.LayerZero
-
-                const result = await mintNFT({
-                    contractAddress: getContractAddress(bridgeType, chain.network as NetworkName),
-                    bridgeType,
-                    chainToSend: {
-                        id: chain.id,
-                        name: chain.name,
-                        network: chain.network,
-                        hyperlaneChain: null,
-                        lzChain: null,
-                        token: 'ETH',
-                        
-                    },
-                    account,
-                    accountAddress: address!
-                });
-
-                if (result.result) {
-                    const chainFrom = ChainStore.getChainById(formData.from);
-                    const chainTo = ChainStore.getChainById(formData.to);
-
-                    const nft = await ApiService.createMint({
-                        metamaskWalletAddress: address as string,
-                        tokenId: result.blockId!,
-                        chainFromNetwork: chainFrom?.network!,
-                        chainToNetwork: chainTo?.network!,
-                        transactionHash: result?.transactionHash!,
-                        bridgeType
-                    });
-
-                    router.push(`/mint/${nft.id}?successful=true`);
-
-                    await fetchAccount();
-                } else {
-                    messageApi.warning(result.message);
-                }
+                await mintAction()
             } catch (e) {
                 console.error(e);
                 setIsLoading(false);
@@ -108,10 +72,97 @@ function Page() {
                 setIsLoading(false);
             }
         }
+    }
+
+    const mintSingle = async (formData: SingleMintFormData) => {
+        const mintSingleNft = async () => {
+            if (!chain) {
+                return
+            }
+
+            const bridgeType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME) ? BridgeType.Hyperlane : BridgeType.LayerZero
+
+            const result = await mintNFT({
+                contractAddress: getContractAddress(bridgeType, chain.network as NetworkName),
+                bridgeType,
+                chainToSend: {
+                    id: chain.id,
+                    name: chain.name,
+                    network: chain.network,
+                    hyperlaneChain: null,
+                    lzChain: null,
+                    token: 'ETH',
+                },
+                account,
+                accountAddress: address!
+            });
+            
+            if (result.result) {
+                const chainFrom = ChainStore.getChainById(formData.from);
+                const chainTo = ChainStore.getChainById(formData.to);
+                const nft = await ApiService.createMint({
+                    metamaskWalletAddress: address as string,
+                    tokenIds: result.blockIds!,
+                    chainFromNetwork: chainFrom?.network!,
+                    chainToNetworks: [chainTo?.network!],
+                    transactionHash: result?.transactionHash!,
+                    bridgeType
+                });
+                router.push(`/mint/${nft[0].id}?successful=true`);
+                await fetchAccount();
+            } else {
+                messageApi.warning(result.message);
+            }
+        }
+
+        mint(formData.from, mintSingleNft)
     };
 
     const mintMultiple = async (formData: MultipleMintFormData) => {
-        console.log(formData, 'formData');
+        const mintMultipleNft = async () => {
+            if (!chain) {
+                return
+            }
+            const bridgeType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME) ? BridgeType.Hyperlane : BridgeType.LayerZero
+            const chainsTo = formData.to.filter(({ checked }) => checked)
+
+            const result = await mintNFT({
+                contractAddress: getContractAddress(bridgeType, chain.network as NetworkName),
+                bridgeType,
+                chainToSend: {
+                    id: chain.id,
+                    name: chain.name,
+                    network: chain.network,
+                    hyperlaneChain: null,
+                    lzChain: null,
+                    token: 'ETH',
+                },
+                account,
+                accountAddress: address!,
+                nftsCount: chainsTo.length
+            });
+
+            if (result.result) {
+                const chainFrom = ChainStore.getChainById(formData.from);
+
+                const nft = await ApiService.createMint({
+                    metamaskWalletAddress: address as string,
+                    tokenIds: result.blockIds!,
+                    chainFromNetwork: chainFrom?.network!,
+                    chainToNetworks: chainsTo.map(({ network }) => network),
+                    transactionHash: result?.transactionHash!,
+                    bridgeType
+                });
+
+                const ntfIds = nft.map(({ id }) => id)
+                router.push(`/mint/${ntfIds.join(NFT_IDS_DIVIDER)}?successful=true`);
+                await fetchAccount();
+            } else {
+                messageApi.warning(result.message);
+            }
+        }
+
+        mint(formData.from, mintMultipleNft)
     }
 
     const tabs = [
@@ -122,11 +173,8 @@ function Page() {
         },
         {
             key: 'multiple',
-            // todo: should replace after add logic for multiple mint
-            // label: 'Multiple',
-            label: <Space size={8}>Multiple <SoonLabel /></Space>,
+            label: 'Multiple',
             children: <MultipleMintForm onSubmit={mintMultiple} />,
-            disabled: true
         }
     ];
 
@@ -136,8 +184,6 @@ function Page() {
         } else {
             router.push(`?${HYPERLANE_QUERY_PARAM_NAME}=true`);
         }
-
-        ChainStore.getChains(bridgeType as BridgeType)
     };
 
     const isHyperlaneBridgeType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME)

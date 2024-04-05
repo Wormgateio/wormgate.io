@@ -1,0 +1,1 @@
+export const HYPERLANE_BASE_URL = 'https://explorer.hyperlane.xyz/api'

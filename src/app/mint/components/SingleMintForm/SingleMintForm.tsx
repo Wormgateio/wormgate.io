@@ -40,6 +40,8 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
 
   const [bridgePriceList, setBridgePriceList] = useState<EstimationBridgeType>([]);
 
+  const bridgeType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME) ? BridgeType.Hyperlane : BridgeType.LayerZero
+
   const estimateBridgeFee = async () => {
     const chainFrom = ChainStore.getChainById(watchedFormData?.from);
     const nftChain = ChainStore.chains.find((c) => c.chainId === chainFrom?.chainId);
@@ -47,7 +49,6 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
 
     if (chain) {
       let _currentNetwork: string = chainFrom?.network!;
-      const bridgeType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME) ? BridgeType.Hyperlane : BridgeType.LayerZero
 
       const priceList = await estimateBridge(
         chains,
@@ -84,8 +85,12 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
   }, [chains, chain]);
 
   useEffect(() => {
-    estimateBridgeFee();
-  }, [watchedFormData, chain]);
+    if (bridgeType === BridgeType.LayerZero && account?.id) {
+      estimateBridgeFee();
+    } else {
+      setBridgePriceList([]);
+    }
+  }, [watchedFormData, chain, bridgeType, account?.id]);
 
   const chainsTo = useMemo(() => {
     return chains.filter((c) => c.id !== watchedFormData?.from);

@@ -1,0 +1,1 @@
+export const NFT_IDS_DIVIDER = '_'

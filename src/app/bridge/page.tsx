@@ -15,11 +15,14 @@ import AppStore from "../../store/AppStore";
 import { getFilteredNfts } from "./helpers/get-filtered-nfts";
 import { BridgeType } from "../../common/enums/BridgeType";
 import { BridgePageTab } from "./constants";
+import { useSearchParams } from "next/navigation";
+import { HYPERLANE_QUERY_PARAM_NAME } from "@utils/hyperlaneQueryParamName";
 
 function Page() {
+    const searchParams = useSearchParams()
     const { address, isConnected, isConnecting } = useAccount();
     const [activeTab, setActiveTab] = useState(BridgePageTab.All);
-    const [bridgeType, setBridgeType] = useState(BridgeType.LayerZero)
+    const [bridgeType, setBridgeType] = useState(() => searchParams.get(HYPERLANE_QUERY_PARAM_NAME) ? BridgeType.Hyperlane : BridgeType.LayerZero)
 
     useEffect(() => {
         NftStore.getNfts();

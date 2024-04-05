@@ -9,8 +9,10 @@ import { LeaderDto } from "../common/dto/LeaderDto";
 import { RandomImageDto } from "../common/dto/RandomImageDto";
 import { OperationHistoryDto } from "../common/dto/OperationHistoryDto";
 import { CreateRefuelDto } from "../common/dto/RefuelDto";
-import { RareNftDto } from "../common/dto/RareNftDto";
 import { BridgeType } from "../common/enums/BridgeType";
+import { HyperlaneTransactionInfo } from "../common/dto/HyperlaneTransactionInfo";
+import axios from "axios";
+import { HYPERLANE_BASE_URL } from "@utils/hyperlaneUrl";
 
 class ApiService {
     async getAccount(): Promise<AccountDto> {
@@ -37,7 +39,7 @@ class ApiService {
         return apiClient.post('refuel', data);
     }
 
-    async createMint(data: CreateMintDto): Promise<MintDto> {
+    async createMint(data: CreateMintDto): Promise<MintDto[]> {
         const response = await apiClient.post('mint', data);
         return response.data;
     }
@@ -114,14 +116,32 @@ class ApiService {
         return response.data;
     }
 
-    async getNftHistory(nftId: string, currentNetwork: string) {
-        const response = await apiClient.get<OperationHistoryDto[]>('history', { params: { nftId, currentNetwork } });
+    async getNftHistory(nftId: string, currentNetwork: string, bridgeType: BridgeType) {
+        const response = await apiClient.get<OperationHistoryDto[]>('history', { params: { nftId, currentNetwork, bridgeType } });
         return response.data;
     }
 
     async getGoldenAxeReward() {
         const response = await apiClient.get('golden-axe-reward');
         return response.data;
+    }
+
+    async getHyperlaneTransactionInfo(hash: string) {
+         try {
+            const response = await axios<HyperlaneTransactionInfo>(
+                HYPERLANE_BASE_URL,
+                { 
+                    params: { 
+                        module: 'message', 
+                        action: 'get-messages',
+                        'origin-tx-hash': hash
+                    } 
+                }
+            );
+            return response.data.result;
+        } catch {
+            return null
+        }
     }
 }
 

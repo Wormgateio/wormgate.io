@@ -8,7 +8,6 @@
   justify-content: center;
   flex-wrap: wrap;
   text-align: center;
-  gap: 4px;
   margin-bottom: 40px;
 }
 
@@ -30,12 +29,19 @@
   }
 }
 
-.nft {
-  max-width: 240px;
-  margin: auto;
-  gap: 8px;
+.nfts {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px
+}
+
+.nftsCount {
+  background: linear-gradient(180deg, #0997B7 0%, #57E0FF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-left: 5px;
 }
 
 @media screen and (max-width: $breakpoint-tablet) {

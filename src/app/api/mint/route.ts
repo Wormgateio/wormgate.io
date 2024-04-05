@@ -12,6 +12,8 @@ import { compareAsc } from "date-fns/compareAsc";
 import { getRandomTimesForDay } from "@utils/getRandomTimeForDay";
 import { addDays, getDay } from "date-fns";
 
+const NFTS_COUNT_FOR_MINT_GOLDEN_AXE = 1
+
 interface GoldenAxeMintOptions {
     mintTime: Date,
     mintTimes: Date[]
@@ -46,9 +48,9 @@ export async function POST(request: Request) {
         return new BadRequest(`Chain network ${data.chainFromNetwork} not found`);
     }
 
-    const { nft, goldenAxeOptions} = await getNft(user)
+    const nfts = await getNfts(user, data.tokenIds.length)
 
-    const createdNFT = await createNFT({
+    const nftPromises = nfts.map(({ nft, goldenAxeOptions }, idx) => createNFT({
         name: nft.name,
         description: '',
         pinataImageHash: nft.hash,
@@ -56,17 +58,17 @@ export async function POST(request: Request) {
         pinataFileName: nft.fileName,
         user,
         userId: user.id,
-        tokenId: data.tokenId,
+        tokenId: data.tokenIds[idx],
         chainId: chainFrom.id,
-        chainIdToFirstBridge: (await prisma.chain.findFirst({
-            where: { network: data.chainToNetwork }
-        }))?.id!,
+        chainToNetwork: data.chainToNetworks[idx],
         transactionHash: data.transactionHash,
         isCustom: false,
         bridgeType: data.bridgeType
-    }, goldenAxeOptions);
+    }, goldenAxeOptions))
 
-    return Response.json(createdNFT);
+    const createdNfts = await Promise.all(nftPromises)
+
+    return Response.json(createdNfts);
 }
 
 interface CreateNFTDto {
@@ -79,7 +81,7 @@ interface CreateNFTDto {
     userId: string;
     tokenId: number;
     chainId: string;
-    chainIdToFirstBridge: string;
+    chainToNetwork: string;
     transactionHash: string;
     isCustom: boolean;
     bridgeType: BridgeType;
@@ -87,6 +89,11 @@ interface CreateNFTDto {
 
 async function createNFT(data: CreateNFTDto, goldenAxeOptions: GoldenAxeMintOptions | null) {
     return prisma.$transaction(async (context) => {
+
+        const chainToFirstBridge = await context.chain.findFirst({
+            where: { network: data.chainToNetwork }
+        });
+
         const nft = await context.nft.create({
             data: {
                 name: data.name,
@@ -97,7 +104,7 @@ async function createNFT(data: CreateNFTDto, goldenAxeOptions: GoldenAxeMintOpti
                 userId: data.userId,
                 tokenId: data.tokenId,
                 chainId: data.chainId,
-                chainIdToFirstBridge: data.chainIdToFirstBridge,
+                chainIdToFirstBridge: chainToFirstBridge?.id,
                 isCustom: data.isCustom,
                 bridgeType: data.bridgeType
             }
@@ -153,9 +160,8 @@ async function createNFT(data: CreateNFTDto, goldenAxeOptions: GoldenAxeMintOpti
     });
 }
 
-async function getNft(user : User) {
-
-    if (user && user.twitterLogin){
+async function getNfts(user: User, nftsCount: number) {
+    if (user && user.twitterLogin && nftsCount === NFTS_COUNT_FOR_MINT_GOLDEN_AXE){
         const goldenAxeOptions = await prisma.rareNft.findFirst({
             where: { type: NftType.GoldenAxe }
         });
@@ -164,19 +170,22 @@ async function getNft(user : User) {
             const mintTime = goldenAxeOptions.mintTimes.find((time) => compareAsc(new Date(), new Date(time)) !== -1) 
 
             if (mintTime) {
-                return { 
-                    nft: goldenAxeIpf, 
-                    goldenAxeOptions: {
-                        mintTime,
-                        mintTimes: goldenAxeOptions.mintTimes,
-                        perDay: goldenAxeOptions.perDay
-                    } 
-                }
+                return [
+                    { 
+                        nft: goldenAxeIpf, 
+                        goldenAxeOptions: {
+                            mintTime,
+                            mintTimes: goldenAxeOptions.mintTimes,
+                            perDay: goldenAxeOptions.perDay
+                        } 
+                    }
+                ]
             }
+
         }
     }
 
-    return { nft: ipfs[Math.floor(Math.random() * ipfs.length)], goldenAxeOptions: null } 
+    return new Array(nftsCount).fill(0).map(() => ({ nft: ipfs[Math.floor(Math.random() * ipfs.length)], goldenAxeOptions: null })) 
 }
 
 function getNewMintTimesForGoldenAxe(goldenAxeOptions: GoldenAxeMintOptions) {

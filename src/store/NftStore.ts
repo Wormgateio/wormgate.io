@@ -2,6 +2,7 @@ import { makeAutoObservable } from "mobx";
 import { enableStaticRendering } from "mobx-react-lite";
 import ApiService from "../services/ApiService";
 import { NFTDto } from "../common/dto/NFTDto";
+import { toDictionary } from "@utils/toDictionary";
 
 enableStaticRendering(typeof window === 'undefined');
 
@@ -34,6 +35,18 @@ class NftStore {
 
     selectNftById(id: string) {
         return this.nfts.find((nft) => nft.id === id);
+    }
+
+    selectNftsByIds(ids: string[]) {
+        const nftById = toDictionary(this.nfts, (n) => n.id);
+
+        return ids.reduce((res: NFTDto[], id) => {
+            if (nftById[id]) {
+                res.push(nftById[id])
+            }
+
+            return res
+        }, [])
     }
     
     selectNftByHash(hash: string) {

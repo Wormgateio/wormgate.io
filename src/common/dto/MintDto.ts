@@ -18,9 +18,9 @@ export interface CreateCustomMintDto {
 
 export interface CreateMintDto {
     metamaskWalletAddress: string;
-    tokenId: number;
+    tokenIds: number[];
     chainFromNetwork: string;
-    chainToNetwork: string;
+    chainToNetworks: string[];
     transactionHash: string;
     bridgeType: BridgeType
 }

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prismaStudio": "npx prisma studio"
+    "prismaStudio": "npx prisma studio",
+    "prepare": "husky install"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
@@ -45,6 +46,7 @@
     "@types/uuid": "^9.0.8",
     "eslint": "^8",
     "eslint-config-next": "14.0.3",
+    "husky": "^9.0.11",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }

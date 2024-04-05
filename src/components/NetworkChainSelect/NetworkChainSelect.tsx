@@ -1,4 +1,4 @@
-import { Dropdown, Flex, MenuProps, message } from 'antd';
+import { Dropdown, Flex, message } from 'antd';
 import Image from 'next/image';
 import { useEffect, useMemo } from 'react';
 import clsx from 'clsx';
@@ -8,10 +8,7 @@ import { getChainLogo } from '../../utils/getChainLogo';
 import styles from './NetworkChainSelect.module.css';
 import ChainStore from '../../store/ChainStore';
 import { observer } from 'mobx-react-lite';
-import { toDictionary } from '../../utils/to-dictionary';
-import { useGetChains } from '../../hooks/use-get-chains';
-import { useSearchParams } from 'next/navigation';
-import { HYPERLANE_QUERY_PARAM_NAME } from '@utils/hyperlaneQueryParamName';
+import { toDictionary } from '../../utils/toDictionary';
 import { useMedia } from 'use-media';
 import { MediaBreakpoint } from '@utils/mediaBreakpoints';
 
@@ -22,7 +19,6 @@ interface NetworkChainSelectProps {
 }
 
 function NetworkChainSelect({ className }: NetworkChainSelectProps) {
-  const searchParams = useSearchParams()
   const isMobile = useMedia({ maxWidth: MediaBreakpoint.Mobile });
   const [messageApi, contextHolder] = message.useMessage();
   const { chain, chains: allChains } = useNetwork();
@@ -32,16 +28,11 @@ function NetworkChainSelect({ className }: NetworkChainSelectProps) {
       reset();
     },
   });
-  const getChains = useGetChains()
 
-  useEffect(() => {
-    getChains()
-  }, [searchParams.get(HYPERLANE_QUERY_PARAM_NAME)])
-
-  const chains = useMemo(() => {
+  const { chainName, chainsMenu } = useMemo(() => {
     const chainsById = toDictionary(allChains, x => x.id);
 
-    return availableChains.reduce((chains: Chain[], { chainId }) => {
+    const chains = [...availableChains].reduce((chains: Chain[], { chainId }) => {
       const chain = chainsById[chainId]
 
       if (chain) {
@@ -50,26 +41,20 @@ function NetworkChainSelect({ className }: NetworkChainSelectProps) {
 
       return chains;
     }, [])
-  }, [allChains, availableChains])
 
-  const chainName = useMemo(() => {
-    if (chain && chains.some(({ network }) => network === chain.network)) {
-      return chain.name;
-    }
-    return WRONG_NETWORK;
-  }, [chain, chains]);
+    const chainName = chain && chains.some(({ network }) => network === chain.network) ? chain.name : WRONG_NETWORK
 
-  const chainsMenu = useMemo(() => {
-    const items: MenuProps['items'] = [...chains]
+    return {
+      chainName,
+      chainsMenu: [...chains]
       .sort((a, b) => a.name.localeCompare(b.name))
       .map((c) => ({
         key: c.id,
         label: c.name,
         icon: <Image width={24} height={24} src={getChainLogo(c.network)} alt="" />,
-      }));
-
-    return items;
-  }, [chains]);
+      }))
+    }
+  }, [allChains, availableChains, chain])
 
   const chainLogo = useMemo(() => chainName === WRONG_NETWORK ? '' : getChainLogo(chain?.network!), [chain, chainName]);
 

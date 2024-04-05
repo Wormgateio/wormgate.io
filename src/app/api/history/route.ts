@@ -1,10 +1,21 @@
 import { NextRequest } from "next/server";
 import { BadRequest } from "../utils/responses";
 import prisma from "../../../utils/prismaClient";
+import { HyperlaneTransactionInfo } from "../../../common/dto/HyperlaneTransactionInfo";
+import axios from "axios";
+import { toDictionary } from "@utils/toDictionary";
+import { BalanceLog, BridgeLog, BridgeType, MintLog } from "@prisma/client";
+import { HYPERLANE_BASE_URL } from "@utils/hyperlaneUrl";
+
+interface BalanceMintBridgeLog extends BalanceLog {
+    mintLog: MintLog | null,
+    bridgeLog: BridgeLog | null,
+}
 
 export async function GET(request: NextRequest) {
     const nftId = request.nextUrl.searchParams.get('nftId');
     const currentNetwork = request.nextUrl.searchParams.get('currentNetwork');
+    const bridgeType = request.nextUrl.searchParams.get('bridgeType');
 
     if (!nftId || !currentNetwork) {
         return new BadRequest('Nft id and current chain network is required');
@@ -19,6 +30,9 @@ export async function GET(request: NextRequest) {
         include: { mintLog: true, bridgeLog: true },
     });
 
+    const isHyperlaneBridgeType = bridgeType === BridgeType.hyperlane
+    const hyperlaneTransactionsByHash = isHyperlaneBridgeType ? await getHyperlaneTransactions(balanceLogs) : {}
+
     const history = balanceLogs.map((log, index) => {
         const network = log.bridgeLog ? log.bridgeLog.previousChain : log.mintLog && index ? balanceLogs[index - 1].bridgeLog?.previousChain : currentNetwork;
         const targetNetwork = log.bridgeLog?.nextChain;
@@ -28,8 +42,41 @@ export async function GET(request: NextRequest) {
             chainNetwork: network,
             targetChainNetwork: targetNetwork,
             date: log.createdAt,
+            transactionHash: log.bridgeLog?.transactionHash && isHyperlaneBridgeType ? hyperlaneTransactionsByHash[log.bridgeLog.transactionHash]?.id : undefined
         };
     });
 
     return Response.json(history);
+}
+
+async function getHyperlaneTransactions(balanceLogs: BalanceMintBridgeLog[]) {
+    const hyperlaneTransactionPromises = balanceLogs.reduce((promises: Promise<HyperlaneTransactionInfo['result']>[], log) => {
+        if (log.bridgeLog?.transactionHash) {
+            promises.push(getHyperlaneTransactionInfo(log.bridgeLog.transactionHash))
+        }
+
+        return promises
+    }, [])
+
+    try {
+        const hyperlaneTransactions = await Promise.all(hyperlaneTransactionPromises)
+        return toDictionary(hyperlaneTransactions.flat(), (t) => t.origin.hash)
+    } catch {
+        return {}
+    }
+}
+
+async function getHyperlaneTransactionInfo(hash: string) {
+    const response = await axios<HyperlaneTransactionInfo>(
+        HYPERLANE_BASE_URL, 
+        { 
+            params: { 
+                module: 'message', 
+                action: 'get-messages',
+                'origin-tx-hash': hash
+            } 
+        }
+    );
+
+    return response.data.result;
 }

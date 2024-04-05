@@ -1,4 +1,4 @@
-import { InterfaceAbi, ethers } from "ethers";
+import { Interface, InterfaceAbi, ethers } from "ethers";
 import { hexToNumber } from "web3-utils";
 import axios, { AxiosResponse } from "axios";
 
@@ -12,6 +12,7 @@ import { AccountDto } from "../common/dto/AccountDto";
 import { wait } from "../utils/wait";
 import { ChainDto } from "../common/dto/ChainDto";
 import { BridgeType } from "../common/enums/BridgeType";
+import { getBlockIds } from "./helpers/getBlockIds";
 
 interface ChainToSend {
     id: number;
@@ -27,7 +28,8 @@ interface ControllerFunctionProps {
     accountAddress: string;
     contractAddress: string;
     chainToSend: ChainToSend;
-    bridgeType: BridgeType
+    bridgeType: BridgeType,
+    nftsCount?: number
 }
 
 interface ControllerFunctionResult {
@@ -35,7 +37,7 @@ interface ControllerFunctionResult {
     message: string;
     receipt?: any;
     transactionHash: string;
-    blockId?: number;
+    blockIds?: number[];
 }
 
 const TRANSACTION_WAIT: number = 60000;
@@ -60,7 +62,7 @@ const getAbi = (type: BridgeType): InterfaceAbi => {
  * @param chainToSend Current chain to send NFT
  * @param account User account
  */
-export const mintNFT = async ({ contractAddress, bridgeType, chainToSend, account }: ControllerFunctionProps): Promise<ControllerFunctionResult> => {
+export const mintNFT = async ({ contractAddress, bridgeType, chainToSend, account, nftsCount = 1 }: ControllerFunctionProps): Promise<ControllerFunctionResult> => {
     const provider = new ethers.BrowserProvider((window as any).ethereum);
 
     const signer = await provider.getSigner();
@@ -80,19 +82,33 @@ export const mintNFT = async ({ contractAddress, bridgeType, chainToSend, accoun
         };
     }
 
-    let options: any = { value: BigInt(mintFee), gasLimit: BigInt(0) };
+    let options: any = { value: BigInt(mintFee) * BigInt(nftsCount) };
+
     let gasLimit, txResponse;
 
     if (account?.refferer) {
-        gasLimit = await contract[`batchMint(1, address)`].estimateGas(account.refferer, options);
-        options.gasLimit = gasLimit;
+        const args = [nftsCount, account.refferer]
 
-        txResponse = await contract[`batchMint(1, address)`](account.refferer, options);
+        if (bridgeType === BridgeType.LayerZero) {
+            gasLimit = await contract.batchMint.estimateGas(...args, options);
+            options.gasLimit = gasLimit;
+            txResponse = await contract.batchMint(...args, options);
+        } else {
+            gasLimit = await contract.batchMintWithReferrer.estimateGas(...args, options);
+            options.gasLimit = gasLimit;
+            txResponse = await contract.batchMintWithReferrer(...args, options);
+        }
     } else {
-        gasLimit = await contract[`mint()`].estimateGas(options);
+        const args: (string | number)[] = [nftsCount]
+
+        if (bridgeType === BridgeType.LayerZero) {
+            args.push(contractAddress)
+        }
+
+        gasLimit = await contract.batchMint.estimateGas(...args, options)
         options.gasLimit = gasLimit;
 
-        txResponse = await contract[`mint()`](options);
+        txResponse = await contract.batchMint(...args, options);
     }
 
     await wait();
@@ -102,21 +118,15 @@ export const mintNFT = async ({ contractAddress, bridgeType, chainToSend, accoun
 
     const receipt = await txResponse.wait(null, TRANSACTION_WAIT);
 
-    const log = (receipt.logs as any[]).find(x => x.topics.length === 4);
-    let blockId: number;
-
-    if (chainToSend.network === NetworkName.Polygon) {
-        blockId = parseInt(`${hexToNumber(receipt.logs[1].topics[3])}`);
-    } else {
-        blockId = parseInt(`${hexToNumber(log.topics[3])}`);
-    }
+    const iface = new Interface(abi);
+    const blockIds = getBlockIds(receipt.logs, iface, bridgeType)
 
     return {
         result: receipt?.status === 1,
         message: receipt?.status === 1 ? 'Successful send' : (receipt?.status == null ? 'Send not confirmed' : 'Send failed'),
         transactionHash: txResponse?.hash,
         receipt,
-        blockId
+        blockIds
     }
 }
 

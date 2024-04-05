@@ -9,10 +9,13 @@ import AppStore from "../store/AppStore";
 import { getContractAddress , DEFAULT_REFUEL_COST_USD, UnailableNetworks } from "./constants";
 import { NetworkName } from "./enums/NetworkName";
 import ApiService from "../services/ApiService";
+import { getBridgeBlockExplorer } from "@utils/getBridgeBlockExplorer";
+import { BridgeType } from "./enums/BridgeType";
 
 interface SubmittedData {
     previousChain: ChainDto;
     nextChain: ChainDto;
+    transactionLink: string | null
 }
 
 export function useBridge(nft: NFTDto, onAfterBridge?: (previousChain?: ChainDto, nextChain?: ChainDto) => void, useFirstChainToBridge = false) {
@@ -70,6 +73,7 @@ export function useBridge(nft: NFTDto, onAfterBridge?: (previousChain?: ChainDto
 
             const chainToSend = ChainStore.getChainById(selectedChain!);
             let _currentNetwork: string = currentChain?.network!;
+            const isHyperlaneBridgeType = nft.bridgeType === BridgeType.Hyperlane
 
             if (currentChain?.network !== nft.chainNetwork) {
                 const res = await switchNetworkAsync?.(nft.chainNativeId);
@@ -110,12 +114,15 @@ export function useBridge(nft: NFTDto, onAfterBridge?: (previousChain?: ChainDto
                     nftId: nft.id
                 });
 
+                const transactionInfo = isHyperlaneBridgeType ? await ApiService.getHyperlaneTransactionInfo(result.transactionHash) : null;
+
                 const previousChain = ChainStore.getChainById(nft.chainId)!;
                 const nextChain = ChainStore.getChainById(chainToSend?.id!)!;
 
                 setSubmittedData({
                     previousChain,
                     nextChain,
+                    transactionLink: transactionInfo ? getBridgeBlockExplorer(nft.bridgeType, transactionInfo.id) : null
                 });
 
                 onAfterBridge?.(previousChain, nextChain);

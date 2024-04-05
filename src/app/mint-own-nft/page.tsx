@@ -67,7 +67,7 @@ function Page() {
                         name: data.name,
                         description: data.description,
                         metamaskWalletAddress: address as string,
-                        tokenId: result.blockId!,
+                        tokenId: result.blockIds![0],
                         chainNetwork: chain?.network!,
                         transactionHash: result?.transactionHash!
                     });

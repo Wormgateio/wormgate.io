@@ -2,7 +2,8 @@ import React from 'react'
 import { Tabs } from 'antd';
 import { BridgeType } from '../../common/enums/BridgeType';
 import styles from "./BridgeTypeSelect.module.scss";
-import Image from 'next/image';
+import LzSvg from './LzSvg';
+import HyperlaneSvg from './HyperlaneSvg';
 
 interface BridgeTypeSelectProps {
     onChange(value: string): void;
@@ -13,11 +14,11 @@ export default function BridgeTypeSelect({ onChange, value }: BridgeTypeSelectPr
     const tabs = [
         {
             key: BridgeType.LayerZero,
-            label: <Image className={styles.image} src="/svg/layer-zero.svg" width={111} height={24} alt="LayerZero" />,
+            label: <LzSvg />
         },
         {
             key: BridgeType.Hyperlane,
-            label: <Image className={styles.image} src="/hyperlane.png" width={111} height={24} alt="Hyperlane" />,
+            label: <HyperlaneSvg />
         },
     ]
 

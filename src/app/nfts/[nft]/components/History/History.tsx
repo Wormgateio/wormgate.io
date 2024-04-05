@@ -11,6 +11,10 @@ import ChainLabel from "../../../../../components/ChainLabel/ChainLabel";
 import ChainStore from "../../../../../store/ChainStore";
 
 import styles from "./History.module.scss";
+import { BridgeType } from "../../../../../common/enums/BridgeType";
+import { getBridgeBlockExplorer } from "@utils/getBridgeBlockExplorer";
+import { LinkSvg } from "../../../../../components/LinkSvg/LinkSvg";
+import { MediaBreakpoint } from "@utils/mediaBreakpoints";
 
 const OPERATION_ICONS = {
     [BalanceLogType.Mint]: '/svg/mint-operation.svg',
@@ -26,14 +30,18 @@ const OPERATION_NAME = {
 
 interface Props {
     history: OperationHistoryDto[];
+    bridgeType: BridgeType,
     loading?: boolean;
     className?: string;
 }
 
-function History({ history, loading, className }: Props) {
-    const isMobile = useMedia({ maxWidth: 768 });
+function History({ history, bridgeType, loading, className }: Props) {
+    const isLaptop = useMedia({ maxWidth: MediaBreakpoint.Laptop });
 
-    if (isMobile) {
+    const isHyperlaneBridgeType = bridgeType === BridgeType.Hyperlane
+    const showLinkColumn = isHyperlaneBridgeType ? history.some((h) => h.transactionHash) : false;
+
+    if (isLaptop) {
         return (
             <div className={clsx(styles.container, className)}>
                 {loading && <Spin size="large" />}
@@ -69,7 +77,17 @@ function History({ history, loading, className }: Props) {
                                         </>
                                     )}
                                 </div>
+                                {showLinkColumn && item.transactionHash && (
+                                    <div className={styles.infoRightSide}>
+                                        <a className={styles.transactionLink} href={getBridgeBlockExplorer(BridgeType.Hyperlane, item.transactionHash)} target="_blank">
+                                            hyperlane.xyz
+                                            <LinkSvg />
+                                        </a>
+                                    </div>
+                                    )
+                                }
                             </div>
+                            
                         </div>
                     );
                 })}
@@ -109,6 +127,16 @@ function History({ history, loading, className }: Props) {
                                     )}
                                 </div>
                             </div>
+                            {showLinkColumn && !item.transactionHash && <div className={styles.transactionLinkWrapper} />}
+                            {showLinkColumn && item.transactionHash && 
+                                <div className={styles.transactionLinkWrapper}>
+                                    <a className={styles.transactionLink} href={getBridgeBlockExplorer(BridgeType.Hyperlane, item.transactionHash)} target="_blank">
+                                        hyperlane.xyz
+
+                                        <LinkSvg />
+                                    </a>
+                                </div>
+                            }
                             <div>{intlFormatDistance(new Date(item.date), new Date(), { locale: 'en-US' })}</div>
                         </div>
                     )

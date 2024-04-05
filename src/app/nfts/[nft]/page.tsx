@@ -37,7 +37,7 @@ function Page({ params }: Props) {
             if (nft) {
                 setNft(nft);
                 setIsLoadingHistory(true);
-                const history = await ApiService.getNftHistory(nft.id, nft.chainNetwork);
+                const history = await ApiService.getNftHistory(nft.id, nft.chainNetwork, nft.bridgeType);
                 setHistory(history);
                 setIsLoadingHistory(false);
             } else {
@@ -127,7 +127,7 @@ function Page({ params }: Props) {
             </div>
 
             <MiniCard title="History">
-                <History history={history} loading={isLoadingHistory} className={styles.history} />
+                <History history={history} loading={isLoadingHistory} className={styles.history} bridgeType={nft.bridgeType} />
             </MiniCard>
         </Card>
     );

@@ -17,5 +17,7 @@
     :global(.ant-tabs-tab) {
         flex: 1;
         justify-content: center;
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
     }
 }

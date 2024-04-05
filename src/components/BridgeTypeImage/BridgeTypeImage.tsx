@@ -1,7 +1,8 @@
 import React from 'react'
 import { BridgeType } from '../../common/enums/BridgeType'
-import Image from 'next/image'
 import styles from "./BridgeTypeImage.module.scss";
+import HyperlaneSvg from '../BridgeTypeSelect/HyperlaneSvg';
+import LzSvg from '../BridgeTypeSelect/LzSvg';
 
 interface BridgeTypeImageProps {
     bridgeType: BridgeType;
@@ -13,7 +14,7 @@ export default function BridgeTypeImage({ bridgeType, className, imageClassName 
     if (bridgeType === BridgeType.Hyperlane) {
         return (
             <div className={`${styles.wrapper}${` ${className}` || ''}`}>
-                <Image className={imageClassName} src="/hyperlane.png" width={111} height={24} alt="Hyperlane" />
+                <HyperlaneSvg className={imageClassName} />
             </div>
         ) 
     }
@@ -21,7 +22,7 @@ export default function BridgeTypeImage({ bridgeType, className, imageClassName 
     if (bridgeType === BridgeType.LayerZero) {
         return (
             <div className={`${styles.wrapper}${` ${className}` || ''}`}>
-                <Image className={imageClassName} src="/svg/layer-zero.svg" width={111} height={24} alt="LayerZero" /> 
+                <LzSvg className={imageClassName} />
             </div>
         )
     }

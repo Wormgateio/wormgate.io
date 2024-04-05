@@ -9,10 +9,19 @@ import AppStore from '../../../store/AppStore';
 
 import styles from './Header.module.scss';
 import { MediaBreakpoint } from '@utils/mediaBreakpoints/mediaBreakpoint';
+import { useGetChains } from '../../../hooks/use-get-chains';
+import { useSearchParams } from 'next/navigation';
+import { HYPERLANE_QUERY_PARAM_NAME } from '@utils/hyperlaneQueryParamName';
 
 function Header() {
+  const searchParams = useSearchParams()
   const { fetchAccount } = AppStore;
   const isDesktop = useMedia({ maxWidth: MediaBreakpoint.Tablet });
+  const getChains = useGetChains()
+
+  useEffect(() => {
+    getChains()
+  }, [searchParams.get(HYPERLANE_QUERY_PARAM_NAME)])
 
   useEffect(() => {
     fetchAccount();

@@ -5,10 +5,16 @@
         flex: 1
     }
 
+    & :global(.ant-tabs-tab-btn) {
+        display: flex;
+    }
+
     & :global(.ant-tabs-tab) {
         flex: 1;
         justify-content: center;
         opacity: 0.32;
+        padding-top: 2px !important;
+        padding-bottom: 2px !important;
     }
 
     & :global(.ant-tabs-tab-active) {
@@ -21,14 +27,23 @@
     width: auto;
 }
 
+.hyperlaneTitle {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.hyperlane {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    gap: 5px;
+}
+
 @media screen and (max-width: $breakpoint-mobile) {
     .tabs {
         & :global(.ant-tabs-nav-list .ant-tabs-tab) {
             padding: 7px 0 !important;
         }
-    }
-
-    .image {
-        height: 20px;
     }
 }

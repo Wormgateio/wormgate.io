@@ -1,0 +1,15 @@
+@import '../../../../../utils/mediaBreakpoints/mediaBreakpointsVariables.scss';
+
+.nft {
+  max-width: 240px;
+  gap: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (max-width: $breakpoint-tablet) {
+  .card {
+    width: auto;
+    height: auto;
+  }
+}

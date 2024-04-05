@@ -71,6 +71,13 @@
     flex-grow: 1;
 }
 
+.chains {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+}
+
 .label {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.64);
@@ -81,12 +88,24 @@
     font-weight: 600;
 }
 
+.transactionLinkWrapper {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.transactionLink {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 
 @media screen and (max-width: $breakpoint-tablet) {
     .scheme {
         gap: 4px;
         flex-grow: 1;
-        justify-content: center;
         margin-top: 10px;
     }
 
@@ -111,5 +130,22 @@
 
     .value {
         color: #FFFFFFA3
+    }
+
+    .chains {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+}
+
+
+@media screen and (max-width: $breakpoint-mobile) { 
+    .chains {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .scheme {
+        justify-content: center;
     }
 }

@@ -1,6 +1,6 @@
 import { Flex } from "antd";
 import { observer } from "mobx-react-lite";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import PinataImage from "../../../../components/PinataImage";
 import ChainLabel from "../../../../components/ChainLabel/ChainLabel";
@@ -10,6 +10,7 @@ import ListCard from "../../../../components/ListCard/ListCard";
 import styles from "./NftList.module.scss";
 import BridgeTypeSelect from "../../../../components/BridgeTypeSelect/BridgeTypeSelect";
 import { BridgeType } from "../../../../common/enums/BridgeType";
+import { HYPERLANE_QUERY_PARAM_NAME } from "@utils/hyperlaneQueryParamName";
 
 interface NftListProps {
     data: NFTDto[];
@@ -19,16 +20,27 @@ interface NftListProps {
 
 function NftList({ data, bridgeType, setBridgeType }: NftListProps) {
     const router = useRouter();
+    const pathname = usePathname();
     const nfts = [...data].sort((a, b) => a.chainName.localeCompare(b.chainName));
 
     const handleCardClick = (nft: NFTDto) => {
         router.push(`/nfts/${nft.id}`);
     };
 
+    const changeBridgeType = (value: BridgeType) => {
+        if (value === BridgeType.LayerZero) {
+            router.replace(pathname);
+        } else {
+            router.push(`?${HYPERLANE_QUERY_PARAM_NAME}=true`);
+        }
+
+        setBridgeType(value)
+    }
+
     return (
         <div>
             <div className={styles.bridgeTypeSelect}>
-                <BridgeTypeSelect value={bridgeType} onChange={setBridgeType}/>
+                <BridgeTypeSelect value={bridgeType} onChange={changeBridgeType} />
             </div>
             
             <Flex gap={24} wrap="wrap" className={styles.list}>

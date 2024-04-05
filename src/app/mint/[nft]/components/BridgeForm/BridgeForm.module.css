@@ -1,3 +1,8 @@
+.bridgeSuccessfulWrapper {
+    display: flex;
+    flex-direction: column;
+}
+
 .bridgeTitle {
     padding-bottom: 8px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.32);
@@ -61,6 +66,15 @@
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 101;
+}
+
+.transactionLink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 5px;
+    color: #3B7DFE;
 }
 
 @media screen and (max-width: 768px) {

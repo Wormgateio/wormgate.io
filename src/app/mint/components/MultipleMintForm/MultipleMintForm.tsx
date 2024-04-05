@@ -38,14 +38,18 @@ function MultipleMintForm({ onSubmit }: MultipleMintFormProps) {
     const { chain } = useNetwork();
 
     useEffect(() => {
-        if (chain && chains.length) {
-            const formData: MultipleMintFormData = {
-                from: '',
-                to: [],
-            }
+        const formData: MultipleMintFormData = {
+            from: '',
+            to: [],
+        }
 
-            chains.forEach((c) => {
-                if (chain && c.network === chain.network) {
+        if (chain && chains.length) {
+            const usedKnownChain = chains.some((c) =>  c.network === chain.network);
+            
+            chains.forEach((c, idx) => {
+                if (!usedKnownChain && idx === 0) {
+                    formData.from = c.id
+                } else if (chain && c.network === chain.network) {
                     formData.from = c.id
                 } else {
                     formData.to.push({
@@ -56,9 +60,22 @@ function MultipleMintForm({ onSubmit }: MultipleMintFormProps) {
                     })
                 }
             })
-
-            form.setFieldsValue(formData)
+        } else {
+            chains.forEach((c, idx) => {
+                if (idx === 0) {
+                    formData.from = c.id
+                } else {
+                    formData.to.push({
+                        checked: true, 
+                        network: c.network,
+                        name: c.name,
+                        id: c.id
+                    })
+                }
+            })
         }
+
+        form.setFieldsValue(formData)
     }, [chains, chain]);
 
     const switchNetwork = async () => {
@@ -114,7 +131,7 @@ function MultipleMintForm({ onSubmit }: MultipleMintFormProps) {
     const fromChain = ChainStore.getChainById(watchedFormData?.from);
     const networkFromIsDifferent = fromChain?.chainId !== chain?.id;
 
-    const showLoader = !chains.length || !chain || !watchedFormData?.to?.length
+    const showLoader = !chains.length || !watchedFormData?.to?.length
     
     return (
         <Form size="large" layout="vertical" form={form} onFinish={onSubmit}>
@@ -130,7 +147,7 @@ function MultipleMintForm({ onSubmit }: MultipleMintFormProps) {
                 </div>
 
                 <div className={cn.chainsWrapper}>
-                    <button className={cn.clearButton} onClick={clearAllChains}>Clear All</button>
+                    <button className={cn.clearButton} onClick={clearAllChains} type='button'>Clear All</button>
 
                     <div className={cn.chains}>
                         <Form.List name="to">
