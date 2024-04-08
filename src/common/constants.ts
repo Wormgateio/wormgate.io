@@ -106,30 +106,25 @@ export const UnailableNetworks: Record<NetworkName, NetworkName[]> = {
 
 export const HYPERLANE_CONTRACT_ADDRESS: Record<NetworkName, CryptoAddress> = {
   [NetworkName.Base]: '0xCb70E0357A6bfa1D8AE7043156CB57d6e9BdbC55',
-  [NetworkName.ArbitrumNova]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-  [NetworkName.LineaMainnet]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-  [NetworkName.Optimism]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
+  [NetworkName.ArbitrumNova]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
+  [NetworkName.LineaMainnet]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
+  [NetworkName.Optimism]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
   [NetworkName.Polygon]: '0x37e890a71dcba5fb732b149950eeec4dd01b6db5',
-  [NetworkName.Zora]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-  [NetworkName.Scroll]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
-  [NetworkName.Mantle]: '0x991fC265f163fc3s3328FBD2b7C8aa9B77840Ed42',
+  [NetworkName.Zora]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
+  [NetworkName.Scroll]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
+  [NetworkName.Mantle]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
   [NetworkName.Arbitrum]: '0x700de81c88a27be0c73c209fe51ab4a4d8bfe3fc',
-  [NetworkName.Avalanche]: '0x7a9ed9A5EF8dF626Bf934AaCe84c66267b37842c',
-  [NetworkName.ZkSync]: '0x569aA521b05752D22de8B3DBb91D92f65baa7E6f',
-  [NetworkName.BSC]: '0x991fC265f163fc33328FBD2b7C8aa9B77840Ed42',
+  [NetworkName.Avalanche]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
+  [NetworkName.ZkSync]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
+  [NetworkName.BSC]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
 
-  [NetworkName.Celo]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
-  [NetworkName.Core]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
+  [NetworkName.Celo]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
+  [NetworkName.Core]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
   [NetworkName.Gnosis]: '0x88dad668e7cc33fe47cb929ae55386e2862aa97c',
-  [NetworkName.Fantom]: '0xC9940D3C5fCe7F5868D127B38128768AEC7A0809',
+  [NetworkName.Fantom]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
 };
 
-export const HyperlaneAvailableNetworks = [
-  NetworkName.Base,
-  NetworkName.Polygon,
-  NetworkName.Arbitrum,
-  NetworkName.Gnosis,
-];
+export const HyperlaneAvailableNetworks = [NetworkName.Base, NetworkName.Polygon, NetworkName.Arbitrum, NetworkName.Gnosis];
 
 export function getContractAddress(ntType: BridgeType, network: NetworkName): CryptoAddress {
   if (ntType === BridgeType.LayerZero) {

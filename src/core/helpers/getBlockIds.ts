@@ -1,5 +1,4 @@
 import { Interface } from "ethers"
-import { BridgeType } from "../../common/enums/BridgeType"
 
 interface Log {
     _type: string,
@@ -7,25 +6,23 @@ interface Log {
     blockHash: string,
     blockNumber: number,
     data: string,
-    index: 358,
     topics: string[],
     transactionHash: string,
     transactionIndex: number
 }
 
-const tokenIdNameByBridgeType = {
-    [BridgeType.Hyperlane]: 'itemId',
-    [BridgeType.LayerZero]: 'tokenId',
-}
-
-export const getBlockIds = (logs: Log[], iface: Interface, bridgeType: BridgeType) => {
+export const getBlockIds = (logs: Log[], iface: Interface) => {
     const blockIds: number[] = []
 
     logs.forEach((log) => {
+        if (log.data !== "0x") {
+            return
+        }
+
         const parsedLog = iface.parseLog({ data: log.data, topics: log.topics })
 
         if (parsedLog) {
-            const tokenIdIndex = parsedLog?.fragment.inputs.findIndex((input) => input.name === tokenIdNameByBridgeType[bridgeType]);
+            const tokenIdIndex = parsedLog.fragment.inputs.findIndex((input) => input.name === 'tokenId');
             if (tokenIdIndex !== -1) {
                 blockIds.push(Number(parsedLog.args[tokenIdIndex]))
             }

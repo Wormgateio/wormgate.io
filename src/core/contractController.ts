@@ -119,7 +119,7 @@ export const mintNFT = async ({ contractAddress, bridgeType, chainToSend, accoun
     const receipt = await txResponse.wait(null, TRANSACTION_WAIT);
 
     const iface = new Interface(abi);
-    const blockIds = getBlockIds(receipt.logs, iface, bridgeType)
+    const blockIds = getBlockIds(receipt.logs, iface)
 
     return {
         result: receipt?.status === 1,
