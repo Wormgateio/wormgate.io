@@ -12,7 +12,7 @@ const chains = [
         hyperlaneChain: 8453,
         token: 'ETH',
         rpcUrl: 'https://mainnet.base.org',
-        availableBridgeTypes: [BridgeType.LayerZero, BridgeType.Hyperlane]
+        availableBridgeTypes: [BridgeType.LayerZero]
     },
     {
         chainId: 42170,
@@ -42,7 +42,7 @@ const chains = [
         hyperlaneChain: 43114,
         token: 'AVAX',
         rpcUrl: 'https://rpc.ankr.com/avalanche',
-        availableBridgeTypes: [BridgeType.LayerZero, BridgeType.Hyperlane]
+        availableBridgeTypes: [BridgeType.LayerZero]
     },
     {
         chainId: 59144,
@@ -72,7 +72,7 @@ const chains = [
         hyperlaneChain: 10,
         token: 'ETH',
         rpcUrl: 'https://rpc.ankr.com/optimism',
-        availableBridgeTypes: [BridgeType.LayerZero, BridgeType.Hyperlane]
+        availableBridgeTypes: [BridgeType.LayerZero]
     },
     {
         chainId: 137,
@@ -102,7 +102,7 @@ const chains = [
         hyperlaneChain: 534352,
         token: 'ETH',
         rpcUrl: 'https://scroll.blockpi.network/v1/rpc/public',
-        availableBridgeTypes: [BridgeType.LayerZero, BridgeType.Hyperlane]
+        availableBridgeTypes: [BridgeType.LayerZero]
     },
     {
         chainId: 7777777,
@@ -142,7 +142,7 @@ const chains = [
         hyperlaneChain: 42220,
         token: 'CELO',
         rpcUrl: 'https://forno.celo.org',
-        availableBridgeTypes: [BridgeType.LayerZero, BridgeType.Hyperlane]
+        availableBridgeTypes: [BridgeType.LayerZero]
     },
     {
         chainId: 1666600000,

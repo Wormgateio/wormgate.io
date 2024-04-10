@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import { notification } from "antd";
 import { NFTDto } from "./dto/NFTDto";
@@ -6,7 +6,7 @@ import { EstimationBridgeType, bridgeNFT, estimateBridge } from "../core/contrac
 import { ChainDto } from "./dto/ChainDto";
 import ChainStore from "../store/ChainStore";
 import AppStore from "../store/AppStore";
-import { getContractAddress , DEFAULT_REFUEL_COST_USD, UnailableNetworks } from "./constants";
+import { getContractAddress , DEFAULT_REFUEL_COST_USD, BRIDGE_ESTIMATION_TOKENS } from "./constants";
 import { NetworkName } from "./enums/NetworkName";
 import ApiService from "../services/ApiService";
 import { getBridgeBlockExplorer } from "@utils/getBridgeBlockExplorer";
@@ -22,16 +22,20 @@ export function useBridge(nft: NFTDto, onAfterBridge?: (previousChain?: ChainDto
     const [selectedChain, setSelectedChain] = useState<string>();
     const [refuelCost, setRefuelCost] = useState(DEFAULT_REFUEL_COST_USD);
     const [refuelEnabled, setRefuelEnable] = useState<boolean>(false);
-    const [_chains, setChains] = useState<ChainDto[]>([]);
     const [isPending , setIsPending] = useState<boolean>(false);
     const [submittedData, setSubmittedData] = useState<SubmittedData | null>(null);
     const [bridgePriceList, setBridgePriceList] = useState<EstimationBridgeType>([]);
-    const { chains } = ChainStore;
+    const { chains, getAvailableChainsForBridge } = ChainStore;
     const { account } = AppStore;
 
     const { chain: currentChain } = useNetwork();
     const { switchNetworkAsync } = useSwitchNetwork();
     const { address } = useAccount();
+
+    const chainsForBridge = useMemo(() => {
+        const nftChain = chains.find(c => c.chainId === nft.chainNativeId);
+        return getAvailableChainsForBridge(nftChain?.id, nft.bridgeType)
+    }, [nft])
 
     const isNeedChangeChain = nft.chainNativeId !== currentChain?.id;
 
@@ -41,26 +45,22 @@ export function useBridge(nft: NFTDto, onAfterBridge?: (previousChain?: ChainDto
 
     const estimateBridgeFee = async (selectedChain: string) => {
         if (nft) {
-            const nftChain = ChainStore.chains.find(c => c.chainId === nft.chainNativeId);
-            const chain = ChainStore.chains.find(c => c.id === selectedChain);
+            const nftChain = chains.find(c => c.chainId === nft.chainNativeId);
+            const chain = chainsForBridge.find(c => c.id === selectedChain);
+
+            
+            if (nftChain?.network !== currentChain?.network) {
+                setBridgePriceList([]);
+                return 
+            }
 
             if (chain) {
                 let _currentNetwork: string = currentChain?.network!;
 
-                const priceList = await estimateBridge(_chains, nftChain?.token!, {
+                const priceList = await estimateBridge(chainsForBridge, nftChain?.token!, {
                     contractAddress: getContractAddress(nft.bridgeType, _currentNetwork as NetworkName),
-                    chainToSend: {
-                        id: chain.chainId,
-                        name: chain.name,
-                        network: chain.network,
-                        lzChain: chain.lzChain,
-                        hyperlaneChain: chain.hyperlaneChain,
-                        token: chain.token
-                    },
                     bridgeType: nft.bridgeType,
-                    account,
-                    accountAddress: address!
-                }, nft?.tokenId, refuelEnabled, refuelCost);
+                }, BRIDGE_ESTIMATION_TOKENS[nftChain?.network as NetworkName], refuelEnabled, refuelCost);
 
                 setBridgePriceList(priceList);
             }
@@ -140,31 +140,25 @@ export function useBridge(nft: NFTDto, onAfterBridge?: (previousChain?: ChainDto
     };
 
     useEffect(() => {
-        if (chains.length && nft) {
-            const _chains = chains
-                .filter(x => x.id !== nft.chainId && x.availableBridgeTypes.includes(nft.bridgeType))
-                .filter(x => !UnailableNetworks[x.network as NetworkName]?.includes(nft.chainNetwork as NetworkName))
-
-            setChains(_chains);
-
-            let initialBridgeChain = _chains[0].id;
+        if (chainsForBridge.length && nft) {
+            let initialBridgeChain = chainsForBridge[0].id;
 
             if (useFirstChainToBridge) {
-                initialBridgeChain = ChainStore.getChainById(nft.chainIdToFirstBridge)?.id || _chains[0].id;
+                initialBridgeChain = ChainStore.getChainById(nft.chainIdToFirstBridge)?.id || chainsForBridge[0].id;
             }
 
             setSelectedChain(initialBridgeChain);
         }
-    }, [chains, nft]);
+    }, [chainsForBridge, nft]);
 
     useEffect(() => {
         if (selectedChain && nft.chainNativeId === currentChain?.id) {
             estimateBridgeFee(selectedChain);
         }
-    }, [selectedChain, refuelEnabled, refuelCost, _chains, currentChain, nft]);
+    }, [selectedChain, refuelEnabled, refuelCost, chainsForBridge, currentChain, nft]);
 
     return {
-        chains: _chains,
+        chains: chainsForBridge,
         refuelCost,
         refuelEnabled,
         selectedChain,

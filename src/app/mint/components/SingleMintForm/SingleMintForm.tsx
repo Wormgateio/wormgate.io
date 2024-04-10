@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Flex, Form } from 'antd';
-import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import { useNetwork, useSwitchNetwork } from 'wagmi';
 import Image from 'next/image';
 import { observer } from 'mobx-react-lite';
 import cn from './SingleMintForm.module.scss';
@@ -10,15 +10,11 @@ import cn from './SingleMintForm.module.scss';
 import ChainStore from '../../../../store/ChainStore';
 import ChainSelect from '../../../../components/ChainSelect/ChainSelect';
 import Button from '../../../../components/ui/Button/Button';
-import { estimateBridge, EstimationBridgeType } from '../../../../core/contractController';
-import { BRIDGE_ESTIMATION_TOKENS, getContractAddress } from '../../../../common/constants';
-import { NetworkName } from '../../../../common/enums/NetworkName';
-import AppStore from '../../../../store/AppStore';
-import { HYPERLANE_QUERY_PARAM_NAME } from '@utils/hyperlaneQueryParamName';
-import { BridgeType } from '../../../../common/enums/BridgeType';
-import { useSearchParams } from 'next/navigation';
+import { EstimationBridgeType } from '../../../../core/contractController';
 
 interface SingleMintFormProps {
+  bridgePriceList: EstimationBridgeType;
+  updateBridgePrice: (chainFromId: number | undefined) => void;
   onSubmit: (formData: SingleMintFormData) => void;
 }
 
@@ -27,54 +23,20 @@ export interface SingleMintFormData {
   to: string;
 }
 
-function SingleMintForm({ onSubmit }: SingleMintFormProps) {
-  const searchParams = useSearchParams()
+function SingleMintForm({ bridgePriceList, updateBridgePrice, onSubmit }: SingleMintFormProps) {
   const [form] = Form.useForm();
   const watchedFormData = Form.useWatch([], form);
 
-  const { account } = AppStore;
   const { chain } = useNetwork();
   const { switchNetworkAsync } = useSwitchNetwork();
-  const { chains } = ChainStore;
-  const { address } = useAccount();
+  const { chains, getAvailableChainsForBridge } = ChainStore;
 
-  const [bridgePriceList, setBridgePriceList] = useState<EstimationBridgeType>([]);
-
-  const bridgeType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME) ? BridgeType.Hyperlane : BridgeType.LayerZero
-
-  const estimateBridgeFee = async () => {
-    const chainFrom = ChainStore.getChainById(watchedFormData?.from);
-    const nftChain = ChainStore.chains.find((c) => c.chainId === chainFrom?.chainId);
-    const chain = ChainStore.chains.find((c) => c.id === watchedFormData?.to);
-
-    if (chain) {
-      let _currentNetwork: string = chainFrom?.network!;
-
-      const priceList = await estimateBridge(
-        chains,
-        nftChain?.token!,
-        {
-          contractAddress: getContractAddress(bridgeType, _currentNetwork as NetworkName),
-          bridgeType,
-          chainToSend: {
-            id: chain.chainId,
-            name: chain.name,
-            network: chain.network,
-            lzChain: chain.lzChain,
-            hyperlaneChain: chain.hyperlaneChain,
-            token: chain.token,
-          },
-          account,
-          accountAddress: address!,
-        },
-        BRIDGE_ESTIMATION_TOKENS[chainFrom?.network as NetworkName],
-        false,
-        0
-      );
-
-      setBridgePriceList(priceList);
+  useEffect(() => {
+    if (watchedFormData?.from) {
+      const chainId = chains.find((chain) => chain.id === watchedFormData.from)?.chainId;
+      updateBridgePrice(chainId)
     }
-  };
+  }, [watchedFormData?.from])
 
   const selectedChain = useMemo(() => {
     if (chain && chains.length) {
@@ -84,17 +46,7 @@ function SingleMintForm({ onSubmit }: SingleMintFormProps) {
     return null;
   }, [chains, chain]);
 
-  useEffect(() => {
-    if (bridgeType === BridgeType.LayerZero && account?.id) {
-      estimateBridgeFee();
-    } else {
-      setBridgePriceList([]);
-    }
-  }, [watchedFormData, chain, bridgeType, account?.id]);
-
-  const chainsTo = useMemo(() => {
-    return chains.filter((c) => c.id !== watchedFormData?.from);
-  }, [chains, watchedFormData?.from]);
+  const chainsTo = useMemo(() => getAvailableChainsForBridge(watchedFormData?.from), [chains, watchedFormData?.from]);
 
   useEffect(() => {
     if (chains.length && chainsTo.length) {
