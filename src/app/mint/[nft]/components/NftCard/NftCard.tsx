@@ -3,7 +3,7 @@ import cn from './NftCard.module.scss';
 import { NFTDto } from '../../../../../common/dto/NFTDto';
 import ListCard from '../../../../../components/ListCard/ListCard';
 import BridgeForm from '../BridgeForm/BridgeForm';
-import PinataImage from '../../../../../components/PinataImage';
+import NftImage from '../../../../../components/NftImage';
 
 interface Props {
     nft: NFTDto,
@@ -17,7 +17,7 @@ export default function NftCard({ nft, refetch, onCardClick }: Props) {
         <ListCard
             className={cn.card}
             tokenId={nft.tokenId}
-            image={<PinataImage hash={nft.pinataImageHash} fileName={nft.pinataFileName} name={nft.name} />}
+            image={<NftImage fileName={nft.pinataFileName} name={nft.name} />}
             onClick={() => onCardClick(nft)}
         />
         

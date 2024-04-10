@@ -4,7 +4,7 @@ import { observer } from "mobx-react-lite";
 import UiModal from "../../../../components/ui/Modal/Modal";
 import ChainLabel from "../../../../components/ChainLabel/ChainLabel";
 import NftStore from "../../../../store/NftStore";
-import PinataImage from "../../../../components/PinataImage";
+import NftImage from "../../../../components/NftImage";
 
 import styles from "./SuccessfulBridgeModal.module.css";
 import { SuccessfulBridgeData } from "../../types";
@@ -31,7 +31,7 @@ function SuccessfulBridgeModal({ data, onClose }: Props) {
             <div className={styles.name}>{nft.name}</div>
 
             <Flex align="center" justify="center" className={styles.image}>
-                <PinataImage hash={nft.pinataImageHash} name={nft.name} />
+                <NftImage fileName={nft.pinataFileName} name={nft.name} />
             </Flex>
 
             <Flex align="center" className={styles.bridgeScheme}>

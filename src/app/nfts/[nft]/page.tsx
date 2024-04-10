@@ -9,7 +9,7 @@ import Card from "../../../components/ui/Card/Card";
 import AppStore from "../../../store/AppStore";
 import ApiService from "../../../services/ApiService";
 import { NFTDto } from "../../../common/dto/NFTDto";
-import PinataImage from "../../../components/PinataImage";
+import NftImage from "../../../components/NftImage";
 import ChainLabel from "../../../components/ChainLabel/ChainLabel";
 import History from "./components/History/History";
 import BridgeForm from "./components/BridgeForm/BridgeForm";
@@ -90,7 +90,7 @@ function Page({ params }: Props) {
             <div className={styles.container}>
                 <div className={styles.card}>
                     <div className={styles.image}>
-                        <PinataImage hash={nft.pinataImageHash} name={nft.name} />
+                        <NftImage fileName={nft.pinataFileName} name={nft.name} />
                     </div>
 
                     <div className={styles.info}>

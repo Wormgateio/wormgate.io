@@ -25,35 +25,12 @@ class ApiService {
         return response.data;
     }
 
-    async checkExistedNFT(image: File, data: { name: string; description: string }) {
-        const formData = new FormData();
-        formData.append('image', image);
-        formData.append('name', data.name);
-        formData.append('description', data.description ?? '');
-
-        const response = await apiClient.post('nft', formData);
-        return response.data;
-    }
-
     createRefuel(data: CreateRefuelDto) {
         return apiClient.post('refuel', data);
     }
 
     async createMint(data: CreateMintDto): Promise<MintDto[]> {
         const response = await apiClient.post('mint', data);
-        return response.data;
-    }
-
-    async createCustomMint(image: File, data: CreateCustomMintDto): Promise<MintDto> {
-        const formData = new FormData();
-        formData.append('image', image);
-        formData.append('name', data.name);
-        formData.append('description', data.description ?? '');
-        formData.append('tokenId', `${data.tokenId}`);
-        formData.append('chainNetwork', data.chainNetwork);
-        formData.append('transactionHash', data.transactionHash);
-
-        const response = await apiClient.post('mint/custom', formData);
         return response.data;
     }
 

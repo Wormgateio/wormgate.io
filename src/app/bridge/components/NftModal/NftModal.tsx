@@ -7,7 +7,7 @@ import UiModal from "../../../../components/ui/Modal/Modal";
 import Button from "../../../../components/ui/Button/Button";
 import RefuelSwitch from "../../../../components/RefuelSwitch/RefuelSwitch";
 import ChainSelect from "../../../../components/ChainSelect/ChainSelect";
-import PinataImage from "../../../../components/PinataImage";
+import NftImage from "../../../../components/NftImage";
 import { SuccessfulBridgeData } from "../../types";
 import { useBridge } from "../../../../common/useBridge";
 import { ChainDto } from "../../../../common/dto/ChainDto";
@@ -90,7 +90,7 @@ function NftModal({ onSubmit }: Props) {
             {nft && (
                 <>
                     <Flex align="center" justify="center" className={styles.image}>
-                        <PinataImage hash={nft.pinataImageHash} name={nft.name} />
+                        <NftImage fileName={nft.pinataFileName} name={nft.name} />
                     </Flex>
                     <div className={styles.description}>{nft.description}</div>
                 </>
