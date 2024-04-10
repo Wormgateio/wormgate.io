@@ -7,5 +7,9 @@ const BLOCK_EXPLORER_BY_BRIDGE_TYPE: Record<BridgeType, string> = {
 }
 
 export function getBridgeBlockExplorer(bridgeType: BridgeType, hash: string) {
+  if (!hash) {
+    return null
+  }
+  
   return `${BLOCK_EXPLORER_BY_BRIDGE_TYPE[bridgeType]}/${hash}`;
 }

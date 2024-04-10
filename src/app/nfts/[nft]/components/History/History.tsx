@@ -79,7 +79,7 @@ function History({ history, bridgeType, loading, className }: Props) {
                                 </div>
                                 {showLinkColumn && item.transactionHash && (
                                     <div className={styles.infoRightSide}>
-                                        <a className={styles.transactionLink} href={getBridgeBlockExplorer(BridgeType.Hyperlane, item.transactionHash)} target="_blank">
+                                        <a className={styles.transactionLink} href={getBridgeBlockExplorer(BridgeType.Hyperlane, item.transactionHash)!} target="_blank">
                                             hyperlane.xyz
                                             <LinkSvg />
                                         </a>
@@ -130,7 +130,7 @@ function History({ history, bridgeType, loading, className }: Props) {
                             {showLinkColumn && !item.transactionHash && <div className={styles.transactionLinkWrapper} />}
                             {showLinkColumn && item.transactionHash && 
                                 <div className={styles.transactionLinkWrapper}>
-                                    <a className={styles.transactionLink} href={getBridgeBlockExplorer(BridgeType.Hyperlane, item.transactionHash)} target="_blank">
+                                    <a className={styles.transactionLink} href={getBridgeBlockExplorer(BridgeType.Hyperlane, item.transactionHash)!} target="_blank">
                                         hyperlane.xyz
 
                                         <LinkSvg />
