@@ -118,7 +118,7 @@ const HYPERLANE_UNAVAILABLE_NETWORKS: Partial<Record<NetworkName, NetworkName[]>
   [NetworkName.Base]: [],
   [NetworkName.BSC]: [],
   [NetworkName.Optimism]: [],
-  [NetworkName.Polygon]: [NetworkName.Gnosis],
+  [NetworkName.Polygon]: [],
   [NetworkName.Scroll]: [],
   [NetworkName.Celo]: [],
   [NetworkName.Gnosis]: [],
