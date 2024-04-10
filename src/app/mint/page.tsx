@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { message, Tabs } from 'antd';
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
@@ -12,8 +12,8 @@ import Card from "../../components/ui/Card/Card";
 import MultipleMintForm, { MultipleMintFormData } from "./components/MultipleMintForm/MultipleMintForm";
 import SingleMintForm, { SingleMintFormData } from "./components/SingleMintForm/SingleMintForm";
 import AppStore from "../../store/AppStore";
-import { mintNFT } from "../../core/contractController";
-import { getContractAddress } from "../../common/constants";
+import { EstimationBridgeType, estimateBridge, mintNFT } from "../../core/contractController";
+import { BRIDGE_ESTIMATION_TOKENS, getContractAddress } from "../../common/constants";
 import { NetworkName } from "../../common/enums/NetworkName";
 import ApiService from "../../services/ApiService";
 import ChainStore from "../../store/ChainStore";
@@ -30,12 +30,48 @@ function Page() {
     const searchParams = useSearchParams()
     const [messageApi, contextHolder] = message.useMessage();
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [bridgePriceList, setBridgePriceList] = useState<EstimationBridgeType>([]);
     const { account, walletConnected, openAccountDrawer, fetchAccount } = AppStore;
+    const { chains } = ChainStore;
     const getChains = useGetChains()
 
     const { switchNetworkAsync } = useSwitchNetwork();
     const { chain } = useNetwork();
     const { address } = useAccount();
+
+    const bridgeType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME) ? BridgeType.Hyperlane : BridgeType.LayerZero
+
+    const estimateBridgeFee = async (chainFromId: number | undefined) => {
+        const chainFrom = ChainStore.chains.find((c) => c.chainId === chainFromId); 
+        let _currentNetwork: string = chainFrom?.network!;
+
+        if (chain?.network !== chainFrom?.network) {
+            setBridgePriceList([])
+            return
+        }
+        
+        const priceList = await estimateBridge(
+          chains,
+          chainFrom?.token!,
+          {
+            contractAddress: getContractAddress(bridgeType, _currentNetwork as NetworkName),
+            bridgeType,
+          },
+          BRIDGE_ESTIMATION_TOKENS[chainFrom?.network as NetworkName],
+          false,
+          0
+        );
+        
+        setBridgePriceList(priceList);
+    };
+
+    useEffect(() => {
+        if (account?.id) {
+          estimateBridgeFee(chain?.id);
+        } else {
+          setBridgePriceList([]);
+        }
+    }, [chain, chains.length, bridgeType, account?.id]);
 
     const mint = async (from: string, mintAction: () => Promise<any>) => {
         if (!walletConnected) {
@@ -169,12 +205,12 @@ function Page() {
         {
             key: 'single',
             label: 'Single',
-            children: <SingleMintForm onSubmit={mintSingle} />
+            children: <SingleMintForm onSubmit={mintSingle} bridgePriceList={bridgePriceList} updateBridgePrice={estimateBridgeFee} />
         },
         {
             key: 'multiple',
             label: 'Multiple',
-            children: <MultipleMintForm onSubmit={mintMultiple} />,
+            children: <MultipleMintForm onSubmit={mintMultiple} bridgePriceList={bridgePriceList} updateBridgePrice={estimateBridgeFee} />,
         }
     ];
 
@@ -186,14 +222,13 @@ function Page() {
         }
     };
 
-    const isHyperlaneBridgeType = searchParams.get(HYPERLANE_QUERY_PARAM_NAME)
 
     return (
         <>
             {contextHolder}
 
             <Card isLoading={isLoading} className={styles.page} title="Mint and Bridge NFT" afterCard={<GoldenAxeBlock />} >
-                <BridgeTypeSelect onChange={changeBridgeType} value={isHyperlaneBridgeType ? BridgeType.Hyperlane : BridgeType.LayerZero} />
+                <BridgeTypeSelect onChange={changeBridgeType} value={bridgeType} />
                 <Tabs className={styles.tabs} defaultActiveKey="single" items={tabs} type="card" />
             </Card>
         </>

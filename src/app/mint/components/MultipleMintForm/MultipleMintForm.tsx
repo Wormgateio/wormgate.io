@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { Flex, Form, Skeleton } from 'antd';
 import { observer } from 'mobx-react-lite';
 import ChainStore from '../../../../store/ChainStore';
@@ -12,8 +12,11 @@ import cn from './MultipleMintForm.module.scss';
 import ChainSelect from '../../../../components/ChainSelect/ChainSelect';
 import Button from '../../../../components/ui/Button/Button';
 import { toDictionary } from '@utils/toDictionary';
+import { EstimationBridgeType } from '../../../../core/contractController';
 
 interface MultipleMintFormProps {
+    bridgePriceList: EstimationBridgeType;
+    updateBridgePrice: (chainFromId: number | undefined) => void;
     onSubmit: (formData: MultipleMintFormData) => void;
 }
 
@@ -29,13 +32,32 @@ export interface MultipleMintFormData {
 
 const skeletonChains = new Array(10).fill(0).map((_, i) => i)
 
-function MultipleMintForm({ onSubmit }: MultipleMintFormProps) {
+function MultipleMintForm({ bridgePriceList, updateBridgePrice, onSubmit }: MultipleMintFormProps) {
     const [form] = Form.useForm();
     const watchedFormData = Form.useWatch<MultipleMintFormData>([], form);
 
     const { switchNetworkAsync } = useSwitchNetwork();
-    const { chains } = ChainStore;
+    const { chains, getAvailableChainsForBridge } = ChainStore;
     const { chain } = useNetwork();
+    const bridgePriceByNetwork = useMemo(() => toDictionary(bridgePriceList, (p) => p?.network!), [bridgePriceList]);
+
+    useEffect(() => {
+        if (watchedFormData?.from) {
+          const chainId = chains.find((chain) => chain.id === watchedFormData.from)?.chainId;
+          
+          updateBridgePrice(chainId)
+
+            form.setFieldsValue({
+                from: watchedFormData.from,
+                to: getAvailableChainsForBridge(watchedFormData.from).map((c) => ({
+                    checked: true, 
+                    network: c.network,
+                    name: c.name,
+                    id: c.id
+                }))
+            })
+        }
+      }, [watchedFormData?.from])
 
     useEffect(() => {
         const formData: MultipleMintFormData = {
@@ -43,37 +65,20 @@ function MultipleMintForm({ onSubmit }: MultipleMintFormProps) {
             to: [],
         }
 
-        if (chain && chains.length) {
-            const usedKnownChain = chains.some((c) =>  c.network === chain.network);
-            
-            chains.forEach((c, idx) => {
-                if (!usedKnownChain && idx === 0) {
-                    formData.from = c.id
-                } else if (chain && c.network === chain.network) {
-                    formData.from = c.id
-                } else {
-                    formData.to.push({
-                        checked: true, 
-                        network: c.network,
-                        name: c.name,
-                        id: c.id
-                    })
-                }
-            })
+        const activeChain = chains.find((c) =>  c.network === chain?.network);
+
+        if (!activeChain) {
+            formData.from = chains[0].id
         } else {
-            chains.forEach((c, idx) => {
-                if (idx === 0) {
-                    formData.from = c.id
-                } else {
-                    formData.to.push({
-                        checked: true, 
-                        network: c.network,
-                        name: c.name,
-                        id: c.id
-                    })
-                }
-            })
+            formData.from = activeChain.id
         }
+
+        formData.to = getAvailableChainsForBridge(formData.from).map((c) => ({
+            checked: true, 
+            network: c.network,
+            name: c.name,
+            id: c.id
+        }))
 
         form.setFieldsValue(formData)
     }, [chains, chain]);
@@ -155,7 +160,17 @@ function MultipleMintForm({ onSubmit }: MultipleMintFormProps) {
                                 showLoader ? 
                                     skeletonChains.map((idx) => <Skeleton.Button key={idx} className={cn.chainSkeleton} />)
                                 : 
-                                    watchedFormData.to.map((chain, idx) => <MultipleMintFormChain key={chain.id} idx={idx} onChange={onToggleChain} network={chain?.network} label={chain?.name} checked={chain.checked} />)
+                                    watchedFormData.to.map((chain, idx) => (
+                                        <MultipleMintFormChain 
+                                            key={chain.id} 
+                                            idx={idx} 
+                                            onChange={onToggleChain} 
+                                            network={chain?.network} 
+                                            label={chain?.name} 
+                                            checked={chain.checked} 
+                                            bridgePrice={bridgePriceByNetwork[chain?.network]?.price}
+                                        />
+                                    ))
                             )}
                         </Form.List> 
                     </div>
