@@ -79,10 +79,7 @@ export const BRIDGE_ESTIMATION_TOKENS: Record<NetworkName, number> = {
 };
 
 const LZ_UNAVAILABLE_NETWORKS: Record<NetworkName, NetworkName[]> = {
-  [NetworkName.ArbitrumNova]: [
-    NetworkName.Scroll,
-    NetworkName.Core,
-  ],
+  [NetworkName.ArbitrumNova]: [NetworkName.Scroll, NetworkName.Core],
   [NetworkName.Arbitrum]: [],
   [NetworkName.Avalanche]: [NetworkName.Zora],
   [NetworkName.Base]: [NetworkName.Core, NetworkName.Avalanche],
@@ -97,16 +94,16 @@ const LZ_UNAVAILABLE_NETWORKS: Record<NetworkName, NetworkName[]> = {
   [NetworkName.Zora]: [NetworkName.Core],
   [NetworkName.Celo]: [NetworkName.Core, NetworkName.Scroll, NetworkName.ZkSync],
   [NetworkName.Core]: [
-    NetworkName.ArbitrumNova, 
-    NetworkName.Base, 
-    NetworkName.Celo, 
+    NetworkName.ArbitrumNova,
+    NetworkName.Base,
+    NetworkName.Celo,
     NetworkName.Fantom,
-    NetworkName.Gnosis, 
+    NetworkName.Gnosis,
     NetworkName.LineaMainnet,
     NetworkName.Mantle,
     NetworkName.Scroll,
     NetworkName.ZkSync,
-    NetworkName.Zora
+    NetworkName.Zora,
   ],
   [NetworkName.Gnosis]: [NetworkName.Core],
   [NetworkName.Fantom]: [NetworkName.Core],
@@ -125,22 +122,22 @@ const HYPERLANE_UNAVAILABLE_NETWORKS: Partial<Record<NetworkName, NetworkName[]>
 };
 
 export const HYPERLANE_CONTRACT_ADDRESS: Partial<Record<NetworkName, CryptoAddress>> = {
-  // [NetworkName.Base]: '0xCb70E0357A6bfa1D8AE7043156CB57d6e9BdbC55',
+  [NetworkName.Base]: '0xBc05f46c3286372B86dD9c03e67B72E85B75a018',
   // [NetworkName.ArbitrumNova]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
   // [NetworkName.LineaMainnet]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
-  // [NetworkName.Optimism]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
-  [NetworkName.Polygon]: '0xcf144454d79ffaae9d62662b0a1911f7805e105f',
-  // [NetworkName.Zora]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
-  // [NetworkName.Scroll]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
-  // [NetworkName.Mantle]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
-  [NetworkName.Arbitrum]: '0xfea7fece5f8a937acb7343b3edb20571ceff64c7',
-  // [NetworkName.Avalanche]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
-  // [NetworkName.ZkSync]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
-  [NetworkName.BSC]: '0xb0d4b289b5309f8aadc2ab832076b360f7ae3643',
-  // [NetworkName.Celo]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
-  // [NetworkName.Core]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
-  [NetworkName.Gnosis]: '0x2009a23b4a89114dc42311f6b9d291202208b1cb',
-  // [NetworkName.Fantom]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
+  [NetworkName.Optimism]: '0xBc05f46c3286372B86dD9c03e67B72E85B75a018',
+  [NetworkName.Polygon]: '0xBc05f46c3286372B86dD9c03e67B72E85B75a018',
+ // [NetworkName.Zora]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
+  [NetworkName.Scroll]: '0xBc05f46c3286372B86dD9c03e67B72E85B75a018',
+ // [NetworkName.Mantle]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
+  [NetworkName.Arbitrum]: '0xBc05f46c3286372B86dD9c03e67B72E85B75a018',
+  [NetworkName.Avalanche]: '0xBc05f46c3286372B86dD9c03e67B72E85B75a018',
+ // [NetworkName.ZkSync]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
+  [NetworkName.BSC]: '0xBc05f46c3286372B86dD9c03e67B72E85B75a018',
+  [NetworkName.Celo]: '0xBc05f46c3286372B86dD9c03e67B72E85B75a018',
+ // [NetworkName.Core]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
+  [NetworkName.Gnosis]: '0xBc05f46c3286372B86dD9c03e67B72E85B75a018',
+ // [NetworkName.Fantom]: '0xfFD7026AD9dF52aA82982c40F15f88c4B92e4C25',
 };
 
 export const HyperlaneAvailableNetworks = [NetworkName.Base, NetworkName.Polygon, NetworkName.Arbitrum, NetworkName.Gnosis];
@@ -151,14 +148,14 @@ export function getContractAddress(ntType: BridgeType, network: NetworkName): Cr
   }
 
   if (ntType === BridgeType.Hyperlane) {
-    return HYPERLANE_CONTRACT_ADDRESS[network as NetworkName] || '' as CryptoAddress;
+    return HYPERLANE_CONTRACT_ADDRESS[network as NetworkName] || ('' as CryptoAddress);
   }
 
   return '' as CryptoAddress;
 }
 
 export function getUnavailableNetworks(bridgeType: BridgeType) {
-  return bridgeType === BridgeType.Hyperlane ? HYPERLANE_UNAVAILABLE_NETWORKS : LZ_UNAVAILABLE_NETWORKS
+  return bridgeType === BridgeType.Hyperlane ? HYPERLANE_UNAVAILABLE_NETWORKS : LZ_UNAVAILABLE_NETWORKS;
 }
 
 export const DEFAULT_REFUEL_COST_USD = 0.25;

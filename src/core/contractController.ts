@@ -14,7 +14,7 @@ import { ChainDto } from "../common/dto/ChainDto";
 import { BridgeType } from "../common/enums/BridgeType";
 import { getBlockIds } from "./helpers/getBlockIds";
 import { LZ_VERSION } from "./constants";
-import { estimateFeeForBridge } from "./helpers";
+import { estimateFeeForBridge, getGasLimitForBridge } from "./helpers";
 
 interface ChainToSend {
     id: number;
@@ -254,7 +254,7 @@ const lzBridge = async (
         gasLimit: BigInt(0)
     }
 
-    bridgeOptions.gasLimit = await contract.sendFrom.estimateGas(
+    const defaultGasLimit = await contract.sendFrom.estimateGas(
         sender,
         _dstChainId,
         _toAddress,
@@ -264,6 +264,8 @@ const lzBridge = async (
         adapterParams,
         bridgeOptions
     );
+
+    bridgeOptions.gasLimit = getGasLimitForBridge(defaultGasLimit)
 
     const transaction = await contract.sendFrom(
         sender,
@@ -318,12 +320,22 @@ const hyperlaneBridge = async (
         }
     }
 
+    const defaultGasLimit = await contract.transferRemote.estimateGas(
+        _dstChainId,
+        _receiver,
+        tokenId,
+        {
+            value: nativeFee + await contract.bridgeFee(),
+        }
+    ) 
+
     const transaction = await contract.transferRemote(
         _dstChainId,
         _receiver,
         tokenId,
         {
             value: nativeFee + await contract.bridgeFee(),
+            gasLimit: getGasLimitForBridge(defaultGasLimit)
         }
     );
 
