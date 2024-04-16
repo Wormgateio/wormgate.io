@@ -11,9 +11,13 @@ import ChainStore from '../../../../store/ChainStore';
 import ChainSelect from '../../../../components/ChainSelect/ChainSelect';
 import Button from '../../../../components/ui/Button/Button';
 import { EstimationBridgeType } from '../../../../core/contractController';
+import LzSvg from '../../../../components/BridgeTypeSelect/LzSvg';
+import HyperlaneSvg from '../../../../components/BridgeTypeSelect/HyperlaneSvg';
+import { BridgeType } from '../../../../common/enums/BridgeType';
 
 interface SingleMintFormProps {
   bridgePriceList: EstimationBridgeType;
+  bridgeType: BridgeType;
   updateBridgePrice: (chainFromId: number | undefined) => void;
   onSubmit: (formData: SingleMintFormData) => void;
 }
@@ -23,7 +27,7 @@ export interface SingleMintFormData {
   to: string;
 }
 
-function SingleMintForm({ bridgePriceList, updateBridgePrice, onSubmit }: SingleMintFormProps) {
+function SingleMintForm({ bridgePriceList, bridgeType, updateBridgePrice, onSubmit }: SingleMintFormProps) {
   const [form] = Form.useForm();
   const watchedFormData = Form.useWatch([], form);
 
@@ -34,9 +38,9 @@ function SingleMintForm({ bridgePriceList, updateBridgePrice, onSubmit }: Single
   useEffect(() => {
     if (watchedFormData?.from) {
       const chainId = chains.find((chain) => chain.id === watchedFormData.from)?.chainId;
-      updateBridgePrice(chainId)
+      updateBridgePrice(chainId);
     }
-  }, [watchedFormData?.from])
+  }, [watchedFormData?.from]);
 
   const selectedChain = useMemo(() => {
     if (chain && chains.length) {
@@ -94,8 +98,15 @@ function SingleMintForm({ bridgePriceList, updateBridgePrice, onSubmit }: Single
             Switch network to {fromChain?.name}
           </Button>
         ) : (
-          <Button block type="submit">
+          <Button className={cn.submitButton} block type="submit">
             Mint
+            <span className={cn.bridgeType}>
+              {bridgeType === BridgeType.LayerZero ? (
+                <LzSvg className={cn.LzSvg} />
+              ) : (
+                <HyperlaneSvg rootClassName={cn.Hyperlane} withoutOpacity />
+              )}
+            </span>
           </Button>
         )}
 

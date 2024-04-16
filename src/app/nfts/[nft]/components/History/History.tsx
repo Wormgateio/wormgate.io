@@ -28,6 +28,32 @@ const OPERATION_NAME = {
     [BalanceLogType.Bridge]: 'Bridge',
 };
 
+const getTransactionLink = (showLinkColumn: boolean, hash: string | undefined, bridgeType: BridgeType) => {
+    if (!showLinkColumn || !hash) {
+        return null;
+    }
+
+    const isHyperlaneBridgeType = bridgeType === BridgeType.Hyperlane;
+
+    return (
+        <div className={styles.infoRightSide}>
+            <a className={styles.transactionLink} href={getBridgeBlockExplorer(bridgeType, hash)!} target="_blank">
+                {isHyperlaneBridgeType ? (
+                        <>
+                            Hyperlane.xyz
+                            <LinkSvg />
+                        </>
+                    ) : 
+                        <>
+                            LayerZero.xyz
+                            <LinkSvg />
+                        </>
+                }
+            </a>
+        </div>
+    )
+}
+
 interface Props {
     history: OperationHistoryDto[];
     bridgeType: BridgeType,
@@ -37,9 +63,7 @@ interface Props {
 
 function History({ history, bridgeType, loading, className }: Props) {
     const isLaptop = useMedia({ maxWidth: MediaBreakpoint.Laptop });
-
-    const isHyperlaneBridgeType = bridgeType === BridgeType.Hyperlane
-    const showLinkColumn = isHyperlaneBridgeType ? history.some((h) => h.transactionHash) : false;
+    const showLinkColumn = history.some((h) => h.transactionHash);
 
     if (isLaptop) {
         return (
@@ -77,15 +101,7 @@ function History({ history, bridgeType, loading, className }: Props) {
                                         </>
                                     )}
                                 </div>
-                                {showLinkColumn && item.transactionHash && (
-                                    <div className={styles.infoRightSide}>
-                                        <a className={styles.transactionLink} href={getBridgeBlockExplorer(BridgeType.Hyperlane, item.transactionHash)!} target="_blank">
-                                            hyperlane.xyz
-                                            <LinkSvg />
-                                        </a>
-                                    </div>
-                                    )
-                                }
+                                {getTransactionLink(showLinkColumn, item.transactionHash, bridgeType)}
                             </div>
                             
                         </div>
@@ -128,15 +144,7 @@ function History({ history, bridgeType, loading, className }: Props) {
                                 </div>
                             </div>
                             {showLinkColumn && !item.transactionHash && <div className={styles.transactionLinkWrapper} />}
-                            {showLinkColumn && item.transactionHash && 
-                                <div className={styles.transactionLinkWrapper}>
-                                    <a className={styles.transactionLink} href={getBridgeBlockExplorer(BridgeType.Hyperlane, item.transactionHash)!} target="_blank">
-                                        hyperlane.xyz
-
-                                        <LinkSvg />
-                                    </a>
-                                </div>
-                            }
+                            {getTransactionLink(showLinkColumn, item.transactionHash, bridgeType)}
                             <div>{intlFormatDistance(new Date(item.date), new Date(), { locale: 'en-US' })}</div>
                         </div>
                     )

@@ -40,7 +40,7 @@ function NftList({ data, bridgeType, setBridgeType }: NftListProps) {
     return (
         <div>
             <div className={styles.bridgeTypeSelect}>
-                <BridgeTypeSelect value={bridgeType} onChange={changeBridgeType} />
+                <BridgeTypeSelect value={bridgeType} onChange={changeBridgeType} svgClassName={styles.bridgeSelectSvg} />
             </div>
             
             <Flex gap={24} wrap="wrap" className={styles.list}>

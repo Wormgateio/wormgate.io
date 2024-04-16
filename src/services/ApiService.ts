@@ -13,6 +13,7 @@ import { BridgeType } from "../common/enums/BridgeType";
 import { HyperlaneTransactionInfo } from "../common/dto/HyperlaneTransactionInfo";
 import axios from "axios";
 import { HYPERLANE_BASE_URL } from "@utils/hyperlaneUrl";
+import { getBridgeBlockExplorer } from "@utils/getBridgeBlockExplorer";
 
 class ApiService {
     async getAccount(): Promise<AccountDto> {
@@ -118,6 +119,18 @@ class ApiService {
             return response.data.result;
         } catch {
             return null
+        }
+    }
+
+    async getBridgeTransactionLink(hash: string, bridgeType: BridgeType) {
+        if (bridgeType === BridgeType.Hyperlane) {
+            const info = await this.getHyperlaneTransactionInfo(hash)
+
+            if (info) {
+                return getBridgeBlockExplorer(bridgeType, info.id)
+            }
+        } else {
+            return getBridgeBlockExplorer(bridgeType, hash)
         }
     }
 }
