@@ -113,8 +113,8 @@ export function useBridge(nft: NFTDto, onAfterBridge?: (previousChain?: ChainDto
                     nextChainNetwork: chainToSend?.network!,
                     nftId: nft.id
                 });
-
-                const transactionInfo = isHyperlaneBridgeType ? await ApiService.getHyperlaneTransactionInfo(result.transactionHash) : null;
+                
+                const transactionLink = await ApiService.getBridgeTransactionLink(result.transactionHash, nft.bridgeType)
 
                 const previousChain = ChainStore.getChainById(nft.chainId)!;
                 const nextChain = ChainStore.getChainById(chainToSend?.id!)!;
@@ -122,7 +122,7 @@ export function useBridge(nft: NFTDto, onAfterBridge?: (previousChain?: ChainDto
                 setSubmittedData({
                     previousChain,
                     nextChain,
-                    transactionLink: transactionInfo ? getBridgeBlockExplorer(nft.bridgeType, transactionInfo.id) : null
+                    transactionLink: transactionLink || null
                 });
 
                 onAfterBridge?.(previousChain, nextChain);

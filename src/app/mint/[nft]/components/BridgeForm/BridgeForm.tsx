@@ -43,6 +43,8 @@ export default function BridgeForm(props: Props) {
     } = useBridge(nft, onAfterBridge, true);
 
     if (submittedData) {
+        const isHyperlaneBridgeType = nft.bridgeType === BridgeType.Hyperlane;
+
         return (
             <div className={styles.bridgeSuccessfulWrapper}>
                 <div className={styles.bridgeSuccessful}>
@@ -66,8 +68,18 @@ export default function BridgeForm(props: Props) {
 
                 {submittedData.transactionLink && (
                     <a className={styles.transactionLink} href={submittedData.transactionLink} target="_blank">
-                        Hyperlane.xyz
-                        <LinkSvg />
+                        {isHyperlaneBridgeType ? (
+                                <>
+                                    Hyperlane.xyz
+                                    <LinkSvg />
+                                </>
+                            ) : (
+                                <>
+                                    LayerZero.xyz
+                                    <LinkSvg />
+                                </>
+                            )                                
+                        }
                     </a>
                 )}
             </div>

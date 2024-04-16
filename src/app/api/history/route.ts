@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
             chainNetwork: network,
             targetChainNetwork: targetNetwork,
             date: log.createdAt,
-            transactionHash: log.bridgeLog?.transactionHash && isHyperlaneBridgeType ? hyperlaneTransactionsByHash[log.bridgeLog.transactionHash]?.id : undefined
+            transactionHash: log.bridgeLog?.transactionHash && isHyperlaneBridgeType ? hyperlaneTransactionsByHash[log.bridgeLog.transactionHash]?.id : log.bridgeLog?.transactionHash
         };
     });
 

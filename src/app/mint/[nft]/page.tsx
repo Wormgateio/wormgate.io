@@ -86,7 +86,7 @@ function NftPage({ params }: NftPageProps) {
             </div>
 
             <div className={cn.nfts}>
-            { nfts.map((nft) => <NftCard key={nft.id} nft={nft} onCardClick={handleCardClick} refetch={refetch} />) }
+                {nfts.map((nft) => <NftCard key={nft.id} nft={nft} onCardClick={handleCardClick} refetch={refetch} />)}
             </div>
         </>
     );

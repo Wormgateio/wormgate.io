@@ -5,7 +5,16 @@
 }
 
 .bridgeTypeSelect {
-    max-width: 450px;
+    max-width: 504px;
+
+    h4 {
+        font-size: 20px;
+    }
+}
+
+.bridgeSelectSvg {
+    height: 37px;
+    width: auto;
 }
 
 @media screen and (max-width: $breakpoint-laptop) {
@@ -42,5 +51,16 @@
     .listItem {
         width: 140px !important;
         height: 140px !important;
+    }
+
+    .bridgeSelectSvg {
+        height: 28px;
+        width: auto;
+    }
+
+    .bridgeTypeSelect {
+        h4 {
+            font-size: 15px;
+        }
     }
 }
