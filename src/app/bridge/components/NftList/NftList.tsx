@@ -2,7 +2,7 @@ import { Flex } from "antd";
 import { observer } from "mobx-react-lite";
 import { usePathname, useRouter } from "next/navigation";
 
-import PinataImage from "../../../../components/PinataImage";
+import NftImage from "../../../../components/NftImage";
 import ChainLabel from "../../../../components/ChainLabel/ChainLabel";
 import { NFTDto } from "../../../../common/dto/NFTDto";
 import ListCard from "../../../../components/ListCard/ListCard";
@@ -58,7 +58,7 @@ function NftList({ data, bridgeType, setBridgeType }: NftListProps) {
                                 labelClassName={styles.chainLabel}
                             />
                         }
-                        image={<PinataImage hash={nft.pinataImageHash} fileName={nft.pinataFileName} name={nft.name} />}
+                        image={<NftImage fileName={nft.pinataFileName} name={nft.name} />}
                         title={nft.name}
                         onClick={() => handleCardClick(nft)}
                         className={styles.listItem}

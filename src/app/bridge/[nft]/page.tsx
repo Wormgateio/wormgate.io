@@ -12,10 +12,10 @@ import NftStore from "../../../store/NftStore";
 import ChainStore from "../../../store/ChainStore";
 import AppStore from "../../../store/AppStore";
 import ListCard from "../../../components/ListCard/ListCard";
-import PinataImage from "../../../components/PinataImage";
 import { NFTDto } from "../../../common/dto/NFTDto";
 import styles from "../../mint/[nft]/components/BridgeForm/BridgeForm.module.css";
 import ChainLabel from "../../../components/ChainLabel/ChainLabel";
+import NftImage from "../../../components/NftImage";
 
 interface NftPageProps {
     params: { nft: string };
@@ -77,7 +77,7 @@ function NftPage({ params, searchParams }: NftPageProps) {
                 <ListCard
                     className={cn.card}
                     tokenId={nft.tokenId}
-                    image={<PinataImage hash={nft.pinataImageHash} fileName={nft.pinataFileName} name={nft.name} />}
+                    image={<NftImage fileName={nft.pinataFileName} name={nft.name} />}
                     onClick={() => handleCardClick(nft)}
                 />
 
