@@ -186,7 +186,7 @@ function Account() {
           </div>
 
           <div className={styles.card}>
-            <div className={styles.cardTitle}>Refferal</div>
+            <div className={styles.cardTitle}>Refferal (only for LayerZero mint)</div>
             <div>
               <FormControl title="" className={styles.refferalLinkControl}>
                 <Input value={refferalLink} onClick={handleCopy} onChange={() => {}} readOnly />
