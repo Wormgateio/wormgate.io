@@ -15,9 +15,9 @@ function GoldenAxeBlock() {
         }
     }, [])
 
-    if (!goldenAxeReward) {
-        return null
-    }
+//    if (!goldenAxeReward) {
+//        return null
+//    }
 
     const modalTitle = (
         <div className={cn.modalTitle}>
