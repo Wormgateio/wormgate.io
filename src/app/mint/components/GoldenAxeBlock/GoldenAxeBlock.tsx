@@ -32,14 +32,14 @@ function GoldenAxeBlock() {
             <h3 className={cn.title}>Strike Gold with Every Mint!</h3>
             <p className={cn.text}>
               Discover the <span className={cn.yellowText}>Golden Axe</span> in your daily mint for 
-              a chance to win <span className={cn.blueText}>${goldenAxeReward}!</span> Multiple axes and winners every day.
+              a chance to win <span className={cn.blueText}>$50!</span> Multiple axes and winners every day.
               Is fortune on your side today? <span className={cn.preview} onClick={() => setShowModal(true)}>Preview</span>
             </p>
 
             <Tooltip rootClassName={cn.tooltip} title={(
                 <p className={cn.tooltipText}>
                     Every day, several Golden Axes are randomly awarded to users at various times. 
-                    If you&lsquo;re one of the lucky recipients of a Golden Axe, you&lsquo;ll receive ${goldenAxeReward} in USDT, 
+                    If you&lsquo;re one of the lucky recipients of a Golden Axe, you&lsquo;ll receive $50 in USDT, 
                     deposited directly into your OPTIMISM network wallet within 10 days, subject to verification. 
                     Keep minting for your chance to strike gold!
                 </p>
